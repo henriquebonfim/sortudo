@@ -3,7 +3,7 @@ name: CD to Production
 on:
   push:
     branches:
-      - main
+      - production
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -14,28 +14,26 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
-      - uses: actions/setup-node@v6
+      - uses: oven-sh/setup-bun@v2
         with:
-          node-version: 24
-          cache: 'npm'
-      - run: npm audit
-      - run: npm ci
-      - run: npm run lint
-      - run: npm run typecheck
-      - run: npm run test
+          bun-version: latest
+      - run: bun install
+      - run: bun run lint
+      - run: bun run typecheck
+      - run: bun run test
 
   build_and_deploy:
     needs: validate
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
-      - uses: actions/setup-node@v6
+      - uses: oven-sh/setup-bun@v2
         with:
-          node-version: 24
-          cache: 'npm'
-      - run: npm audit
-      - run: npm ci
-      - run: npm run build
+          bun-version: latest
+      - run: bun install
+      - name: Sync Static Data
+        run: bun scripts/sync-static-data.js
+      - run: bun run build
         env:
           VITE_FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY }}
           VITE_FIREBASE_AUTH_DOMAIN: ${{ secrets.FIREBASE_AUTH_DOMAIN }}
@@ -49,4 +47,3 @@ jobs:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_SORTUDO }}'
           channelId: live
-          projectId: sortudo
