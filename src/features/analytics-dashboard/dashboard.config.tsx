@@ -20,6 +20,7 @@ import {
   TemporalFrequencyChart,
   TopJackpotWinnersChart,
   TopNumbersByDecadeChart,
+  OddsVisualizerChart,
 } from '@/features/analytics-dashboard/charts';
 
 
@@ -268,6 +269,29 @@ export function buildChapters(): Chapter[] {
           note: "A cidade não-capital mais premiada historicamente é Santos/SP.",
           className: "md:col-span-2 lg:col-span-2",
           component: <GeoWinnersChart />,
+        },
+      ],
+    },
+
+
+    // ── PSICOLOGIA E EDUCAÇÃO ────────────────────────────────────────────────
+    {
+      id: "psychology",
+      icon: <PieChart className="w-4 h-4" />,
+      title: "Psicologia da Aposta",
+      description: "A Ilusão da Probabilidade",
+      lineClass: "bg-pink-500/60",
+      iconColorClass: "text-pink-400",
+      sections: [
+        {
+          id: "odds-visualizer",
+          title: "A Escala da Improbabilidade",
+          subtitle: "1 em 50 milhões na prática",
+          type: "Informational",
+          insight: "O cérebro humano tem dificuldade em processar números maiores que 10.000. Esta visualização compara a Mega-Sena com eventos raros reais.",
+          note: "A probabilidade é tão baixa que apostar a vida inteira altera sua chance em menos de 0.01%.",
+          className: "md:col-span-1 lg:col-span-3",
+          component: <OddsVisualizerChart />,
         },
       ],
     },

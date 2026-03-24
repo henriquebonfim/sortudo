@@ -17,3 +17,4 @@ export { default as TopJackpotWinnersChart } from '@/features/analytics-dashboar
 export { default as TopNumbersByDecadeChart } from '@/features/analytics-dashboard/charts/comparison/TopNumbersByDecadeChart';
 export { default as DataParsingProcessChart } from '@/features/analytics-dashboard/charts/process/DataParsingProcessChart';
 export { default as SuggestedFeaturesPanel } from '@/features/analytics-dashboard/charts/list/SuggestedFeaturesPanel';
+export * from './odds-visualizer/OddsVisualizerChart';

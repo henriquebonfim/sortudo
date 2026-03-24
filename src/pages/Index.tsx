@@ -7,7 +7,8 @@ import {
   IndependenceSection,
   MathSection,
   MoneyFlowTeaser,
-  ProbabilitySection
+  ProbabilitySection,
+  OddsStorySection
 } from "@/features/home/components";
 
 export default function HeroPage() {
@@ -19,7 +20,8 @@ export default function HeroPage() {
       <MoneyFlowTeaser />
       <ProbabilitySection />
       <CombinatorialSection />
-      <MathSection />
+            <MathSection />
+      <OddsStorySection />
       <CaseStudy />
       <ClosingQuote />
     </div>
