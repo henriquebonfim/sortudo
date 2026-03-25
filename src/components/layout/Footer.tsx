@@ -1,4 +1,4 @@
-import { TrendingDown, Github } from "lucide-react";
+import { Github, TrendingUp } from "lucide-react";
 import { Link } from "react-router-dom";
 
 export function Footer() {
@@ -7,9 +7,9 @@ export function Footer() {
       <div className="container">
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
           <div className="flex items-center gap-2">
-            <TrendingDown className="h-4 w-4 text-primary" />
+            <TrendingUp className="h-4 w-4 text-primary" />
             <span className="font-display font-bold text-foreground">
-              Quanto você já perdeu?
+              Sortudo?
             </span>
           </div>
           <div className="flex items-center gap-6 text-sm text-muted-foreground">

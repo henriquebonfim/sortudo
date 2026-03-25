@@ -1,14 +1,13 @@
+import { AnimatePresence, motion } from "framer-motion";
+import { Menu, TrendingUp, X } from "lucide-react";
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { motion, AnimatePresence } from "framer-motion";
-import { Menu, X, TrendingDown } from "lucide-react";
 
 const navItems = [
   { label: "Início", path: "/" },
-  { label: "Dados", path: "/dados" },
-  { label: "Simulador", path: "/simulador" },
-  { label: "Calculadora", path: "/calculadora" },
-  { label: "Quiz", path: "/quiz" },
+  { label: "Gerador da sorte", path: "/gerador" },
+  { label: "Já fui sorteado?", path: "/buscar" },
+  { label: "Dados Estatísticos", path: "/dados" },
   { label: "Sobre", path: "/sobre" },
 ];
 
@@ -20,9 +19,9 @@ export function Header() {
     <header className="fixed top-0 left-0 right-0 z-50 border-b border-border bg-background/80 backdrop-blur-xl">
       <div className="container flex h-14 items-center justify-between">
         <Link to="/" className="flex items-center gap-2 group">
-          <TrendingDown className="h-5 w-5 text-primary transition-transform group-hover:rotate-12" />
-          <span className="font-display font-bold text-lg text-foreground">
-            Quanto você já <span className="text-gradient-gold">perdeu</span>?
+          <TrendingUp className="h-5 w-5 text-primary transition-transform group-hover:rotate-12" />
+          <span className="font-display font-bold text-lg text-foreground ">
+            Sor<span className="underline decoration-primary">tudo</span><span className="text-gradient-gold">?</span>
           </span>
         </Link>
 
@@ -32,11 +31,10 @@ export function Header() {
             <Link
               key={item.path}
               to={item.path}
-              className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
-                location.pathname === item.path
-                  ? "text-primary bg-primary/10"
-                  : "text-muted-foreground hover:text-foreground hover:bg-secondary"
-              }`}
+              className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${location.pathname === item.path
+                ? "text-primary bg-primary/10"
+                : "text-muted-foreground hover:text-foreground hover:bg-secondary"
+                }`}
             >
               {item.label}
             </Link>
@@ -68,11 +66,10 @@ export function Header() {
                   key={item.path}
                   to={item.path}
                   onClick={() => setOpen(false)}
-                  className={`px-4 py-2.5 rounded-lg text-sm font-medium transition-colors ${
-                    location.pathname === item.path
-                      ? "text-primary bg-primary/10"
-                      : "text-muted-foreground hover:text-foreground hover:bg-secondary"
-                  }`}
+                  className={`px-4 py-2.5 rounded-lg text-sm font-medium transition-colors ${location.pathname === item.path
+                    ? "text-primary bg-primary/10"
+                    : "text-muted-foreground hover:text-foreground hover:bg-secondary"
+                    }`}
                 >
                   {item.label}
                 </Link>

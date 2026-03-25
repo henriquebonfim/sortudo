@@ -1,0 +1,30 @@
+name: Sugestão de Funcionalidade
+description: Sugira uma ideia para o Sortudo?
+title: "[FEAT]: "
+labels: ["enhancement"]
+assignees: []
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Sua sugestão está relacionada a um problema?
+      description: Uma descrição clara e concisa do que é o problema. Ex. Eu fico frustrado quando [...]
+    validations:
+      required: true
+  - type: textarea
+    id: solution
+    attributes:
+      label: Descrição da sua solução
+      description: Uma descrição clara e concisa do que você deseja que aconteça.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Descrição de alternativas que você considerou
+      description: Uma descrição clara e concisa de quaisquer soluções ou funcionalidades alternativas que você considerou.
+  - type: textarea
+    id: context
+    attributes:
+      label: Contexto Adicional
+      description: Adicione qualquer outro contexto ou capturas de tela sobre a sugestão aqui.

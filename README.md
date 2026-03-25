@@ -1,73 +1,84 @@
-# Welcome to your Lovable project
+# Sortudo? (Lucky?) 🍀 — Simulador Educativo da Mega-Sena
 
-## Project info
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-**URL**: https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID
+**Sortudo?** é um simulador educativo e de código aberto projetado para desmistificar a matemática por trás das loterias. Usando dados históricos reais da Mega-Sena, o projeto demonstra visualmente as probabilidades e o impacto financeiro de apostar a longo prazo.
 
-## How can I edit this code?
+> "A sorte é um erro de cálculo. A matemática não é cruel — só honesta."
 
-There are several ways of editing your application.
+---
 
-**Use Lovable**
+## ✨ Características
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and start prompting.
+-   **📊 Painel de Dados**: Importe os resultados oficiais da Caixa (XLSX) e visualize estatísticas de frequência.
+-   **💸 Calculadora de Perdas**: Descubra quanto você já gastou historicamente e o que esse dinheiro teria rendido em Tesouro Selic ou Ibovespa.
+-   **🎲 Simulador 40 Anos**: Veja como seu patrimônio se comporta em décadas de apostas ininterruptas.
+-   **🔍 Buscador de Combinações**: Verifique se seus números da "sorte" já saíram alguma vez nos 2.800+ concursos.
+-   **🏗️ Arquitetura DDD**: Código limpo, testável e desacoplado, seguindo padrões de Domain-Driven Design.
 
-Changes made via Lovable will be committed automatically to this repo.
+## 🏗️ Requisitos Técnicos
 
-**Use your preferred IDE**
+O projeto utiliza tecnologias modernas focadas em performance e experiência do usuário:
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+-   **Frontend**: React + TypeScript + Vite
+-   **Estilização**: Tailwind CSS + shadcn/ui
+-   **Animações**: Framer Motion
+-   **Persistência**: IndexedDB (Local-first storage)
+-   **Processamento**: Web Workers
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+---
 
-Follow these steps:
+## 🚀 Como Começar
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+### Pré-requisitos
+-   Node.js (v18+)
+-   Bun (recomendado) ou npm/yarn
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+### Instalação
 
-# Step 3: Install the necessary dependencies.
-npm i
+```bash
+# Clone o repositório
+git clone https://github.com/henriquebonfim/sortudo.git
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+# Entre na pasta
+cd sortudo
+
+# Instale as dependências
+bun install
+
+# Inicie o servidor de desenvolvimento
+bun dev
 ```
 
-**Edit a file directly in GitHub**
+---
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+## 📂 Arquitetura (DDD)
 
-**Use GitHub Codespaces**
+A base de código é organizada em camadas para garantir escalabilidade:
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+-   `src/domain`: Entidades, interfaces de repositório e serviços de domínio (as regras do jogo).
+-   `src/application`: Serviços de aplicação que orquestram fluxos de dados e comandos.
+-   `src/infrastructure`: Implementações técnicas (storage, workers, api clients).
+-   `src/features`: Fatias verticais de funcionalidades complexas.
 
-## What technologies are used for this project?
+---
 
-This project is built with:
+## 🤝 Contribuindo
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+Contribuições são muito bem-vindas! Sinta-se à vontade para abrir uma Issue ou enviar um Pull Request.
 
-## How can I deploy this project?
+1. Faça um Fork do projeto
+2. Crie uma Branch para sua feature (`git checkout -b feature/minha-feature`)
+3. Faça commit das suas alterações (`git commit -m 'feat: Adiciona nova funcionalidade'`)
+4. Faça Push para a Branch (`git push origin feature/minha-feature`)
+5. Abra um Pull Request
 
-Simply open [Lovable](https://lovable.dev/projects/REPLACE_WITH_PROJECT_ID) and click on Share -> Publish.
+---
 
-## Can I connect a custom domain to my Lovable project?
+## 📄 Licença
 
-Yes, you can!
+Distribuído sob a licença MIT. Veja `LICENSE` para mais informações.
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+---
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/features/custom-domain#custom-domain)
+Desenvolvido com ❤️ e matemática por [Henrique Bonfim](https://github.com/henriquebonfim).
