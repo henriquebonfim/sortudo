@@ -21,7 +21,7 @@ export function Header() {
         <Link to="/" className="flex items-center gap-2 group">
           <TrendingUp className="h-5 w-5 text-primary transition-transform group-hover:rotate-12" />
           <span className="font-display font-bold text-lg text-foreground ">
-            Sor<span className="underline decoration-primary decoration-w">tudo</span><span className="text-gradient-gold">?</span>
+            Sor<span className="underline decoration-primary">tudo</span><span className="text-gradient-gold">?</span>
           </span>
         </Link>
 
