@@ -1,30 +1,36 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
+import { useMotionValue, animate } from "framer-motion";
 
-export function AnimatedCounter({
-  target,
-  duration = 2000,
-}: {
+interface AnimatedCounterProps {
   target: number;
   duration?: number;
-}) {
-  const [count, setCount] = useState(0);
-  const started = useRef(false);
+}
+
+export function AnimatedCounter({ target, duration = 2000 }: AnimatedCounterProps) {
+  const count = useMotionValue(0);
+  const [displayValue, setDisplayValue] = useState(0);
 
   useEffect(() => {
-    if (started.current) return;
-    started.current = true;
-    const startTime = performance.now();
-    const animate = (now: number) => {
-      const elapsed = now - startTime;
-      const progress = Math.min(elapsed / duration, 1);
-      const eased = 1 - Math.pow(1 - progress, 3);
-      setCount(Math.floor(eased * target));
-      if (progress < 1) requestAnimationFrame(animate);
+    // Whenever target changes, animate the motion value
+    const controls = animate(count, target, {
+      duration: duration / 1000,
+      ease: "easeOut",
+    });
+    
+    // Subscribe to the motion value to update our state for rendering
+    const unsubscribe = count.on("change", (latest) => {
+      setDisplayValue(Math.floor(latest));
+    });
+
+    return () => {
+      controls.stop();
+      unsubscribe();
     };
-    requestAnimationFrame(animate);
-  }, [target, duration]);
+  }, [target, duration, count]);
 
   return (
-    <span className="font-mono tabular-nums">{count.toLocaleString("pt-BR")}</span>
+    <span className="font-mono tabular-nums">
+      {displayValue.toLocaleString("pt-BR")}
+    </span>
   );
 }
