@@ -1,8 +1,8 @@
-import { motion } from 'framer-motion';
-import { Target, Zap, TrendingDown, ArrowRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { OddsVisualizerChart } from '@/features/home/components/OddsVisualizerChart';
+import { motion } from 'framer-motion';
+import { ArrowRight, Target } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { OddsVisualizerChart } from '@/features/analytics-dashboard/charts/odds-visualizer/OddsVisualizerChart';
 
 export function OddsStorySection() {
   return (
@@ -17,8 +17,8 @@ export function OddsStorySection() {
             viewport={{ once: true, margin: "-100px" }}
             className="text-center mb-16"
           >
-            <div className="inline-flex items-center justify-center p-3 bg-pink-500/10 rounded-2xl mb-6">
-              <Target className="w-8 h-8 text-pink-500" />
+            <div className="inline-flex items-center justify-center p-3 bg-primary/10 rounded-2xl mb-6">
+              <Target className="w-8 h-8 text-primary" />
             </div>
             <h2 className="text-4xl md:text-5xl font-display font-bold text-foreground mb-6 tracking-tight">
               A Ilusão da <span className="text-gradient-rose">Proporção</span>
@@ -37,16 +37,16 @@ export function OddsStorySection() {
             transition={{ delay: 0.2 }}
             className="bg-card border border-border/50 rounded-2xl p-6 md:p-8 shadow-2xl relative overflow-hidden"
           >
-            <div className="absolute top-0 right-0 w-64 h-64 bg-pink-500/10 blur-3xl rounded-full -mr-32 -mt-32 pointer-events-none" />
+            <div className="absolute top-0 right-0 w-64 h-64 bg-primary/10 blur-3xl rounded-full -mr-32 -mt-32 pointer-events-none" />
 
             <OddsVisualizerChart />
 
             <div className="mt-10 flex flex-col items-center">
               <p className="text-center text-muted-foreground mb-6 max-w-2xl text-sm md:text-base">
-                 Quando você compra um bilhete, sua chance matemática sai de zero absoluto, mas na prática, a probabilidade continua sendo <strong>irrisória</strong> perante as leis do universo.
+                Quando você compra um bilhete, sua chance matemática sai de zero absoluto, mas na prática, a probabilidade continua sendo <strong>irrisória</strong> perante as leis do universo.
               </p>
               <Link to="/dados">
-                <Button variant="default" size="lg" className="gap-2 bg-pink-600 hover:bg-pink-700 text-white rounded-full px-8 h-12">
+                <Button variant="default" size="lg" className="gap-2 border border-primary hover:border-primary/50 hover:text-secondary  bg-base font-bold hover:bg-primary/90 text-primary rounded-full px-8 h-12">
                   Explorar os Dados Completos <ArrowRight className="w-4 h-4" />
                 </Button>
               </Link>

@@ -1,6 +1,6 @@
 import { memo, useMemo } from "react";
 import { useLotteryStore } from "@/application/useLotteryStore";
-import { CHART_COLORS } from "@/domain/lottery/lottery.constants";
+import { CHART_COLORS } from "@/components/lottery/chart.constants";
 import { StatRing } from "../other/StatRing";
 import { LowHighDistribution } from "../other/LowHighDistribution";
 import { OverlapChart } from "../other/OverlapChart";

@@ -1,5 +1,5 @@
 import { memo } from "react";
-import { CHART_COLORS } from "@/domain/lottery/lottery.constants";
+import { CHART_COLORS } from "@/components/lottery/chart.constants";
 
 export const ChartLegend = memo(function ChartLegend() {
   return (

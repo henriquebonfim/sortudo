@@ -1,6 +1,6 @@
-import type { Mode } from '@/features/generator/generator.types';
+import { GenerationMode } from '@/domain/lottery/generators/number-generator';
 
-const MODE_LABELS: Record<Mode, string> = {
+const MODE_LABELS: Record<GenerationMode, string> = {
   random: 'Aleatório',
   hot: 'Só quentes',
   cold: 'Só frios',
@@ -19,8 +19,8 @@ const MODE_LABELS: Record<Mode, string> = {
 };
 
 interface ModeSelectorProps {
-  currentMode: Mode;
-  onModeChange: (mode: Mode) => void;
+  currentMode: GenerationMode;
+  onModeChange: (mode: GenerationMode) => void;
   disabled?: boolean;
 }
 
@@ -28,7 +28,7 @@ export function ModeSelector({ currentMode, onModeChange, disabled }: ModeSelect
   return (
     <>
       <div className="mt-8 flex flex-wrap justify-center gap-2">
-        {(Object.keys(MODE_LABELS).slice(0, 8) as Mode[]).map((m) => (
+        {(Object.keys(MODE_LABELS).slice(0, 8) as GenerationMode[]).map((m) => (
           <button
             key={m}
             disabled={disabled}
@@ -43,7 +43,7 @@ export function ModeSelector({ currentMode, onModeChange, disabled }: ModeSelect
         ))}
       </div>
       <div className="mt-8 flex flex-wrap justify-center gap-2">
-        {(Object.keys(MODE_LABELS).slice(8) as Mode[]).map((m) => (
+        {(Object.keys(MODE_LABELS).slice(8) as GenerationMode[]).map((m) => (
           <button
             key={m}
             disabled={disabled}

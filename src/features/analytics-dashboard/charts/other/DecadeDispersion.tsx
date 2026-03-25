@@ -1,5 +1,5 @@
 import { memo } from "react";
-import { CHART_COLORS } from "@/domain/lottery/lottery.constants";
+import { CHART_COLORS } from "@/components/lottery/chart.constants";
 
 export const DecadeDispersion = memo(function DecadeDispersion({
   fullySpreadPct,

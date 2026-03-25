@@ -9,7 +9,7 @@ import {
   Cell,
   TooltipProps,
 } from "recharts";
-import { CHART_COLORS } from "@/domain/lottery/lottery.constants";
+import { CHART_COLORS } from "@/components/lottery/chart.constants";
 
 const OverlapTooltip = memo(function OverlapTooltip({
   active,

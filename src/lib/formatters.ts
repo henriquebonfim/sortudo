@@ -31,3 +31,18 @@ export function round(value: number, decimals = 1): number {
 export function formatNumber(value: number): string {
   return new Intl.NumberFormat("pt-BR").format(value);
 }
+
+/**
+ * Extracts year from YYYY-MM-DD string.
+ */
+export function getYear(date: string): number {
+  return parseInt(date.substring(0, 4), 10);
+}
+
+/**
+ * Extracts decade string (e.g., "1990s") from YYYY-MM-DD string.
+ */
+export function getDecade(date: string): string {
+  const year = getYear(date);
+  return `${Math.floor(year / 10) * 10}s`;
+}

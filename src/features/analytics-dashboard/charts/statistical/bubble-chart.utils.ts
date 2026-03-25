@@ -1,4 +1,4 @@
-import { CHART_COLORS } from "@/domain/lottery/lottery.constants";
+import { CHART_COLORS } from "@/components/lottery/chart.constants";
 import { BubbleNode } from "./bubble-chart.types";
 
 export function freqToColor(freq: number, min: number, max: number): string {

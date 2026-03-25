@@ -122,7 +122,7 @@ export function CoinFlipDemo() {
       <button
         onClick={flip}
         disabled={flipping}
-        className="w-full py-2.5 px-4 rounded-xl bg-primary text-primary-foreground font-display font-bold text-sm hover:bg-primary/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+        className="w-full py-2.5 px-4 rounded-xl bg-base text-base-foreground font-display font-bold text-sm hover:bg-base/90 border border-primary transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
       >
         {flipping ? "Lançando..." : attempts === 0 ? "🪙 Lançar moedas" : "🔄 Lançar novamente"}
       </button>

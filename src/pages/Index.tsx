@@ -16,12 +16,12 @@ export default function HeroPage() {
     <div className="min-h-screen">
       <HeroSection />
       <FeaturesGrid />
+      <OddsStorySection />
       <IndependenceSection />
       <MoneyFlowTeaser />
       <ProbabilitySection />
       <CombinatorialSection />
-            <MathSection />
-      <OddsStorySection />
+      <MathSection />
       <CaseStudy />
       <ClosingQuote />
     </div>

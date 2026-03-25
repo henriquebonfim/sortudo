@@ -3,6 +3,7 @@ import { LotteryStats } from '@/domain/lottery/lottery.types';
 import { Draw, LotteryMetadata } from '@/domain/lottery/draw.model';
 import { searchCombination } from '@/domain/lottery/search-engine';
 import { StatisticsService } from '@/domain/lottery/statistics.service';
+import { DrawMapper } from '@/domain/lottery/draw.mapper';
 import type { SearchResult } from '@/domain/lottery/lottery.types';
 
 const SIMULATION_COUNT_KEY = 'total_simulations';
@@ -31,31 +32,9 @@ export const useLotteryStore = create<LotteryState>((set, get) => {
       const data = await res.json();
       
       const rawDraws = data.draws || data.concursos || [];
-      const draws: Draw[] = rawDraws.map((d: any) => ({
-        id: d.id,
-        date: d.data || d.date,
-        numbers: d.bolas || d.numbers || [],
-        jackpotWinners: d.ganhadoresSena ?? d.jackpotWinners ?? 0,
-        jackpotPrize: d.valorSena ?? d.jackpotPrize ?? 0,
-        quinaWinners: d.ganhadoresQuina ?? d.quinaWinners ?? 0,
-        quinaPrize: d.valorQuina ?? d.quinaPrize ?? 0,
-        quadraWinners: d.ganhadoresQuadra ?? d.quadraWinners ?? 0,
-        quadraPrize: d.valorQuadra ?? d.quadraPrize ?? 0,
-        accumulated: d.acumulado ?? d.accumulated ?? false,
-        totalRevenue: d.valorArrecadado ?? d.totalRevenue ?? 0,
-        prizeEstimate: d.estimativaPremio ?? d.prizeEstimate ?? 0,
-        locations: d.cidadeUF || d.locations || [],
-        accumulatedJackpot: d.valorAcumuladoSena ?? d.accumulatedJackpot,
-      }));
-
-      const metadata: LotteryMetadata | null = data.metadata || (draws.length > 0 ? {
-        totalDraws: draws.length,
-        firstDrawDate: draws[0].date,
-        lastDrawDate: draws[draws.length - 1].date,
-        lastUpdate: data.sync_at || new Date().toISOString()
-      } : null);
-
-      const stats: LotteryStats | null = draws.length > 0 ? StatisticsService.calculateAllStats(draws) : null;
+      const draws = DrawMapper.toDomainList(rawDraws);
+      const metadata = DrawMapper.extractMetadata(data, draws);
+      const stats = draws.length > 0 ? StatisticsService.calculateAllStats(draws) : null;
 
       set({ 
         stats, 

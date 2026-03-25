@@ -1,6 +1,8 @@
 import { Draw } from '@/domain/lottery/draw.model';
 import { MAX_LOTTERY_NUMBER } from '@/domain/lottery/lottery.constants';
-import { calculatePercentage, round } from '@/lib/formatters';
+import { calculatePercentage, round, getDecade } from '@/lib/formatters';
+import { CalculatorUtils } from './calculator-utils';
+import { mean, standardDeviation } from '@/domain/math/statistics';
 
 export class FrequencyAnalyzer {
   static calculateFrequencies(draws: Draw[]) {
@@ -23,15 +25,13 @@ export class FrequencyAnalyzer {
       }));
 
     const freqValues = Object.values(frequencies);
-    const mean = freqValues.length ? freqValues.reduce((a, b) => a + b, 0) / freqValues.length : 0;
-    const variance = freqValues.length ? freqValues.reduce((a, b) => a + (b - mean) ** 2, 0) / freqValues.length : 0;
 
     return {
       frequencies,
       min: ranking[ranking.length - 1] || { number: 0, frequency: 0, position: 0, percentage: 0 },
       max: ranking[0] || { number: 0, frequency: 0, position: 0, percentage: 0 },
-      mean: round(mean),
-      standardDeviation: round(Math.sqrt(variance)),
+      mean: round(mean(freqValues)),
+      standardDeviation: round(standardDeviation(freqValues)),
       ranking,
     };
   }
@@ -62,7 +62,7 @@ export class FrequencyAnalyzer {
     const currentGaps = new Array(MAX_LOTTERY_NUMBER + 1).fill(0);
     const maxGaps = new Array(MAX_LOTTERY_NUMBER + 1).fill(0);
 
-    const sorted = [...draws].sort((a, b) => a.id - b.id);
+    const sorted = CalculatorUtils.sortDrawsById(draws);
 
     for (const d of sorted) {
       for (let n = 1; n <= MAX_LOTTERY_NUMBER; n++) currentGaps[n]++;
@@ -84,8 +84,7 @@ export class FrequencyAnalyzer {
     const byDecade: Record<string, Record<number, number>> = {};
 
     for (const d of draws) {
-      const year = parseInt(d.date.substring(0, 4));
-      const decade = `${Math.floor(year / 10) * 10}s`;
+      const decade = getDecade(d.date);
       if (!byDecade[decade]) byDecade[decade] = {};
       for (const num of d.numbers) {
         byDecade[decade][num] = (byDecade[decade][num] || 0) + 1;
@@ -112,7 +111,7 @@ export class FrequencyAnalyzer {
   }
 
   static calculateHotNumbers(draws: Draw[], lastN = 10) {
-    const recentDraws = [...draws].sort((a, b) => a.id - b.id).slice(-lastN);
+    const recentDraws = CalculatorUtils.sortDrawsById(draws).slice(-lastN);
     const freq: Record<number, number> = {};
 
     for (const d of recentDraws) {

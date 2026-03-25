@@ -2,14 +2,14 @@ import { motion } from 'framer-motion';
 import { formatNumber } from '@/lib/formatters';
 import { TOTAL_COMBINATIONS } from '@/domain/lottery/lottery.constants';
 
-import type { Mode } from '@/features/generator/generator.types';
+import { GenerationMode } from '@/domain/lottery/generators/number-generator';
 
 interface ContextMessageProps {
-  mode: Mode;
+  mode: GenerationMode;
   hasNumbers: boolean;
 }
 
-function getContextMessage(mode: Mode): string {
+function getContextMessage(mode: GenerationMode): string {
 
   if (mode === 'dates') {
     return 'Jogar datas é tão válido quanto qualquer outra combinação — mesma probabilidade. Mas como muita gente faz isso, se você ganhar vai dividir com mais pessoas. Matematicamente pior.';

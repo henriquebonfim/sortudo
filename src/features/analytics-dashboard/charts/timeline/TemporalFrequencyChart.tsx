@@ -14,7 +14,7 @@ import {
 import {
   CHART_COLORS,
   CHART_DIMENSIONS,
-} from "@/domain/lottery/lottery.constants";
+} from "@/components/lottery/chart.constants";
 
 const PALETTE = [
   CHART_COLORS.AMBER,

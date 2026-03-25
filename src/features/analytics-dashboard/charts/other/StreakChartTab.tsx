@@ -11,7 +11,7 @@ import {
   Area,
   TooltipProps,
 } from "recharts";
-import { CHART_COLORS } from "@/domain/lottery/lottery.constants";
+import { CHART_COLORS } from "@/components/lottery/chart.constants";
 
 export type StreakEntry = {
   streakLength: number;

@@ -2,7 +2,12 @@ import { memo } from "react";
 
 interface ChartTooltipProps {
   active?: boolean;
-  payload?: any[];
+  payload?: Array<{
+    payload: Record<string, unknown>;
+    value: number | string;
+    name: string;
+    color?: string;
+  }>;
   title?: string;
   items?: Array<{
     label: string;

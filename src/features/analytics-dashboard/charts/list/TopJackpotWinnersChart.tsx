@@ -2,7 +2,7 @@ import { memo } from "react";
 import { motion } from "framer-motion";
 import { useLotteryStore } from "@/application/useLotteryStore";
 import { formatCurrency } from "@/lib/formatters";
-import { CHART_COLORS } from "@/domain/lottery/lottery.constants";
+import { CHART_COLORS } from "@/components/lottery/chart.constants";
 import { TopJackpotWinnersResponse } from "@/domain/lottery/lottery.types";
 
 const MAX_WINNERS_TO_SHOW = 10;

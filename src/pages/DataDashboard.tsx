@@ -19,7 +19,7 @@ export default function DataDashboard() {
   };
 
   const hasData = metadata && metadata.totalDraws > 0;
-  const chapters = buildChapters();
+  const chapters = buildChapters(stats);
 
   if (isSeeding) {
     return (

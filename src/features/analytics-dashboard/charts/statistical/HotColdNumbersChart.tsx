@@ -1,7 +1,7 @@
 import { useMemo, memo } from "react";
 import { useLotteryStore } from "@/application/useLotteryStore";
 import { motion } from "framer-motion";
-import { CHART_COLORS } from "@/domain/lottery/lottery.constants";
+import { CHART_COLORS } from "@/components/lottery/chart.constants";
 
 const TEMP_COLORS: Record<string, string> = {
   hot: CHART_COLORS.RED,

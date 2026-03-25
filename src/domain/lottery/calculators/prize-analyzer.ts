@@ -1,10 +1,12 @@
 import { Draw } from '@/domain/lottery/draw.model';
 import { MEGA_DA_VIRADA_THRESHOLD, DECEMBER_MONTH } from '@/domain/lottery/lottery.constants';
-import { calculatePercentage, round } from '@/lib/formatters';
+import { calculatePercentage, round, getYear } from '@/lib/formatters';
+import { CalculatorUtils } from './calculator-utils';
+import { sum, mean, max } from '@/domain/math/statistics';
 
 export class PrizeAnalyzer {
   static calculateTopJackpotWinners(draws: Draw[]) {
-    const totalWinnersGlobal = draws.reduce((sum, d) => sum + (d.jackpotWinners || 0), 0);
+    const totalWinnersGlobal = sum(draws.map(d => d.jackpotWinners || 0));
     
     return draws
       .filter(d => (d.jackpotWinners || 0) > 0)
@@ -23,7 +25,7 @@ export class PrizeAnalyzer {
     const byYear: Record<number, { prizes: number[]; megaDaVirada: boolean }> = {};
 
     for (const d of draws) {
-      const year = parseInt(d.date.substring(0, 4));
+      const year = getYear(d.date);
       if (!byYear[year]) byYear[year] = { prizes: [], megaDaVirada: false };
       if (d.jackpotPrize > 0) byYear[year].prizes.push(d.jackpotPrize);
       if (d.jackpotWinners === 0 && d.jackpotPrize > MEGA_DA_VIRADA_THRESHOLD && d.date.includes(DECEMBER_MONTH)) {
@@ -34,8 +36,8 @@ export class PrizeAnalyzer {
     return Object.entries(byYear)
       .map(([year, data]) => ({
         year: parseInt(year),
-        maxPrize: data.prizes.length ? Math.max(...data.prizes) : 0,
-        avgPrize: data.prizes.length ? data.prizes.reduce((a, b) => a + b, 0) / data.prizes.length : 0,
+        maxPrize: max(data.prizes),
+        avgPrize: mean(data.prizes),
         totalDraws: data.prizes.length,
         megaDaVirada: data.megaDaVirada,
       }))
@@ -46,7 +48,7 @@ export class PrizeAnalyzer {
     const byYear: Record<number, { acc: number; noAcc: number }> = {};
 
     for (const d of draws) {
-      const year = parseInt(d.date.substring(0, 4));
+      const year = getYear(d.date);
       if (!byYear[year]) byYear[year] = { acc: 0, noAcc: 0 };
       if (d.accumulated) byYear[year].acc++;
       else byYear[year].noAcc++;
@@ -67,20 +69,18 @@ export class PrizeAnalyzer {
     const quina = draws.filter(d => d.quinaWinners > 0).map(d => d.quinaPrize);
     const quadra = draws.filter(d => d.quadraWinners > 0).map(d => d.quadraPrize);
 
-    const avg = (arr: number[]) => arr.length ? arr.reduce((a, b) => a + b, 0) / arr.length : 0;
-    const max = (arr: number[]) => arr.length ? Math.max(...arr) : 0;
     const totalW = (field: 'jackpotWinners' | 'quinaWinners' | 'quadraWinners') =>
-      draws.reduce((s, d) => s + (d[field] || 0), 0);
+      sum(draws.map(d => d[field] || 0));
 
     return [
-      { tier: 'sena', label: '6 Hits (Jackpot)', avgPrize: avg(sena), maxPrize: max(sena), totalWinners: totalW('jackpotWinners') },
-      { tier: 'quina', label: '5 Hits (Quina)', avgPrize: avg(quina), maxPrize: max(quina), totalWinners: totalW('quinaWinners') },
-      { tier: 'quadra', label: '4 Hits (Quadra)', avgPrize: avg(quadra), maxPrize: max(quadra), totalWinners: totalW('quadraWinners') },
+      { tier: 'sena', label: '6 Hits (Jackpot)', avgPrize: mean(sena), maxPrize: max(sena), totalWinners: totalW('jackpotWinners') },
+      { tier: 'quina', label: '5 Hits (Quina)', avgPrize: mean(quina), maxPrize: max(quina), totalWinners: totalW('quinaWinners') },
+      { tier: 'quadra', label: '4 Hits (Quadra)', avgPrize: mean(quadra), maxPrize: max(quadra), totalWinners: totalW('quadraWinners') },
     ];
   }
 
   static calculateStreakEconomics(draws: Draw[]) {
-    const sorted = [...draws].sort((a, b) => a.id - b.id);
+    const sorted = CalculatorUtils.sortDrawsById(draws);
     let currentStreak = 0;
     const byStreak: Record<number, { count: number; totalCollection: number; totalPrize: number }> = {};
 
@@ -107,10 +107,10 @@ export class PrizeAnalyzer {
     if (!metadata || draws.length === 0) {
       return { totalDraws: 0, firstDrawDate: '-', lastDrawDate: '-', totalJackpotWinners: 0, pctWithoutWinner: 0, avgJackpotPrize: 0, highestPrize: 0 };
     }
-    const winners = draws.reduce((acc, d) => acc + (d.jackpotWinners || 0), 0);
+    const winners = sum(draws.map(d => d.jackpotWinners || 0));
     const withoutWinner = draws.filter(d => (d.jackpotWinners || 0) === 0).length;
-    const maxPrize = Math.max(...draws.map(d => d.jackpotPrize || 0));
-    const avgPrize = draws.reduce((acc, d) => acc + (d.jackpotPrize || 0), 0) / (draws.filter(d => (d.jackpotWinners || 0) > 0).length || 1);
+    const jackpotPrizes = draws.map(d => d.jackpotPrize || 0);
+    const winningJackpotPrizes = draws.filter(d => (d.jackpotWinners || 0) > 0).map(d => d.jackpotPrize || 0);
 
     return {
       totalDraws: metadata.totalDraws,
@@ -118,8 +118,8 @@ export class PrizeAnalyzer {
       lastDrawDate: metadata.lastDrawDate,
       totalJackpotWinners: winners,
       pctWithoutWinner: calculatePercentage(withoutWinner, metadata.totalDraws),
-      avgJackpotPrize: Math.round(avgPrize),
-      highestPrize: maxPrize,
+      avgJackpotPrize: Math.round(mean(winningJackpotPrizes)),
+      highestPrize: max(jackpotPrizes),
     };
   }
 }

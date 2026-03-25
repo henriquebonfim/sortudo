@@ -1,6 +1,8 @@
 import { Draw } from '@/domain/lottery/draw.model';
-import { PRIMES, LOW_HIGH_BOUNDARY, BALLS_PER_DRAW } from '@/domain/lottery/lottery.constants';
-import { calculatePercentage, round } from '@/lib/formatters';
+import { PRIMES, LOW_HIGH_BOUNDARY, BALLS_PER_DRAW, ANALYSIS_CONFIG } from '@/domain/lottery/lottery.constants';
+import { calculatePercentage } from '@/lib/formatters';
+import { CalculatorUtils } from './calculator-utils';
+import { sum } from '@/domain/math/statistics';
 
 export class DrawAnalyzer {
   static calculateParityDistribution(draws: Draw[]) {
@@ -28,12 +30,12 @@ export class DrawAnalyzer {
   }
 
   static calculateSumDistribution(draws: Draw[]) {
-    const bucketSize = 10;
+    const bucketSize = ANALYSIS_CONFIG.SUM_BUCKET_SIZE;
     const counts: Record<number, number> = {};
 
     for (const d of draws) {
-      const sum = d.numbers.reduce((a, b) => a + b, 0);
-      const bucket = Math.floor(sum / bucketSize) * bucketSize;
+      const s = sum(d.numbers);
+      const bucket = Math.floor(s / bucketSize) * bucketSize;
       counts[bucket] = (counts[bucket] || 0) + 1;
     }
 
@@ -51,7 +53,7 @@ export class DrawAnalyzer {
     const overlapCounts = new Array(BALLS_PER_DRAW + 1).fill(0);
     let lastDrawNumbers: number[] = [];
 
-    const sorted = [...draws].sort((a, b) => a.id - b.id);
+    const sorted = CalculatorUtils.sortDrawsById(draws);
 
     for (const d of sorted) {
       if (d.numbers.length !== BALLS_PER_DRAW) continue;
@@ -69,12 +71,12 @@ export class DrawAnalyzer {
       const decadeCounts: Record<number, number> = {};
       let hasClustered = false;
       for (const num of numbers) {
-        const decade = Math.floor(num / 10) * 10;
+        const decade = Math.floor(num / ANALYSIS_CONFIG.DECADE_SIZE) * ANALYSIS_CONFIG.DECADE_SIZE;
         decadesSet.add(decade);
         decadeCounts[decade] = (decadeCounts[decade] || 0) + 1;
-        if (decadeCounts[decade] >= 3) hasClustered = true;
+        if (decadeCounts[decade] >= ANALYSIS_CONFIG.CLUSTERED_THRESHOLD) hasClustered = true;
       }
-      if (decadesSet.size === 6) fullySpread++;
+      if (decadesSet.size === ANALYSIS_CONFIG.FULLY_SPREAD_SIZE) fullySpread++;
       if (hasClustered) clustered++;
 
       if (lastDrawNumbers.length === BALLS_PER_DRAW) {
@@ -100,7 +102,7 @@ export class DrawAnalyzer {
         zero: calculatePercentage(overlapCounts[0], overlapTotal, 2),
         one: calculatePercentage(overlapCounts[1], overlapTotal, 2),
         two: calculatePercentage(overlapCounts[2], overlapTotal, 2),
-        threePlus: calculatePercentage(overlapCounts.slice(3).reduce((a, b) => a + b, 0), overlapTotal, 2),
+        threePlus: calculatePercentage(sum(overlapCounts.slice(3)), overlapTotal, 2),
       },
     };
   }

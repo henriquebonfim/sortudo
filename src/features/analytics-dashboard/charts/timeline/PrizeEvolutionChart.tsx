@@ -15,6 +15,8 @@ import {
 import {
   CHART_COLORS,
   CHART_DIMENSIONS,
+} from "@/components/lottery/chart.constants";
+import {
   MEGA_DA_VIRADA_START_YEAR,
 } from "@/domain/lottery/lottery.constants";
 

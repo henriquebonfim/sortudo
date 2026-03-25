@@ -9,5 +9,6 @@ export * from "@/features/home/components/HeroSection";
 export * from "@/features/home/components/IndependenceSection";
 export * from "@/features/home/components/MathSection";
 export * from "@/features/home/components/MoneyFlowTeaser";
+export * from "@/features/home/components/OddsStorySection";
+export * from "@/features/home/components/OddsVisualizerChart";
 export * from "@/features/home/components/ProbabilitySection";
-export * from './OddsStorySection';

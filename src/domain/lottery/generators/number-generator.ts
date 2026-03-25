@@ -45,7 +45,7 @@ function pickRandom(pool: number[], count: number): number[] {
 }
 
 const STRATEGIES: Record<GenerationMode, GeneratorStrategy> = {
-  random: (ctx) => pickRandom(FULL_POOL, 6),
+  random: () => pickRandom(FULL_POOL, 6),
   hot: (ctx) => pickRandom(ctx.hotNumbers.length > 0 ? ctx.hotNumbers : FULL_POOL, 6),
   cold: (ctx) => pickRandom(ctx.coldNumbers.length > 0 ? ctx.coldNumbers : FULL_POOL, 6),
   sequential: () => [1, 2, 3, 4, 5, 6],

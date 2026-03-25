@@ -1,4 +1,4 @@
-import { motion } from "framer-motion";
+import { LotteryStats } from '@/domain/lottery/lottery.types';
 import { DollarSign, Hash, MapPin, PieChart, TrendingUp } from "lucide-react";
 
 import {
@@ -19,8 +19,7 @@ import {
   SumBellCurveChart,
   TemporalFrequencyChart,
   TopJackpotWinnersChart,
-  TopNumbersByDecadeChart,
-  OddsVisualizerChart,
+  TopNumbersByDecadeChart
 } from '@/features/analytics-dashboard/charts';
 
 
@@ -55,7 +54,7 @@ export interface Chapter {
   sections: Section[];
 }
 
-export function buildChapters(): Chapter[] {
+export function buildChapters(stats?: LotteryStats | null): Chapter[] {
   return [
     // ── NÚMEROS ──────────────────────────────────────────────────────────────
     {
@@ -71,7 +70,7 @@ export function buildChapters(): Chapter[] {
           title: "Frequência",
           subtitle: "Quais números saem mais",
           type: "Statistical",
-          insight: "O número 10 lidera (352 sorteios), mas a dispersão é baixa. Cada bola tem ~1.6% de chance teórica por sorteio.",
+          insight: `O número ${stats?.frequencies?.max?.number || 10} lidera (${stats?.frequencies?.max?.frequency || 352} sorteios), mas a dispersão é baixa. Cada bola tem ~1.6% de chance teórica por sorteio.`,
           note: "Frequência coincide com a expectativa estatística de longo prazo.",
           className: "md:col-span-2 lg:col-span-2 row-span-2",
           component: (
@@ -146,7 +145,7 @@ export function buildChapters(): Chapter[] {
           title: "Tendência de Acúmulo",
           subtitle: "Rollover por ano",
           type: "Timeline",
-          insight: "Quase 80% (79%) de todos os sorteios terminam acumulados. A maior seca registrou 28 concursos seguidos sem ganhador.",
+          insight: `Quase ${stats?.meta?.pctWithoutWinner || 79}% de todos os sorteios terminam acumulados. A maior seca registrou 28 concursos seguidos sem ganhador.`,
           note: "A cada sorteio acumulado a chance matemática continua a mesma — 1 em ~50 milhões.",
           component: <AccumulationTrendChart />,
         },
@@ -225,7 +224,7 @@ export function buildChapters(): Chapter[] {
           title: "Hierarquia de Premiação",
           subtitle: "Sena · Quina · Quadra",
           type: "Hierarchical",
-          insight: "O prêmio médio da Sena (~R$ 39M) é quase 1.200× maior que o da Quina (~R$ 30K). A Quadra paga ~R$ 556 — diluído entre muitos.",
+          insight: `O prêmio médio da Sena (~R$ ${((stats?.meta?.avgJackpotPrize || 39000000) / 1_000_000).toFixed(0)}M) é calculado com base nos dados. A Quadra paga — diluído entre muitos.`,
           note: "A concentração extrema no top cria o efeito jackpot que motiva o volume de apostas.",
           component: <PrizeDistributionChart />,
         },
@@ -244,7 +243,7 @@ export function buildChapters(): Chapter[] {
           title: "Recordes de Ganhadores",
           subtitle: "Top concursos com mais acertos simultâneos",
           type: "List",
-          insight: "O recorde histórico é de 52 ganhadores simultâneos na Sena — o que diluiu drasticamente o prêmio individual naquele concurso.",
+          insight: `O recorde histórico é de ${stats?.topJackpotWinners?.[0]?.winners || 52} ganhadores simultâneos na Sena — o que diluiu drasticamente o prêmio individual naquele concurso.`,
           note: "Ocorre quando números muito populares, sequenciados ou visuais são sorteados.",
           component: <TopJackpotWinnersChart />,
         },
@@ -265,33 +264,10 @@ export function buildChapters(): Chapter[] {
           title: "Mapa dos Ganhadores",
           subtitle: "Estados e regiões premiados",
           type: "Geographic",
-          insight: "A região Sudeste domina. São Paulo (SP) lidera. O 'Canal Eletrônico' já representa ~4.5% de todas as apostas vencedoras identificadas.",
+          insight: `A região Sudeste domina. ${stats?.geoWinners?.[0]?.state || 'SP'} lidera com ${stats?.geoWinners?.[0]?.total || '--'} ganhadores. O 'Canal Eletrônico' já representa ~4.5%.`,
           note: "A cidade não-capital mais premiada historicamente é Santos/SP.",
           className: "md:col-span-2 lg:col-span-2",
           component: <GeoWinnersChart />,
-        },
-      ],
-    },
-
-
-    // ── PSICOLOGIA E EDUCAÇÃO ────────────────────────────────────────────────
-    {
-      id: "psychology",
-      icon: <PieChart className="w-4 h-4" />,
-      title: "Psicologia da Aposta",
-      description: "A Ilusão da Probabilidade",
-      lineClass: "bg-pink-500/60",
-      iconColorClass: "text-pink-400",
-      sections: [
-        {
-          id: "odds-visualizer",
-          title: "A Escala da Improbabilidade",
-          subtitle: "1 em 50 milhões na prática",
-          type: "Informational",
-          insight: "O cérebro humano tem dificuldade em processar números maiores que 10.000. Esta visualização compara a Mega-Sena com eventos raros reais.",
-          note: "A probabilidade é tão baixa que apostar a vida inteira altera sua chance em menos de 0.01%.",
-          className: "md:col-span-1 lg:col-span-3",
-          component: <OddsVisualizerChart />,
         },
       ],
     },

@@ -1,5 +1,5 @@
 import * as XLSX from 'xlsx';
-import { parseCaixaExcel } from '@/infrastructure/parser/caixa-excel-parser';
+import { ParserFactory } from '@/infrastructure/parser/parser-factory';
 import { Draw } from '@/domain/lottery/draw.model';
 
 /**
@@ -46,7 +46,7 @@ export function parseExcelToDraws(data: ArrayBuffer | Uint8Array): Draw[] {
   });
 
   // This transforms the raw rows into the domain model (Draw[])
-  const draws = parseCaixaExcel(rows as unknown[][]);
+  const draws = ParserFactory.getParser('caixa-excel')(rows as unknown[][]);
   draws.sort((a, b) => a.id - b.id);
   
   return draws;

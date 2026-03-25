@@ -18,6 +18,7 @@ jobs:
         with:
           bun-version: latest
       - run: bun install
+      - run: bun run fetch:json
       - run: bun run lint
       - run: bun run typecheck
       - run: bun run test
@@ -31,8 +32,7 @@ jobs:
         with:
           bun-version: latest
       - run: bun install
-      - name: Sync Static Data
-        run: bun scripts/sync-static-data.js
+      - run: bun run fetch:json
       - run: bun run build
         env:
           VITE_FIREBASE_API_KEY: ${{ secrets.FIREBASE_API_KEY }}

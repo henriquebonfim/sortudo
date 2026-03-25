@@ -25,23 +25,6 @@ export interface TopJackpotWinnersResponse {
   draws: Array<{ drawId: number; date: string; winners: number; prize: number; pctOfTotalWinners: number }>;
 }
 
-export interface GeoWinnersResponse {
-  state: string;
-  total: number;
-  percentage: number;
-}
-
-export interface ParityResponse {
-  label: string;
-  count: number;
-  odd: number;
-  even: number;
-  percentage: number;
-}
-
-export interface DrawsResponse {
-  draws: Draw[];
-}
 
 export interface SearchResult {
   combination: number[];
@@ -52,15 +35,6 @@ export interface SearchResult {
   totalAnalyzed: number;
 }
 
-export interface BubbleNode {
-  number: number;
-  frequency: number;
-  r: number;
-  color: string;
-  x?: number;
-  y?: number;
-  fy?: number | null;
-}
 
 export interface LotteryStats {
   meta: MetaResponse;

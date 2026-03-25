@@ -1,7 +1,6 @@
 import { useLotteryStore } from '@/application/useLotteryStore';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { MAX_LOTTERY_NUMBER } from '@/domain/lottery/lottery.constants';
-import { NumberGenerator } from '@/domain/lottery/generators/number-generator';
 import type { SearchResult } from '@/domain/lottery/lottery.types';
 import {
   BallDisplay,
@@ -20,7 +19,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import type { Mode } from '@/features/generator/generator.types';
+import { GenerationMode, NumberGenerator } from '@/domain/lottery/generators/number-generator';
 
 
 const SHUFFLE_TICKS = 15;
@@ -35,7 +34,7 @@ export default function GeneratorPage() {
   const incrementSimulation = useLotteryStore((state) => state.incrementSimulation);
   const freq = stats?.frequencies;
   const navigate = useNavigate();
-  const [mode, setMode] = useState<Mode>('random');
+  const [mode, setMode] = useState<GenerationMode>('random');
   const [numbers, setNumbers] = useState<number[]>([]);
   const [shuffling, setShuffling] = useState(false);
   const [displayNums, setDisplayNums] = useState<number[]>([0, 0, 0, 0, 0, 0]);
