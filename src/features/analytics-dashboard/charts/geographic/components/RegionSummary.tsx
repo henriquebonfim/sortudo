@@ -1,5 +1,6 @@
 import { memo, useMemo } from "react";
 import { motion } from "framer-motion";
+import { GeoDataPoint } from "../geo.types";
 import { CHART_COLORS } from "@/components/lottery/chart.constants";
 
 const REGIONS = [
@@ -10,11 +11,6 @@ const REGIONS = [
   { name: "Norte", states: ["PA", "AM", "TO", "AC", "RR", "RO", "AP"], color: "#F97316" },
 ];
 
-export interface GeoDataPoint {
-  state: string;
-  total: number;
-  percentage: number;
-}
 
 interface RegionSummaryProps {
   data: GeoDataPoint[];

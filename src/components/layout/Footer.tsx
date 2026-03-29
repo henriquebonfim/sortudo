@@ -1,4 +1,4 @@
-import { Github, TrendingUp } from "lucide-react";
+import { Globe, TrendingUp } from "lucide-react";
 import { Link } from "react-router-dom";
 
 export function Footer() {
@@ -20,14 +20,14 @@ export function Footer() {
               rel="noopener noreferrer"
               className="flex items-center gap-1.5 hover:text-foreground transition-colors"
             >
-              <Github className="h-4 w-4" />
+              <Globe className="h-4 w-4" />
               Open Source
             </a>
           </div>
         </div>
         <div className="mt-8 pt-6 border-t border-border">
           <p className="text-xs text-muted-foreground leading-relaxed max-w-2xl">
-            Dados oficiais da CEF. Matemática por nossa conta. Não somos um site de apostas. Somos a cura.
+            Dados oficiais da CEF. Matemática por nossa conta. Não somos um site de apostas. Somos a matemática que ninguém te contou.
             <br />
             "Jogar pode ser divertido. Só saiba quanto está custando."
           </p>

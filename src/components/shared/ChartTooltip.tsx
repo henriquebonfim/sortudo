@@ -8,7 +8,9 @@ interface ChartTooltipProps {
     name: string;
     color?: string;
   }>;
+  label?: string;
   title?: string;
+  formatter?: (value: number | string | unknown, name: string) => string | React.ReactNode;
   items?: Array<{
     label: string;
     value: string | number;
@@ -21,49 +23,49 @@ export const ChartTooltip = memo(function ChartTooltip({
   active, 
   payload, 
   title, 
-  items 
+  items,
+  formatter,
+  label: _label
 }: ChartTooltipProps) {
   if (!active || !payload?.length) return null;
 
-  const data = payload[0].payload;
+  const data = payload[0].payload as Record<string, string | number | undefined>;
 
   return (
-    <div className="glass-card border border-primary/20 p-3 text-xs font-mono shadow-xl">
-      {title ? (
-        <p className="text-foreground font-bold text-sm mb-1">{title}</p>
-      ) : data.number ? (
-        <p className="text-foreground font-bold text-sm mb-1">Número {data.number}</p>
-      ) : data.label ? (
-        <p className="text-foreground font-bold text-sm mb-1">{data.label}</p>
-      ) : null}
+    <div className="glass-card border border-primary/20 p-3 text-xs font-mono shadow-xl bg-background/95 backdrop-blur-md">
+      {(title || data.number || data.name || data.label) && (
+        <p className="text-foreground font-bold text-sm mb-1.5 border-b border-white/5 pb-1">
+          {title || (data.number ? `Número ${data.number}` : data.name || data.label)}
+        </p>
+      )}
       
-      <div className="space-y-1">
+      <div className="space-y-1.5">
         {items ? (
-          items.map((item, i) => (
-            <p key={i} className="text-muted-foreground">
-              {item.label}: <span className={item.color || "text-foreground"}>
-                {item.value}{item.suffix || ""}
+          items.map((item, i) => {
+            // If value is a string, it's likely a key in the data object
+            const val = typeof item.value === 'string' && data[item.value] !== undefined 
+              ? data[item.value] 
+              : item.value;
+              
+            const displayVal = formatter ? formatter(val, item.label) : `${val}${item.suffix || ""}`;
+            return (
+              <p key={i} className="text-muted-foreground flex justify-between gap-4">
+                <span className="opacity-80 font-medium">{item.label}:</span>
+                <span className={item.color || "text-foreground font-bold"}>
+                  {displayVal}
+                </span>
+              </p>
+            );
+          })
+        ) : (
+          payload.map((entry, i) => (
+            <p key={i} className="text-muted-foreground flex justify-between gap-4">
+              <span className="opacity-80">{entry.name}:</span>
+              <span className="text-foreground font-bold" style={{ color: entry.color }}>
+                {formatter ? formatter(entry.value, entry.name) : entry.value}
               </span>
             </p>
           ))
-        ) : (
-          <>
-            {data.frequency !== undefined && (
-              <p className="text-muted-foreground">
-                Aparições: <span className="text-foreground">{data.frequency}</span>
-              </p>
-            )}
-            {data.percentage !== undefined && (
-              <p className="text-muted-foreground italic">
-                Frequência: {data.percentage}%
-              </p>
-            )}
-            {data.position !== undefined && (
-              <p className="text-muted-foreground">
-                Ranking: <span className="text-primary">#{data.position}</span>
-              </p>
-            )}
-          </>
         )}
       </div>
     </div>

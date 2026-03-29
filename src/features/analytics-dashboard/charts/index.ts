@@ -1,4 +1,5 @@
 export { default as TopNumbersByDecadeChart } from '@/features/analytics-dashboard/charts/comparison/TopNumbersByDecadeChart';
+export { default as RegularVsSpecialChart } from '@/features/analytics-dashboard/charts/comparison/RegularVsSpecialChart';
 export { default as GeoWinnersChart } from '@/features/analytics-dashboard/charts/geographic/GeoWinnersChart';
 export { default as PrizeDistributionChart } from '@/features/analytics-dashboard/charts/hierarchical/PrizeDistributionChart';
 export { default as NumberProfileChart } from '@/features/analytics-dashboard/charts/informational/NumberProfileChart';
@@ -17,4 +18,10 @@ export { default as SumBellCurveChart } from '@/features/analytics-dashboard/cha
 export { default as AccumulationTrendChart } from '@/features/analytics-dashboard/charts/timeline/AccumulationTrendChart';
 export { default as PrizeEvolutionChart } from '@/features/analytics-dashboard/charts/timeline/PrizeEvolutionChart';
 export { default as TemporalFrequencyChart } from '@/features/analytics-dashboard/charts/timeline/TemporalFrequencyChart';
-export * from '../../home/components/OddsVisualizerChart';
+export { default as LotteryHistoryTimeline } from '@/features/analytics-dashboard/charts/timeline/LotteryHistoryTimeline';
+export { default as LowHighChart } from '@/features/analytics-dashboard/charts/informational/LowHighChart';
+export { default as MathCompositionChart } from '@/features/analytics-dashboard/charts/informational/MathCompositionChart';
+export { default as ClusteringChart } from '@/features/analytics-dashboard/charts/informational/ClusteringChart';
+export { default as ConsecutiveOverlapChart } from '@/features/analytics-dashboard/charts/informational/ConsecutiveOverlapChart';
+export { default as StreakFrequencyChart } from '@/features/analytics-dashboard/charts/statistical/StreakFrequencyChart';
+export * from '@/components/shared/odds-visualizer/OddsVisualizerChart';

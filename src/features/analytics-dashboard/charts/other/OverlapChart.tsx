@@ -14,7 +14,8 @@ import { CHART_COLORS } from "@/components/lottery/chart.constants";
 const OverlapTooltip = memo(function OverlapTooltip({
   active,
   payload,
-}: TooltipProps<number, string>) {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+}: any) {
   if (!active || !payload?.length) return null;
   const data = payload[0].payload as { label: string; value: number };
   
@@ -27,7 +28,7 @@ const OverlapTooltip = memo(function OverlapTooltip({
   );
 });
 
-export interface OverlapDataEntry {
+interface OverlapDataEntry {
   label: string;
   value: number;
   color: string;

@@ -1,4 +1,4 @@
-import { Code2, Github } from "lucide-react";
+import { Code2, Globe } from "lucide-react";
 
 export function OpenSource() {
   return (
@@ -17,7 +17,7 @@ export function OpenSource() {
           rel="noopener noreferrer"
           className="pill-btn pill-btn-inactive flex items-center gap-2"
         >
-          <Github className="h-4 w-4" /> Código Fonte (Frontend)
+          <Globe className="h-4 w-4" /> Código Fonte (Frontend)
         </a>
       </div>
     </div>

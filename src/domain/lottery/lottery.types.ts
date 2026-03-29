@@ -1,4 +1,5 @@
-import { Draw } from '@/domain/lottery/draw.model';
+import type { Draw } from '@/domain/lottery/draw.model';
+export type { Draw };
 
 // Domain types for the Mega-Sena simulator
 
@@ -25,7 +26,6 @@ export interface TopJackpotWinnersResponse {
   draws: Array<{ drawId: number; date: string; winners: number; prize: number; pctOfTotalWinners: number }>;
 }
 
-
 export interface SearchResult {
   combination: number[];
   jackpot: Draw[];
@@ -34,6 +34,7 @@ export interface SearchResult {
   threeHits: Draw[];
   totalAnalyzed: number;
 }
+
 
 
 export interface LotteryStats {
@@ -59,4 +60,8 @@ export interface LotteryStats {
     drawOverlaps: { zero: number; one: number; two: number; threePlus: number };
   };
   streakEconomics: { streakLength: number; drawsCount: number; avgCollection: number; avgPrize: number }[];
+  typeComparison: {
+    regular: { avgPrize: number; maxPrize: number; count: number };
+    special: { avgPrize: number; maxPrize: number; count: number };
+  };
 }

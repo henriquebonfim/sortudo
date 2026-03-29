@@ -23,15 +23,15 @@ export function ResultBanner({ result }: ResultBannerProps) {
 
   if (!isWinner) {
     return (
-      <div className="card-surface p-8 text-center">
+      <div className="card-surface p-8 text-center" data-testid="result-banner-empty">
         <p className="font-display text-2xl font-bold text-hot sm:text-3xl">
-          Essa combinação NUNCA foi sorteada
+          Essa combinação NUNCA acertou a sena
         </p>
         <p className="mt-2 font-mono text-sm text-muted-foreground tabular-nums">
-          em {formatNumber(result.totalAnalyzed)} concursos históricos.
+          em {formatNumber(result.totalAnalyzed)} sorteios oficiais avaliados.
         </p>
         <p className="mt-4 text-sm text-muted-foreground">
-          Mas isso não significa nada. Ela tem a mesma chance de sair amanhã:{' '}
+          Porém, estatisticamente, isso é o esperado. Lembre-se, amanhã ela terá a mesmíssima chance:{' '}
           <span className="font-mono text-primary">1 em {formatNumber(TOTAL_COMBINATIONS)}</span>.
         </p>
       </div>
@@ -39,7 +39,7 @@ export function ResultBanner({ result }: ResultBannerProps) {
   }
 
   return (
-    <div className="card-surface p-8 text-center">
+    <div className="card-surface p-8 text-center" data-testid="result-banner-success">
       <p className="font-display text-2xl font-bold text-green sm:text-3xl">
         🎉 Incrível! Sua combinação saiu {result.jackpot.length} vez(es)!
       </p>

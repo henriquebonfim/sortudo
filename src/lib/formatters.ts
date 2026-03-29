@@ -44,5 +44,6 @@ export function getYear(date: string): number {
  */
 export function getDecade(date: string): string {
   const year = getYear(date);
-  return `${Math.floor(year / 10) * 10}s`;
+  const decade = Math.floor(year / 10) * 10;
+  return `Década de ${String(decade).substring(2)}`;
 }

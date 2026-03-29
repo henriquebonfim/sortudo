@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { useLotteryStore } from "@/application/useLotteryStore";
+import { LotteryStats } from "@/domain/lottery/lottery.types";
 import {
   BarChart,
   Bar,
@@ -15,8 +15,11 @@ import { CHART_COLORS } from "@/components/lottery/chart.constants";
 import { ChartTooltip } from "@/components/shared/ChartTooltip";
 import { FilterMode, FILTER_OPTIONS, LEGEND_ITEMS, getColor } from "./frequency-bar.constants";
 
-export default function FrequencyBarChart() {
-  const stats = useLotteryStore((state) => state.stats);
+interface FrequencyBarChartProps {
+  stats?: LotteryStats | null;
+}
+
+export default function FrequencyBarChart({ stats }: FrequencyBarChartProps) {
   const [filter, setFilter] = useState<FilterMode>("top10");
 
   const data = stats?.frequencies;
@@ -27,7 +30,7 @@ export default function FrequencyBarChart() {
     if (filter === "top10") return ranking.slice(0, 10);
     if (filter === "bottom10") return ranking.slice(-10).reverse();
     return ranking;
-  }, [data?.ranking, filter]);
+  }, [data, filter]);
 
   if (!data?.ranking) {
     return <div className="h-64 animate-pulse bg-muted/20 rounded-xl" />;

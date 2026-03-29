@@ -1,7 +1,5 @@
-import { useLotteryStore } from '@/application/useLotteryStore';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { LoadingBalls } from '@/components/shared/LoadingBalls';
-import type { SearchResult } from '@/domain/lottery/lottery.types';
 import {
   EducationalNote,
   JackpotDetails,
@@ -11,49 +9,20 @@ import {
   ShareButton
 } from '@/features/search/components';
 import { AnimatePresence, motion } from 'framer-motion';
-import { useCallback, useEffect, useMemo, useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useLookup } from '@/features/lookup/useLookup';
 
 export default function SearchPage() {
-  const { draws, initialized } = useLotteryStore();
-  const search = useLotteryStore((state) => state.search);
-  const loading = !initialized;
-  const drawCount = useMemo(() => draws.length, [draws.length]);
-  const [searchParams] = useSearchParams();
-
-  const initialNums = searchParams.get('jogo')?.split(',').slice(0, 6) || [];
-
-  const [inputs, setInputs] = useState<string[]>(
-    initialNums.length === 6 ? initialNums : ['', '', '', '', '', '']
-  );
-  const [result, setResult] = useState<SearchResult | null>(null);
-  const [searched, setSearched] = useState(false);
-
-  const handleChange = useCallback((idx: number, val: string) => {
-    setInputs((prev) => {
-      const next = [...prev];
-      next[idx] = val;
-      return next;
-    });
-  }, []);
-
-  const numbers = inputs.map(Number).filter((n) => n >= 1 && n <= 60);
-  const hasDuplicates = new Set(numbers).size < numbers.length;
-  const isValid = numbers.length === 6 && !hasDuplicates;
-
-  const handleSearch = useCallback(async () => {
-    if (!isValid) return;
-    const res = await search(numbers);
-    setResult(res);
-    setSearched(true);
-  }, [isValid, numbers, search]);
-
-  useEffect(() => {
-    if (initialized && isValid && initialNums.length === 6) {
-      handleSearch();
-    }
-  }, [initialized, isValid, handleSearch, initialNums.length]);
-
+  const {
+    inputs,
+    handleChange,
+    isValid,
+    hasDuplicates,
+    handleSearch,
+    result,
+    searched,
+    loading,
+    drawCount
+  } = useLookup(false);
 
   if (loading) return <div className="container py-24"><LoadingBalls /></div>;
 

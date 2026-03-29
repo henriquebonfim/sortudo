@@ -6,7 +6,7 @@ import { Link, useLocation } from "react-router-dom";
 const navItems = [
   { label: "Início", path: "/" },
   { label: "Gerador da sorte", path: "/gerador" },
-  { label: "Já fui sorteado?", path: "/buscar" },
+  { label: "Meus números já saíram?", path: "/buscar" },
   { label: "Dados Estatísticos", path: "/dados" },
   { label: "Sobre", path: "/sobre" },
 ];

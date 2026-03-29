@@ -1,4 +1,5 @@
 import { Draw } from '@/domain/lottery/draw.model';
+import { LotteryStats } from '@/domain/lottery/lottery.types';
 import { MEGA_DA_VIRADA_THRESHOLD, DECEMBER_MONTH } from '@/domain/lottery/lottery.constants';
 import { calculatePercentage, round, getYear } from '@/lib/formatters';
 import { CalculatorUtils } from './calculator-utils';
@@ -120,6 +121,38 @@ export class PrizeAnalyzer {
       pctWithoutWinner: calculatePercentage(withoutWinner, metadata.totalDraws),
       avgJackpotPrize: Math.round(mean(winningJackpotPrizes)),
       highestPrize: max(jackpotPrizes),
+    };
+  }
+
+  /**
+   * Refined check for Special Events (Mega da Virada).
+   * Logic: 
+   * 1. Check if explicit 'megaViradaAccumulated' field is present.
+   * 2. Check if date is Dec 31st and prize is significantly higher than regular average.
+   */
+  static isSpecialDraw(draw: Draw): boolean {
+    const isDec31 = (draw.date || '').endsWith('-12-31');
+    const isHighPrize = (draw.jackpotPrize || 0) > MEGA_DA_VIRADA_THRESHOLD;
+    
+    return isDec31 && isHighPrize;
+  }
+
+  static calculateTypeComparison(draws: Draw[]): LotteryStats['typeComparison'] {
+    const special = draws.filter(d => PrizeAnalyzer.isSpecialDraw(d));
+    const regular = draws.filter(d => !PrizeAnalyzer.isSpecialDraw(d));
+
+    const getStats = (list: Draw[]) => {
+      const prizes = list.filter(d => d.jackpotPrize > 0).map(d => d.jackpotPrize);
+      return {
+        avgPrize: round(mean(prizes)),
+        maxPrize: max(prizes),
+        count: list.length
+      };
+    };
+
+    return {
+      regular: getStats(regular),
+      special: getStats(special)
     };
   }
 }

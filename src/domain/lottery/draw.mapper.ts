@@ -1,4 +1,5 @@
 import { Draw, LotteryMetadata } from './draw.model';
+import { DrawSchema } from './draw.schema';
 
 interface RawDrawData {
   id?: number;
@@ -28,6 +29,7 @@ interface RawDrawData {
   locations?: string[];
   valorAcumuladoSena?: number;
   accumulatedJackpot?: number;
+  megaViradaAccumulated?: number;
 }
 
 interface RawLotteryResponse {
@@ -38,8 +40,8 @@ interface RawLotteryResponse {
 }
 
 export class DrawMapper {
-  static toDomain(raw: RawDrawData): Draw {
-    return {
+  static toDomain(raw: RawDrawData): Draw | null {
+    const mapped = {
       id: raw.id || 0,
       date: raw.data || raw.date || '',
       numbers: raw.bolas || raw.numbers || [],
@@ -54,11 +56,21 @@ export class DrawMapper {
       prizeEstimate: raw.estimativaPremio ?? raw.prizeEstimate ?? 0,
       locations: raw.cidadeUF || raw.locations || [],
       accumulatedJackpot: raw.valorAcumuladoSena ?? raw.accumulatedJackpot,
+      megaViradaAccumulated: raw.megaViradaAccumulated,
     };
+
+    const result = DrawSchema.safeParse(mapped);
+    if (!result.success) {
+      console.warn(`Draw validation failed for ID ${mapped.id}:`, result.error.format());
+      return null;
+    }
+    return result.data;
   }
 
   static toDomainList(rawList: RawDrawData[]): Draw[] {
-    return rawList.map(item => this.toDomain(item));
+    return rawList
+      .map(item => this.toDomain(item))
+      .filter((d): d is Draw => d !== null);
   }
 
   static extractMetadata(data: RawLotteryResponse, draws: Draw[]): LotteryMetadata | null {

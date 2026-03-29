@@ -1,11 +1,14 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useLotteryStore } from "@/application/useLotteryStore";
 import { TIER_CONFIG } from "./prize-tier.constants";
 import { TierCard, TierData } from "./components/TierCard";
+import { PrizePyramid } from "./components/PrizePyramid";
+import { ListIcon, PyramidIcon } from "lucide-react";
 
 export default function PrizeDistributionChart() {
   const stats = useLotteryStore((state) => state.stats);
   const rawData = stats?.prizeTierComparison;
+  const [view, setView] = useState<"pyramid" | "list">("pyramid");
 
   const { maxAvg, ratio, sorted } = useMemo(() => {
     if (!rawData) return { maxAvg: 0, ratio: "—", sorted: [] };
@@ -32,7 +35,24 @@ export default function PrizeDistributionChart() {
 
   return (
     <div className="space-y-4">
-      {/* KPI callout */}
+      {/* View Switcher */}
+      <div className="flex justify-end gap-2 px-1">
+        <button
+          onClick={() => setView("pyramid")}
+          className={`p-1.5 rounded-lg border transition-all ${view === "pyramid" ? "bg-primary/20 text-primary border-primary/30" : "text-muted-foreground border-border/50 hover:bg-muted"}`}
+          title="Visão Pirâmide"
+        >
+          <PyramidIcon className="w-4 h-4" />
+        </button>
+        <button
+          onClick={() => setView("list")}
+          className={`p-1.5 rounded-lg border transition-all ${view === "list" ? "bg-primary/20 text-primary border-primary/30" : "text-muted-foreground border-border/50 hover:bg-muted"}`}
+          title="Visão Lista"
+        >
+          <ListIcon className="w-4 h-4" />
+        </button>
+      </div>
+
       {hasRatio && (
         <div className="flex items-center gap-3 p-3 rounded-xl bg-amber-500/10 border border-amber-500/20">
           <span className="text-2xl font-display font-bold text-amber-400">
@@ -46,22 +66,25 @@ export default function PrizeDistributionChart() {
         </div>
       )}
 
-      {/* Hierarchical Tier Cards */}
-      <div className="space-y-3">
-        {sorted.map((data, index) => {
-          const config = TIER_CONFIG[data.tier];
-          if (!config) return null;
-          return (
-            <TierCard
-              key={data.tier}
-              data={data}
-              config={config}
-              maxAvg={maxAvg}
-              index={index}
-            />
-          );
-        })}
-      </div>
+      {view === "pyramid" ? (
+        <PrizePyramid sortedData={sorted} />
+      ) : (
+        <div className="space-y-3">
+          {sorted.map((data, index) => {
+            const config = TIER_CONFIG[data.tier];
+            if (!config) return null;
+            return (
+              <TierCard
+                key={data.tier}
+                data={data}
+                config={config}
+                maxAvg={maxAvg}
+                index={index}
+              />
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }

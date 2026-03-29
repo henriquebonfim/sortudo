@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion';
+import { useMemo } from 'react';
 import { useLotteryStore } from '@/application/useLotteryStore';
 import { LoadingBalls } from '@/components/shared/LoadingBalls';
 import { StatCard } from '@/components/shared/StatCard';
@@ -21,6 +22,21 @@ export default function DataDashboard() {
   const hasData = metadata && metadata.totalDraws > 0;
   const chapters = buildChapters(stats);
 
+  const isStale = useMemo(() => {
+    if (!metadata?.lastUpdate) return false;
+    const last = new Date(metadata.lastUpdate).getTime();
+    const now = new Date().getTime();
+    return (now - last) > 7 * 24 * 60 * 60 * 1000;
+  }, [metadata]);
+
+  const freshnessLabel = useMemo(() => {
+    if (!metadata?.lastUpdate) return null;
+    const days = Math.floor((new Date().getTime() - new Date(metadata.lastUpdate).getTime()) / (1000 * 60 * 60 * 24));
+    if (days === 0) return "Atualizado hoje";
+    if (days === 1) return "Atualizado ontem";
+    return `Há ${days} dias`;
+  }, [metadata]);
+
   if (isSeeding) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -36,7 +52,7 @@ export default function DataDashboard() {
           <h1 className="text-3xl font-display font-bold text-foreground">
             Relatório <span className="text-gradient-gold">Analítico</span>
           </h1>
-          <p className="text-muted-foreground">O banco de dados de sorteios está vazio as informações não estão sincronizadas.</p>
+          <p className="text-muted-foreground">O banco de dados de sorteios está vazio e as informações não estão sincronizadas.</p>
         </motion.div>
       </div>
     );
@@ -46,9 +62,18 @@ export default function DataDashboard() {
     <div className="container py-10 md:py-16">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
         <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}>
-          <div className="flex items-center gap-2 text-xs text-muted-foreground mb-1 font-mono">
-            <BarChart3 className="w-3.5 h-3.5" />
-            Concursos analisados: {metadata?.totalDraws.toLocaleString('pt-BR')} · {metadata?.firstDrawDate} → {metadata?.lastDrawDate}
+          <div className="flex items-center gap-3 text-xs text-muted-foreground mb-2 font-mono">
+            <div className="flex items-center gap-2">
+                <BarChart3 className="w-3.5 h-3.5" />
+                Concursos: {metadata?.totalDraws.toLocaleString('pt-BR')}
+            </div>
+            <span className="opacity-30">|</span>
+            <div className={`flex items-center gap-1.5 px-2 py-0.5 rounded-full border ${
+                isStale ? 'bg-rose-500/10 border-rose-500/30 text-rose-400' : 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
+            }`}>
+                <div className={`w-1.5 h-1.5 rounded-full animate-pulse ${isStale ? 'bg-rose-500' : 'bg-emerald-500'}`} />
+                {freshnessLabel}
+            </div>
           </div>
           <h1 className="text-3xl font-display font-bold text-foreground">
             Dashboard <span className="text-gradient-gold">Analítico</span>

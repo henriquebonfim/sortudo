@@ -20,7 +20,7 @@ export function TypeBadge({ type }: { type: InfographicType }) {
   );
 }
 
-export interface ChapterProps {
+interface ChapterProps {
   icon: React.ReactNode;
   title: string;
   description: string;

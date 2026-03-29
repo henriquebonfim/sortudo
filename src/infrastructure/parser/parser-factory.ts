@@ -1,7 +1,7 @@
 import { Draw } from '@/domain/lottery/draw.model';
 import { parseCaixaExcel } from './caixa-excel-parser';
 
-export type ParserType = 'caixa-excel' | 'caixa-json';
+type ParserType = 'caixa-excel' | 'caixa-json';
 
 export class ParserFactory {
   static getParser(type: ParserType): (data: unknown[][]) => Draw[] {

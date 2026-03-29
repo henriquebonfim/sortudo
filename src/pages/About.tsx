@@ -2,6 +2,7 @@ import { motion } from 'framer-motion';
 import {
   WhatIsIt,
   Methodology,
+  Sources,
   OpenSource,
   Contribute,
   FooterNote,
@@ -16,6 +17,7 @@ export default function AboutPage() {
         <div className="space-y-8">
           <WhatIsIt />
           <Methodology />
+          <Sources />
           <OpenSource />
           <Contribute />
           <FooterNote />

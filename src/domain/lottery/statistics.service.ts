@@ -21,6 +21,7 @@ export class StatisticsService {
   static calculateNumberProfile = DrawAnalyzer.calculateNumberProfile;
   static calculateStreakEconomics = PrizeAnalyzer.calculateStreakEconomics;
   static calculateMeta = PrizeAnalyzer.calculateMeta;
+  static calculateTypeComparison = PrizeAnalyzer.calculateTypeComparison;
 
   static calculateAllStats(draws: Draw[]): LotteryStats {
     if (draws.length === 0) throw new Error('No draws available to calculate statistics.');
@@ -45,6 +46,7 @@ export class StatisticsService {
       hotNumbers: StatisticsService.calculateHotNumbers(draws),
       numberProfile: StatisticsService.calculateNumberProfile(draws),
       streakEconomics: StatisticsService.calculateStreakEconomics(draws),
+      typeComparison: StatisticsService.calculateTypeComparison(draws),
     };
   }
 }

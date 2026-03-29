@@ -12,6 +12,7 @@ import {
 } from "recharts";
 import { CHART_COLORS } from "@/components/lottery/chart.constants";
 import { ChartTooltip } from "@/components/shared/ChartTooltip";
+import { GeoDataPoint } from "../geo.types";
 const STATE_COLORS: Record<string, string> = {
   SP: CHART_COLORS.AMBER,
   MG: CHART_COLORS.RED,
@@ -31,11 +32,6 @@ const STATE_NAMES: Record<string, string> = {
   ELECT: "Canal Eletrônico",
 };
 
-interface GeoDataPoint {
-  state: string;
-  total: number;
-  percentage: number;
-}
 
 const tickFormatter = (v: string) => (STATE_NAMES[v] ? "🌐" : v);
 const percentageFormatter = (v: number) => `${v}%`;

@@ -41,6 +41,7 @@ const App = () => (
           <Route path="/dados" element={<LazyPage><DataDashboard /></LazyPage>} />
           <Route path="/sobre" element={<LazyPage><About /></LazyPage>} />
           <Route path="/buscar" element={<LazyPage><Search /></LazyPage>} />
+          <Route path="/buscar/:jogo" element={<LazyPage><Search /></LazyPage>} />
           <Route path="/gerador" element={<LazyPage><Generator /></LazyPage>} />
           <Route path="*" element={<NotFound />} />
         </Routes>

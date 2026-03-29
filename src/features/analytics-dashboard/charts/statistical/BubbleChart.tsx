@@ -48,7 +48,7 @@ export default function BubbleChart() {
     return Object.entries(data.frequencies)
       .map(([k, v]) => ({ n: Number(k), f: v }))
       .sort((a, b) => b.f - a.f);
-  }, [data?.frequencies]);
+  }, [data]);
 
   useEffect(() => {
     if (!filteredEntries.length || !canvasRef.current || !containerRef.current || !data?.min || !data?.max) return;
