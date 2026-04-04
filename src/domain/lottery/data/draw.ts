@@ -159,7 +159,7 @@ export class DrawMapper {
       jackpotPrize: raw.valorSena ?? raw.jackpotPrize ?? 0,
       quinaWinners: raw.ganhadoresQuina ?? raw.quinaWinners ?? 0,
       quinaPrize: raw.valorQuina ?? raw.quinaPrize ?? 0,
-      quadraWinners: raw.ganhadoresQuina ?? raw.quadraWinners ?? 0,
+      quadraWinners: raw.ganhadoresQuadra ?? raw.quadraWinners ?? 0,
       quadraPrize: raw.valorQuadra ?? raw.quadraPrize ?? 0,
       accumulated: raw.acumulado ?? raw.accumulated ?? false,
       totalRevenue: raw.totalRevenue ?? 

@@ -11,7 +11,7 @@ import {
   YAxis
 } from "recharts";
 
-import { CHART_COLORS } from "@/components/lottery/chart.constants";
+import { CHART_COLORS } from "@/features/analytics/charts/chart.constants";
 
 interface DecadeEntryData {
   number: string;

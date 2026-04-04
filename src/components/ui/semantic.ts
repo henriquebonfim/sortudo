@@ -7,8 +7,8 @@
  * These tokens should be the ONLY source of truth for component styling.
  * Components must never reference primitive tokens directly.
  *
- * @see src/design-system/primitives.ts for raw values
- * @see src/design-system/token-utils.ts for TokenPath<T> and resolveToken()
+ * @see src/components/ui/primitives.ts for raw values
+ * @see src/components/ui/token-utils.ts for TokenPath<T> and resolveToken()
  */
 
 // ─── Color Semantic Tokens ────────────────────────────────────────────────────

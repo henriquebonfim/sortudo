@@ -1,5 +1,5 @@
 import { useTopJackpotWinners } from "@/application/selectors";
-import { TopJackpotWinnersResponse } from "@/domain/lottery/draw";
+import { TopJackpotWinnersResponse } from "@/domain/lottery/data/draw";
 import { formatCurrency } from "@/lib";
 import { motion } from "framer-motion";
 import { memo } from "react";

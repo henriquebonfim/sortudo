@@ -26,7 +26,6 @@
 ### 🏠 A. Home Page Structure & Composition
 - [ ] **Extract Page Logic to Features:** Refactor `src/pages/DataDashboard.tsx` to move heavyweight logic into `src/features/analytics-dashboard`.
   - *Goal:* Keep the `pages` layer thin and purely compositional.
-- [ ] **Component Boundary Audit:** Ensure `components/ui` only depends on `design-system` and not the application logic.
 
 ### ⛓️ B. Infrastructure & DevOps
 - [ ] **Dev Container Support:** Add a `.devcontainer/` configuration to ensure environment parity (Bun version, extensions).
@@ -47,4 +46,3 @@
 - [ ] **Performance Benchmarks:** Run Web Vitals audit and document the performance budget in README.md.
 
 ---
-

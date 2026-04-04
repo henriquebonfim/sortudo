@@ -1,10 +1,10 @@
-import { LotteryStats } from '@/domain/lottery/draw';
-import { Chapter } from './config/types';
-import { getNumbersChapter } from './config/chapters/NumbersChapter';
-import { getTemporalChapter } from './config/chapters/TemporalChapter';
-import { getProbabilityChapter } from './config/chapters/ProbabilityChapter';
+import { LotteryStats } from '@/domain/lottery/data/draw';
 import { getEconomicsChapter } from './config/chapters/EconomicsChapter';
 import { getGeographyChapter } from './config/chapters/GeographyChapter';
+import { getNumbersChapter } from './config/chapters/NumbersChapter';
+import { getProbabilityChapter } from './config/chapters/ProbabilityChapter';
+import { getTemporalChapter } from './config/chapters/TemporalChapter';
+import { Chapter } from './config/types';
 
 export type * from './config/types';
 

@@ -28,6 +28,10 @@ export const REVENUE_ALLOCATION = {
 export const MEGA_DA_VIRADA_THRESHOLD = 50_000_000;
 export const MEGA_DA_VIRADA_START_YEAR = 2009;
 export const DECEMBER_MONTH = '-12-';
+export const DECEMBER_31 = '-12-31';
+export const DECEMBER_30 = '-12-30';
+
+export const SPECIAL_DRAW_MIN_PRIZE = 30_000_000;
 
 export const LOW_HIGH_BOUNDARY = 30;
 export const MAX_LOTTERY_NUMBER = 60;
@@ -39,4 +43,9 @@ export const ANALYSIS_CONFIG = {
   DECADE_SIZE: 10,
   CLUSTERED_THRESHOLD: 3,
   FULLY_SPREAD_SIZE: 6,
+};
+
+export const LLN_CONFIG = {
+  EXPECTED_PROBABILITY: 0.5,
+  NOISE_VARIANCE: 0.25,
 };

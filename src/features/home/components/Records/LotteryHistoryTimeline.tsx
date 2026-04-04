@@ -1,7 +1,7 @@
 
 import { useLotteryMeta, usePrizeEvolution } from "@/application/selectors";
-import { CHART_COLORS } from "@/components/lottery/chart.constants";
 import { duration, spring } from "@/components/ui";
+import { CHART_COLORS } from "@/features/analytics/charts/chart.constants";
 import { formatCompactCurrency } from "@/lib";
 import { motion } from "framer-motion";
 import { Calendar, Star, TrendingUp, Trophy } from "lucide-react";
@@ -351,27 +351,24 @@ export function LotteryHistoryTimeline() {
         <div className="flex flex-wrap items-center justify-center gap-6 mt-6 text-xs text-muted-foreground select-none">
           <button
             onClick={() => toggleSeries("maxPrize")}
-            className={`flex items-center gap-2 transition-opacity duration-200 outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded ${
-              visibleSeries.maxPrize ? "opacity-100 hover:opacity-80" : "opacity-40 hover:opacity-60"
-            }`}
+            className={`flex items-center gap-2 transition-opacity duration-200 outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded ${visibleSeries.maxPrize ? "opacity-100 hover:opacity-80" : "opacity-40 hover:opacity-60"
+              }`}
           >
             <div className="w-4 h-1 rounded-full" style={{ backgroundColor: CHART_COLORS.AMBER }} />
             <span>Maior Prêmio</span>
           </button>
           <button
             onClick={() => toggleSeries("totalDistributed")}
-            className={`flex items-center gap-2 transition-opacity duration-200 outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded ${
-              visibleSeries.totalDistributed ? "opacity-100 hover:opacity-80" : "opacity-40 hover:opacity-60"
-            }`}
+            className={`flex items-center gap-2 transition-opacity duration-200 outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded ${visibleSeries.totalDistributed ? "opacity-100 hover:opacity-80" : "opacity-40 hover:opacity-60"
+              }`}
           >
             <div className="w-4 h-0.5 border-t-2 border-dashed" style={{ borderColor: CHART_COLORS.BLUE }} />
             <span>Total distribuídos</span>
           </button>
           <button
             onClick={() => toggleSeries("totalRevenue")}
-            className={`flex items-center gap-2 transition-opacity duration-200 outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded ${
-              visibleSeries.totalRevenue ? "opacity-100 hover:opacity-80" : "opacity-40 hover:opacity-60"
-            }`}
+            className={`flex items-center gap-2 transition-opacity duration-200 outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded ${visibleSeries.totalRevenue ? "opacity-100 hover:opacity-80" : "opacity-40 hover:opacity-60"
+              }`}
           >
             <div className="w-3 h-3 rounded" style={{ backgroundColor: CHART_COLORS.EMERALD, opacity: 0.4 }} />
             <span>Arrecadação Total</span>

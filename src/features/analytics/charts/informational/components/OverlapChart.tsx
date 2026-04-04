@@ -1,14 +1,14 @@
+import { CHART_COLORS } from "@/features/analytics/charts/chart.constants";
 import { memo } from "react";
 import {
-  BarChart,
   Bar,
+  BarChart,
+  Cell,
+  ResponsiveContainer,
+  Tooltip,
   XAxis,
   YAxis,
-  Tooltip,
-  ResponsiveContainer,
-  Cell,
 } from "recharts";
-import { CHART_COLORS } from "@/components/lottery/chart.constants";
 import { OverlapBarTooltip } from "../../chart-tooltips";
 
 interface OverlapDataEntry {

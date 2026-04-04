@@ -7,7 +7,7 @@ import {
   formatNumber,
   getYear,
   getDecade,
-} from "../../src/lib/formatters";
+} from "@/lib";
 
 describe("formatters", () => {
   describe("formatCurrency", () => {

@@ -1,9 +1,9 @@
-import type { SearchResult } from '@/domain/lottery/draw';
-import { 
-  WorkerCommand, 
-  WorkerCommandType, 
-  WorkerResponse, 
-  SearchCombinationPayload 
+import type { SearchResult } from '@/domain/lottery/data/draw';
+import {
+  SearchCombinationPayload,
+  WorkerCommand,
+  WorkerCommandType,
+  WorkerResponse
 } from './types';
 
 import SearchWorker from './search.worker?worker';
@@ -15,11 +15,11 @@ export * from './types';
 export class WorkerClient {
   private static instance: WorkerClient;
   private worker: Worker;
-  private resolvers: Array<{ resolve: (value: any) => void; reject: (reason?: any) => void }> = [];
+  private resolvers: Array<{ resolve: (value: WorkerResponse) => void; reject: (reason?: Error) => void }> = [];
 
   private constructor() {
     this.worker = new SearchWorker();
-    
+
     this.worker.onmessage = (event: MessageEvent<WorkerResponse>) => {
       const { data } = event;
       const resolver = this.resolvers.shift();

@@ -1,39 +1,39 @@
+import { CHART_COLORS } from "@/features/analytics/charts/chart.constants";
 import { useMemo } from "react";
 import {
-  AreaChart,
   Area,
+  AreaChart,
+  CartesianGrid,
+  ReferenceLine,
+  ResponsiveContainer,
+  Tooltip,
   XAxis,
   YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  ReferenceLine,
 } from "recharts";
-import { CHART_COLORS } from "@/components/lottery/chart.constants";
 
 export function LifetimesToWinChart() {
   const chartData = useMemo(() => {
     // A standard 69 ball, 5 pick + 26 powerball setup = 292,201,338 odds
     const oddsOfWinning = 1 / 292_201_338;
     const oddsOfLosing = 1 - oddsOfWinning;
-    
+
     // Assume someone plays 100 tickets every single week for 80 years
     const ticketsPerWeek = 100;
     const weeksPerYear = 52;
     const yearsPerLifetime = 80;
-    
+
     const ticketsPerLifetime = ticketsPerWeek * weeksPerYear * yearsPerLifetime; // 416,000 tickets
-    
+
     // We will chart multiple lifetimes
     const lifetimesToChart = [1, 10, 50, 100, 500, 1000, 2000, 3000];
-    
+
     return lifetimesToChart.map(lifetimes => {
       const ticketsPurchased = ticketsPerLifetime * lifetimes;
-      
+
       // Probability of NOT winning a single time in 'ticketsPurchased' attempts
       const probZeroWins = Math.pow(oddsOfLosing, ticketsPurchased);
       const probAtLeastOneWin = 1 - probZeroWins;
-      
+
       return {
         lifetimes: lifetimes,
         displayLifetimes: lifetimes > 100 ? `${(lifetimes / 1000).toFixed(1)}k Vidas` : `${lifetimes} Vidas`,
@@ -49,7 +49,7 @@ export function LifetimesToWinChart() {
       <div className="glass-card p-6 border-l-4 border-l-red-900/50">
         <h3 className="text-xl font-bold mb-2 text-white">O Risco da Ruína (100 Bilhetes/Semana por 80 Anos)</h3>
         <p className="text-sm text-slate-300 mb-6 max-w-2xl leading-relaxed">
-          É fácil dizer "eu nunca vou ganhar", mas é difícil visualizar matematicamente. Suponha que você compre 100 bilhetes todas as semanas, por 80 anos seguidos (custando $832 mil). 
+          É fácil dizer "eu nunca vou ganhar", mas é difícil visualizar matematicamente. Suponha que você compre 100 bilhetes todas as semanas, por 80 anos seguidos (custando $832 mil).
           <br /><br />
           Mesmo que você jogasse por 3.000 vidas contínuas, ainda haveria uma chance estatística de morrer sem nunca ter ganhado o prêmio. <strong>O "Risco da Ruína" nunca desaparece de verdade.</strong>
         </p>
@@ -58,19 +58,19 @@ export function LifetimesToWinChart() {
           <AreaChart data={chartData} margin={{ left: 10, right: 30, top: 40, bottom: 40 }}>
             {/* The scale has to literally be logarithmic if we want to show anything meaningful */}
             <CartesianGrid strokeDasharray="3 3" stroke={CHART_COLORS.GRID_STROKE} vertical={false} />
-            <XAxis 
-              dataKey="displayLifetimes" 
-              tick={{ fontSize: 11, fill: CHART_COLORS.TICK_LABEL, fontFamily: "monospace" }} 
+            <XAxis
+              dataKey="displayLifetimes"
+              tick={{ fontSize: 11, fill: CHART_COLORS.TICK_LABEL, fontFamily: "monospace" }}
               angle={-30}
               textAnchor="end"
               dy={15}
             />
-            <YAxis 
-              tick={{ fontSize: 11, fill: CHART_COLORS.TICK_LABEL, fontFamily: "monospace" }} 
+            <YAxis
+              tick={{ fontSize: 11, fill: CHART_COLORS.TICK_LABEL, fontFamily: "monospace" }}
               domain={[0, 100]}
               tickFormatter={(val) => `${val}%`}
             />
-            <Tooltip 
+            <Tooltip
               cursor={{ fill: "rgba(255,255,255,0.03)" }}
               contentStyle={{ backgroundColor: '#1E293B', borderColor: '#334155', borderRadius: '8px' }}
               labelStyle={{ color: '#94A3B8' }}

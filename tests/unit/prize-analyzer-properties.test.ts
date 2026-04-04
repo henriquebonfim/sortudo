@@ -1,7 +1,7 @@
-import { describe, it, expect } from 'vitest';
+import { PrizeAnalyzer } from '@/domain/lottery/analysis';
+import { Draw } from '@/domain/lottery/data/draw';
 import * as fc from 'fast-check';
-import { PrizeAnalyzer } from '@/domain/lottery/calculators/prize-analyzer';
-import { Draw } from '@/domain/lottery/draw.model';
+import { describe, expect, it } from 'vitest';
 
 describe('Domain - PrizeAnalyzer Property Tests', () => {
   const drawArb = fc.record({
@@ -34,7 +34,7 @@ describe('Domain - PrizeAnalyzer Property Tests', () => {
             lastDrawDate: draws[draws.length - 1].date
           };
           const meta = PrizeAnalyzer.calculateMeta(draws, metadata);
-          
+
           return (
             meta.totalDraws === draws.length &&
             meta.totalJackpotWinners >= 0 &&
@@ -68,7 +68,7 @@ describe('Domain - PrizeAnalyzer Property Tests', () => {
         const result = PrizeAnalyzer.isSpecialDraw(draw);
         const isYearEnd = draw.date.endsWith('-12-31') || draw.date.endsWith('-12-30');
         const isHigh = draw.jackpotPrize > 30_000_000;
-        
+
         if (result) {
           return isYearEnd && isHigh;
         }

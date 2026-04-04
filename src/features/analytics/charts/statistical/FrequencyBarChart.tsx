@@ -1,19 +1,19 @@
-import { useState, useMemo } from "react";
-import { LotteryStats } from "@/domain/lottery/draw";
+import { LotteryStats } from "@/domain/lottery/data/draw";
+import { CHART_COLORS } from "@/features/analytics/charts/chart.constants";
+import { ChartTooltip } from "@/features/analytics/shared/ChartTooltip";
+import { useMemo, useState } from "react";
 import {
-  BarChart,
   Bar,
-  XAxis,
-  YAxis,
+  BarChart,
   CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
   Cell,
   LabelList,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
 } from "recharts";
-import { CHART_COLORS } from "@/components/lottery/chart.constants";
-import { ChartTooltip } from "@/components/shared/ChartTooltip";
-import { FilterMode, FILTER_OPTIONS, LEGEND_ITEMS, getColor } from "./frequency-bar.constants";
+import { FILTER_OPTIONS, FilterMode, LEGEND_ITEMS, getColor } from "./frequency-bar.constants";
 
 interface FrequencyBarChartProps {
   stats?: LotteryStats | null;

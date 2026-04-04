@@ -1,17 +1,17 @@
-import { memo } from "react";
+import { CHART_COLORS } from "@/features/analytics/charts/chart.constants";
 import { formatCompactCurrency } from "@/lib";
+import { memo } from "react";
 import {
+  Area,
+  CartesianGrid,
+  ComposedChart,
+  Line,
+  ResponsiveContainer,
+  Tooltip,
+  TooltipProps,
   XAxis,
   YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  Line,
-  ComposedChart,
-  Area,
-  TooltipProps,
 } from "recharts";
-import { CHART_COLORS } from "@/components/lottery/chart.constants";
 
 export type StreakEntry = {
   streakLength: number;
@@ -26,7 +26,7 @@ const CustomTooltip = memo(function CustomTooltip({
 }: TooltipProps<number, string>) {
   if (!active || !payload?.length) return null;
   const data = payload[0].payload as StreakEntry;
-  
+
   return (
     <div className="glass-card border border-primary/20 p-3 text-xs font-mono space-y-1">
       <p className="text-foreground font-bold text-sm mb-1.5">

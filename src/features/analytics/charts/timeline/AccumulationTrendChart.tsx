@@ -1,16 +1,16 @@
-import { memo, useMemo } from "react";
 import { useAccumulationTrend } from "@/application/selectors";
+import { CHART_COLORS } from "@/features/analytics/charts/chart.constants";
+import { memo, useMemo } from "react";
 import {
-  BarChart,
   Bar,
-  XAxis,
-  YAxis,
-  Tooltip,
-  ResponsiveContainer,
+  BarChart,
   CartesianGrid,
   Legend,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
 } from "recharts";
-import { CHART_COLORS } from "@/components/lottery/chart.constants";
 
 interface CustomTooltipProps {
   active?: boolean;

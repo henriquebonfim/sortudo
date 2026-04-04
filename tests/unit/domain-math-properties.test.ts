@@ -1,7 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import * as fc from 'fast-check';
-import { combinations } from '@/domain/math/combinations';
-import { poissonProbability } from '@/domain/math/statistics';
+import { combinations, poissonProbability } from '@/domain/math';
 
 describe('Domain Math - Property Based Tests', () => {
   describe('combinations (nCr) Properties', () => {

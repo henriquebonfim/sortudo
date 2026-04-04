@@ -1,14 +1,14 @@
+import { useLotteryMeta, useNumberProfile } from "@/application/selectors";
+import { CHART_COLORS } from "@/features/analytics/charts/chart.constants";
 import { useMemo } from "react";
-import { useNumberProfile, useLotteryMeta } from "@/application/selectors";
 import {
-  PieChart,
-  Pie,
   Cell,
-  Tooltip,
-  ResponsiveContainer,
   Legend,
+  Pie,
+  PieChart,
+  ResponsiveContainer,
+  Tooltip,
 } from "recharts";
-import { CHART_COLORS } from "@/components/lottery/chart.constants";
 import { PieSliceTooltip } from "../chart-tooltips";
 
 export function LowHighChart() {
@@ -19,7 +19,7 @@ export function LowHighChart() {
   const chartData = useMemo(() => {
     if (!data) return [];
     return [
-      { name: "Baixa (1–30)", value: data.low,  color: CHART_COLORS.BLUE },
+      { name: "Baixa (1–30)", value: data.low, color: CHART_COLORS.BLUE },
       { name: "Alta (31–60)", value: data.high, color: CHART_COLORS.AMBER },
     ];
   }, [data]);

@@ -1,17 +1,17 @@
-import { useTypeComparison, useLotteryMeta } from "@/application/selectors";
-import { CHART_COLORS } from "@/components/lottery/chart.constants";
+import { useLotteryMeta, useTypeComparison } from "@/application/selectors";
+import { CHART_COLORS } from "@/features/analytics/charts/chart.constants";
+import { ChartTooltip } from "@/features/analytics/shared/ChartTooltip";
 import {
-  BarChart,
   Bar,
-  XAxis,
-  YAxis,
+  BarChart,
   CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
   Cell,
   Legend,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
 } from "recharts";
-import { ChartTooltip } from "@/components/shared/ChartTooltip";
 
 export function RegularVsSpecialChart() {
   const meta = useLotteryMeta();
@@ -50,17 +50,17 @@ export function RegularVsSpecialChart() {
             margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
           >
             <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={CHART_COLORS.GRID_STROKE} />
-            <XAxis 
-              dataKey="name" 
-              axisLine={false} 
-              tickLine={false} 
-              tick={{ fill: CHART_COLORS.TICK_LABEL, fontSize: 12 }} 
+            <XAxis
+              dataKey="name"
+              axisLine={false}
+              tickLine={false}
+              tick={{ fill: CHART_COLORS.TICK_LABEL, fontSize: 12 }}
             />
-            <YAxis 
-              axisLine={false} 
-              tickLine={false} 
+            <YAxis
+              axisLine={false}
+              tickLine={false}
               tick={{ fill: CHART_COLORS.TICK_LABEL, fontSize: 10 }}
-              tickFormatter={(v) => `R$${v/1000000}M`}
+              tickFormatter={(v) => `R$${v / 1000000}M`}
             />
             <Tooltip
               content={
@@ -74,7 +74,7 @@ export function RegularVsSpecialChart() {
               }
               cursor={{ fill: "rgba(255, 255, 255, 0.05)" }}
             />
-            <Legend verticalAlign="top" height={36}/>
+            <Legend verticalAlign="top" height={36} />
             <Bar dataKey="avg" name="Prêmio Médio" radius={[4, 4, 0, 0]} maxBarSize={40}>
               {chartData.map((entry, index) => (
                 <Cell key={`avg-${index}`} fill={entry.color} fillOpacity={0.8} />
@@ -104,7 +104,7 @@ export function RegularVsSpecialChart() {
           </div>
         ))}
       </div>
-      
+
       <p className="text-[10px] text-muted-foreground italic text-center px-4">
         * Comparação direta entre a rentabilidade média de sorteios semanais vs. o evento anual especial.
       </p>

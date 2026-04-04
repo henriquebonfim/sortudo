@@ -1,7 +1,7 @@
-import { memo } from "react";
-import { motion } from "framer-motion";
 import { combinations } from "@/domain/math";
-import { CHART_COLORS } from "@/components/lottery/chart.constants";
+import { CHART_COLORS } from "@/features/analytics/charts/chart.constants";
+import { motion } from "framer-motion";
+import { memo } from "react";
 
 export interface ParityData {
   label: string;
@@ -18,16 +18,16 @@ interface ParityBarProps {
 }
 
 function calculateTheoreticalParity(label: string): number {
-  const normalized = label.replace(/[ÍÍÎÌ]/g, "I"); 
+  const normalized = label.replace(/[ÍÍÎÌ]/g, "I");
   const numbers = normalized.match(/\d+/g);
   if (!numbers || numbers.length < 2) return 0;
   const odds = parseInt(numbers[0], 10);
   const evens = parseInt(numbers[1], 10);
-  
+
   const totalWays = combinations(60, 6);
   const oddWays = combinations(30, odds);
   const evenWays = combinations(30, evens);
-  
+
   return ((oddWays * evenWays) / totalWays) * 100;
 }
 
@@ -59,13 +59,12 @@ export const ParityBar = memo(function ParityBar({
         <div className="flex items-center gap-2">
           {delta !== null && (
             <span
-              className={`text-[10px] font-mono ${
-                parseFloat(delta) > 0
+              className={`text-[10px] font-mono ${parseFloat(delta) > 0
                   ? "text-emerald-400"
                   : parseFloat(delta) < 0
-                  ? "text-red-400"
-                  : "text-muted-foreground"
-              }`}
+                    ? "text-red-400"
+                    : "text-muted-foreground"
+                }`}
             >
               {parseFloat(delta) > 0 ? "+" : ""}
               {delta}%

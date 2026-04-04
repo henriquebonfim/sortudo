@@ -1,18 +1,17 @@
+import { useLotteryMetadata, useTopPairs } from "@/application/selectors";
+import { CHART_COLORS } from "@/features/analytics/charts/chart.constants";
 import { memo, useMemo } from "react";
-import { useTopPairs } from "@/application/selectors";
-import { useLotteryMetadata } from "@/application/selectors";
+import type { TooltipContentProps } from "recharts";
 import {
-  BarChart,
   Bar,
-  XAxis,
-  YAxis,
-  Tooltip,
-  ResponsiveContainer,
+  BarChart,
   CartesianGrid,
   Cell,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
 } from "recharts";
-import type { TooltipContentProps } from "recharts";
-import { CHART_COLORS } from "@/components/lottery/chart.constants";
 
 interface ExtendedPairData {
   pair: string;
@@ -28,7 +27,7 @@ const CustomTooltip = memo(function CustomTooltip({
 }: TooltipContentProps<number, string>) {
   if (!active || !payload?.length) return null;
   const data = payload[0].payload as ExtendedPairData;
-  
+
   return (
     <div className="glass-card border border-border p-3 text-xs font-mono">
       <p className="text-foreground font-bold">Par {data.pair}</p>

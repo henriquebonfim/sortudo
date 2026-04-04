@@ -1,7 +1,7 @@
 import * as path from 'path';
 import * as fs from 'fs';
 import { fileURLToPath } from 'url';
-import { parseExcelToDraws } from '@/infrastructure/parser/excel-reader';
+import { parseExcelToDraws } from '@/infrastructure/parser';
 import type { Draw } from '@/domain/lottery/draw.model';
 
 // In ESM, __dirname is not available by default

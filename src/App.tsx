@@ -1,7 +1,7 @@
 import { useLotteryStore } from "@/application/useLotteryStore";
-import { LoadingBalls } from "@/components/shared";
-import { Footer, Header } from "@/components/ui/components";
+import { Footer, Header } from "@/components/layout";
 import { ThemeProvider } from "@/components/ui/ThemeProvider";
+import { LoadingBalls } from "@/features/shared";
 import { lazy, Suspense, useEffect } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 

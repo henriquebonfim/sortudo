@@ -1,10 +1,10 @@
-import { memo, useMemo } from "react";
-import { useNumberProfile, useLotteryMeta } from "@/application/selectors";
-import { CHART_COLORS } from "@/components/lottery/chart.constants";
-import { StatRing } from "./components/StatRing";
+import { useLotteryMeta, useNumberProfile } from "@/application/selectors";
+import { CHART_COLORS } from "@/features/analytics/charts/chart.constants";
+import { useMemo } from "react";
+import { DecadeDispersion } from "./components/DecadeDispersion";
 import { LowHighDistribution } from "./components/LowHighDistribution";
 import { OverlapChart } from "./components/OverlapChart";
-import { DecadeDispersion } from "./components/DecadeDispersion";
+import { StatRing } from "./components/StatRing";
 
 export function NumberProfileChart() {
   const meta = useLotteryMeta();

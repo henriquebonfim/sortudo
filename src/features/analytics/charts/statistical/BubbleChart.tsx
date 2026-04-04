@@ -1,7 +1,7 @@
-import { useState, useMemo, useEffect, useRef, MouseEvent } from "react";
 import { useFrequencies, useLotteryMeta } from "@/application/selectors";
-import { LoadingBalls } from "@/components/shared/LoadingBalls";
-import { StatCard } from "@/components/shared/StatCard";
+import { StatCard } from "@/features/analytics/shared/StatCard";
+import { LoadingBalls } from "@/features/shared/LoadingBalls";
+import { MouseEvent, useEffect, useMemo, useRef, useState } from "react";
 import { BubbleNode, Filter } from "./bubble-chart.types";
 import { applyPhysics, freqToColor, renderNodes } from "./bubble-chart.utils";
 
@@ -61,7 +61,7 @@ export function BubbleChart() {
     const rect = container.getBoundingClientRect();
     const W = rect.width;
     const H = 500;
-    
+
     canvas.width = W * window.devicePixelRatio;
     canvas.height = H * window.devicePixelRatio;
     canvas.style.width = `${W}px`;
@@ -85,7 +85,7 @@ export function BubbleChart() {
         vy: 0,
       };
     });
-    
+
     nodesRef.current = initialNodes;
 
     const tick = () => {
@@ -96,7 +96,7 @@ export function BubbleChart() {
     };
 
     animRef.current = requestAnimationFrame(tick);
-    
+
     return () => cancelAnimationFrame(animRef.current);
   }, [filteredEntries, data?.min, data?.max]);
 
@@ -104,7 +104,7 @@ export function BubbleChart() {
   const handleCanvasMove = (e: MouseEvent<HTMLCanvasElement>) => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    
+
     const rect = canvas.getBoundingClientRect();
     const mx = e.clientX - rect.left;
     const my = e.clientY - rect.top;

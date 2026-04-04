@@ -1,4 +1,4 @@
-import type { Draw, SearchResult } from '@/domain/lottery/draw';
+import type { Draw, SearchResult } from '@/domain/lottery/data/draw';
 
 /**
  * Searches for a specific combination of numbers within the draw history.

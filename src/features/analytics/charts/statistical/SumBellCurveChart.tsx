@@ -1,18 +1,18 @@
+import { useLotteryMeta, useSumDistribution } from "@/application/selectors";
+import { CHART_COLORS } from "@/features/analytics/charts/chart.constants";
+import { ChartTooltip } from "@/features/analytics/shared/ChartTooltip";
 import { useMemo } from "react";
-import { useSumDistribution, useLotteryMeta } from "@/application/selectors";
 import {
-  BarChart,
   Bar,
-  XAxis,
-  YAxis,
-  Tooltip,
-  ResponsiveContainer,
+  BarChart,
+  CartesianGrid,
   Cell,
   ReferenceLine,
-  CartesianGrid,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
 } from "recharts";
-import { CHART_COLORS } from "@/components/lottery/chart.constants";
-import { ChartTooltip } from "@/components/shared/ChartTooltip";
 
 export function SumBellCurveChart() {
   const meta = useLotteryMeta();
@@ -20,14 +20,14 @@ export function SumBellCurveChart() {
 
   const { data, total, peak } = useMemo(() => {
     if (!rawData) return { data: [], total: 0, peak: 1 };
-    
+
     const tot = rawData.reduce((s, item) => s + item.count, 0) || 1;
     const transformed = rawData.map((item) => ({
       ...item,
       pct: Math.round((item.count / tot) * 1000) / 10,
     }));
     const p = Math.max(...transformed.map((d) => d.count), 1);
-    
+
     return { data: transformed, total: tot, peak: p };
   }, [rawData]);
 
@@ -43,7 +43,7 @@ export function SumBellCurveChart() {
         />
         <span>Zona de maior concentração (150–200)</span>
       </div>
-      
+
       <div className="rounded-xl border border-border bg-card p-4 shadow-sm">
         <ResponsiveContainer width="100%" height={280}>
           <BarChart
@@ -65,7 +65,7 @@ export function SumBellCurveChart() {
             <YAxis tick={{ fontSize: 11, fill: CHART_COLORS.TICK_LABEL }} />
             <Tooltip
               content={
-                <ChartTooltip 
+                <ChartTooltip
                   items={[
                     { label: "Sorteios", value: "count" },
                     { label: "Percentual", value: "pct", suffix: "%", color: "text-primary" }
@@ -102,7 +102,7 @@ export function SumBellCurveChart() {
           </BarChart>
         </ResponsiveContainer>
       </div>
-      
+
       <p className="text-xs text-muted-foreground/60">
         Total de {total.toLocaleString("pt-BR")} sorteios analisados. Soma mínima teórica: 21 (1+2+3+4+5+6) · Máxima: 345 (55+56+57+58+59+60).
       </p>

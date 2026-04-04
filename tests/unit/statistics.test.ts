@@ -1,6 +1,5 @@
-import { describe, it, expect } from 'vitest';
-import { StatisticsService } from '@/domain/lottery/statistics.service';
-import { Draw, LotteryStats } from '@/domain/lottery/lottery.types';
+import { StatisticsService } from '@/domain/lottery/services';
+import { describe, expect, it } from 'vitest';
 import { REAL_DRAWS } from '../fixtures/real-data';
 
 describe('StatisticsService (Integration Tests with Real Data)', () => {
@@ -15,7 +14,7 @@ describe('StatisticsService (Integration Tests with Real Data)', () => {
   it('calculatePrizeEvolution should cover full history (1996+)', () => {
     const res = StatisticsService.calculatePrizeEvolution(ALL);
     expect(res[0].year).toBe(1996);
-    expect(res[res.length-1].year).toBeGreaterThanOrEqual(2024);
+    expect(res[res.length - 1].year).toBeGreaterThanOrEqual(2024);
   });
 
   it('calculatePrizeTierComparison should show realistic prize spreads', () => {
@@ -39,9 +38,9 @@ describe('StatisticsService (Integration Tests with Real Data)', () => {
 
   it('calculateMeta should return correct historical aggregates', () => {
     const res = StatisticsService.calculateMeta(ALL, {
-        totalDraws: ALL.length,
-        firstDrawDate: ALL[0].date,
-        lastDrawDate: ALL[ALL.length-1].date
+      totalDraws: ALL.length,
+      firstDrawDate: ALL[0].date,
+      lastDrawDate: ALL[ALL.length - 1].date
     });
     expect(res.totalDraws).toBe(ALL.length);
     expect(res.highestPrize).toBeGreaterThan(100_000_000);

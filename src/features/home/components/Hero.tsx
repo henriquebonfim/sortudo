@@ -1,4 +1,3 @@
-import { ScrollSection } from "@/components/shared";
 import {
   ChapterProgress,
   ClosingQuote,
@@ -8,6 +7,7 @@ import {
   OddsStorySection,
   RecordsSection
 } from "@/features/home/components";
+import { ScrollSection } from "@/features/shared";
 
 export function Hero() {
   return (

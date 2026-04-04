@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 import { renderHook } from "@testing-library/react";
 import { describe, it, expect, beforeEach } from "vitest";
-import { useAggregatedRevenue } from "@/application/selectors/useAggregatedRevenue";
+import { useAggregatedRevenue } from "@/application/selectors";
 import { useLotteryStore } from "@/application/useLotteryStore";
 
 describe("useAggregatedRevenue", () => {

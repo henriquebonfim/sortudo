@@ -1,6 +1,6 @@
+import { CHART_COLORS } from '@/features/analytics/charts/chart.constants';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
-import { CHART_COLORS } from '@/components/lottery/chart.constants';
 
 // ─── UI Utilities ────────────────────────────────────────────────────────────
 

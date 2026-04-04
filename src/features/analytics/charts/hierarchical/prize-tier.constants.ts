@@ -1,4 +1,4 @@
-import { CHART_COLORS } from "@/components/lottery/chart.constants";
+import { CHART_COLORS } from "@/features/analytics/charts/chart.constants";
 
 export interface TierConfig {
   label: string;

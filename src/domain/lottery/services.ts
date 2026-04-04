@@ -1,11 +1,11 @@
-import { Draw, LotteryStats } from './draw';
+import {
+  DrawAnalyzer,
+  FrequencyAnalyzer,
+  GeographyAnalyzer,
+  PrizeAnalyzer
+} from './analysis';
+import { Draw, LotteryStats } from './data/draw';
 import { REVENUE_ALLOCATION } from './lottery.constants';
-import { 
-  FrequencyAnalyzer, 
-  PrizeAnalyzer, 
-  GeographyAnalyzer, 
-  DrawAnalyzer 
-} from './calculators';
 
 // ─── Revenue Service ─────────────────────────────────────────────────────────
 
@@ -54,11 +54,11 @@ export class StatisticsService {
    */
   static calculateAllStats(draws: Draw[]): LotteryStats {
     if (draws.length === 0) throw new Error('No draws available to calculate statistics.');
-    
-    const metadata = { 
-      totalDraws: draws.length, 
-      firstDrawDate: draws[0].date, 
-      lastDrawDate: draws[draws.length - 1].date 
+
+    const metadata = {
+      totalDraws: draws.length,
+      firstDrawDate: draws[0].date,
+      lastDrawDate: draws[draws.length - 1].date
     };
 
     return {
@@ -82,8 +82,6 @@ export class StatisticsService {
   }
 }
 
-// ─── Search Engine ───────────────────────────────────────────────────────────
 
-import type { SearchResult } from './draw';
 
-export { searchCombination } from './search-engine';
+export { searchCombination } from './search/search-engine';

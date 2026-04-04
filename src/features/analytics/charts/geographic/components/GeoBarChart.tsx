@@ -1,17 +1,17 @@
+import { CHART_COLORS } from "@/features/analytics/charts/chart.constants";
+import { ChartTooltip } from "@/features/analytics/shared/ChartTooltip";
 import { memo } from "react";
 import {
-  BarChart,
   Bar,
-  XAxis,
-  YAxis,
-  Tooltip,
-  ResponsiveContainer,
+  BarChart,
+  CartesianGrid,
   Cell,
   LabelList,
-  CartesianGrid,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
 } from "recharts";
-import { CHART_COLORS } from "@/components/lottery/chart.constants";
-import { ChartTooltip } from "@/components/shared/ChartTooltip";
 import { GeoDataPoint } from "../geo.types";
 const STATE_COLORS: Record<string, string> = {
   SP: CHART_COLORS.AMBER,
@@ -63,7 +63,7 @@ export const GeoBarChart = memo(function GeoBarChart({ data }: { data: GeoDataPo
           />
           <Tooltip
             content={(props) => (
-              <ChartTooltip 
+              <ChartTooltip
                 {...props}
                 items={[
                   { label: "Ganhadores", value: "total" },

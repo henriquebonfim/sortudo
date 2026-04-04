@@ -1,10 +1,10 @@
 import { useAggregatedRevenue } from "@/application/selectors";
-import { Button } from "@/components/ui/components/button";
+import { Button } from "@/components/layout/button";
 import { spring } from "@/components/ui";
-import { motion, useMotionValue, animate } from "framer-motion";
+import { animate, motion, useMotionValue } from "framer-motion";
 import { ArrowDown, BarChart3, Search } from "lucide-react";
-import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 // ─── Sub-components ──────────────────────────────────────────────────────────
 
@@ -23,7 +23,7 @@ function AnimatedCounter({ target, duration = 2000, decimals = 0 }: AnimatedCoun
       duration: duration / 1000,
       ease: "easeOut",
     });
-    
+
     const unsubscribe = count.on("change", (latest) => {
       setDisplayValue(Number(latest.toFixed(decimals)));
     });

@@ -1,8 +1,8 @@
+import type { LotteryStats, SearchResult } from '@/domain/lottery/data/draw';
+import { Draw, LotteryMetadata } from '@/domain/lottery/data/draw';
+import { WorkerClient } from '@/infrastructure/worker';
 import { create } from 'zustand';
 import { SyncService } from './services/SyncService';
-import type { LotteryStats, SearchResult } from '@/domain/lottery/draw';
-import { Draw, LotteryMetadata } from '@/domain/lottery/draw';
-import { WorkerClient } from '@/infrastructure/worker';
 
 const SIMULATION_COUNT_KEY = 'total_simulations';
 
@@ -80,4 +80,3 @@ export const useLotteryStore = create<LotteryState>((set, get) => {
     },
   };
 });
-

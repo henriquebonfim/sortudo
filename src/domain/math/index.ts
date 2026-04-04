@@ -83,6 +83,31 @@ export function calculateTrueExpectedValue(
   return expectedJackpotValue + secondaryPrizesEV - ticketCost;
 }
 
+/**
+ * Generates a random number following a standard normal distribution (mean=0, stdDev=1)
+ * using the Box-Muller transform.
+ */
+export function boxMullerRandom(): number {
+  let u = 0;
+  let v = 0;
+  while (u === 0) u = Math.random();
+  while (v === 0) v = Math.random();
+  return Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v);
+}
+
+/**
+ * Simulates a binomial convergence point (e.g., Law of Large Numbers)
+ * using the normal approximation to the binomial distribution.
+ */
+export function simulateBinomialPoint(trials: number, p: number = 0.5): number {
+  if (trials <= 0) return p;
+  const expectedValue = trials * p;
+  const stdDev = Math.sqrt(trials * p * (1 - p));
+  const noise = boxMullerRandom();
+  const simulatedHits = expectedValue + noise * stdDev;
+  return parseFloat(((simulatedHits / trials) * 100).toFixed(2));
+}
+
 // ─── Combinatorial Utilities ─────────────────────────────────────────────────
 
 export interface ComboEntry {

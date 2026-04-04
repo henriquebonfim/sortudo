@@ -1,14 +1,14 @@
+import { useLotteryMeta, useNumberProfile } from "@/application/selectors";
+import { CHART_COLORS } from "@/features/analytics/charts/chart.constants";
 import { useMemo } from "react";
-import { useNumberProfile, useLotteryMeta } from "@/application/selectors";
 import {
-  PieChart,
-  Pie,
   Cell,
-  Tooltip,
-  ResponsiveContainer,
   Legend,
+  Pie,
+  PieChart,
+  ResponsiveContainer,
+  Tooltip,
 } from "recharts";
-import { CHART_COLORS } from "@/components/lottery/chart.constants";
 import { PieSliceTooltip } from "../chart-tooltips";
 
 export function MathCompositionChart() {
@@ -22,10 +22,10 @@ export function MathCompositionChart() {
       100 - (profile.primesPercentage + profile.multiplesOf5Percentage + profile.multiplesOf10Percentage)
     );
     return [
-      { name: "Primos",          value: profile.primesPercentage,           color: CHART_COLORS.VIOLET },
-      { name: "Múltiplos de 5",  value: profile.multiplesOf5Percentage,     color: CHART_COLORS.AMBER },
-      { name: "Múltiplos de 10", value: profile.multiplesOf10Percentage,    color: CHART_COLORS.EMERALD },
-      { name: "Outros",          value: Number(outros.toFixed(2)),           color: CHART_COLORS.SLATE },
+      { name: "Primos", value: profile.primesPercentage, color: CHART_COLORS.VIOLET },
+      { name: "Múltiplos de 5", value: profile.multiplesOf5Percentage, color: CHART_COLORS.AMBER },
+      { name: "Múltiplos de 10", value: profile.multiplesOf10Percentage, color: CHART_COLORS.EMERALD },
+      { name: "Outros", value: Number(outros.toFixed(2)), color: CHART_COLORS.SLATE },
     ];
   }, [profile]);
 

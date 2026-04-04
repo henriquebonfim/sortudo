@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { Code2, Database, ExternalLink, Info, Shield, ShieldCheck, Terminal } from 'lucide-react';
-import { DataParsingProcessChart } from './DataParsingProcessChart';
+import { DataParsingProcessChart } from '../analytics/charts/process/DataParsingProcessChart';
 
 const sources = [
   "https://loterias.caixa.gov.br/Paginas/Mega-Sena.aspx",

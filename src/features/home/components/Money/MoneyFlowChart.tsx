@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/components/button";
+import { Button } from "@/components/layout/button";
 import { formatCurrency } from "@/lib";
 import { BarChart3 } from "lucide-react";
 import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";

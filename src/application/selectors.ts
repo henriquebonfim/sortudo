@@ -1,28 +1,28 @@
-import { useMemo } from 'react';
-import { useShallow } from 'zustand/react/shallow';
 import { useLotteryStore } from '@/application/useLotteryStore';
-import type { Draw } from '@/domain/lottery/draw';
-import { 
-  TICKET_PRICE, 
-  BALLS_PER_DRAW, 
+import type { Draw } from '@/domain/lottery/data/draw';
+import {
+  BALLS_PER_DRAW,
   MAX_LOTTERY_NUMBER,
+  TICKET_PRICE,
   TOTAL_COMBINATIONS
 } from '@/domain/lottery/lottery.constants';
 import { RevenueService } from '@/domain/lottery/services';
 import { getCombosTable } from '@/domain/math';
+import { useMemo } from 'react';
+import { useShallow } from 'zustand/react/shallow';
 
 // ─── System State Selectors ──────────────────────────────────────────────────
 
 /** Selects whether the store has been initialized. */
-export const useIsInitialized = () => 
+export const useIsInitialized = () =>
   useLotteryStore((state) => state.initialized);
 
 /** Selects whether the store is currently seeding data. */
-export const useIsSeeding = () => 
+export const useIsSeeding = () =>
   useLotteryStore((state) => state.isSeeding);
 
 /** Selects the lottery metadata (dates, counts, etc.). */
-export const useLotteryMetadata = () => 
+export const useLotteryMetadata = () =>
   useLotteryStore(useShallow((state) => state.metadata));
 
 /** Selects the full list of draws. */
@@ -97,15 +97,15 @@ export function useAggregatedRevenue() {
       totalRevenue += draw.totalRevenue || 0;
       totalJackpotWinners += draw.jackpotWinners || 0;
       totalPrizeDistributed += (draw.jackpotWinners * draw.jackpotPrize) +
-                               (draw.quinaWinners * draw.quinaPrize) +
-                               (draw.quadraWinners * draw.quadraPrize);
+        (draw.quinaWinners * draw.quinaPrize) +
+        (draw.quadraWinners * draw.quadraPrize);
     }
 
     const totalBillions = Math.floor(totalRevenue / 1_000_000_000);
     const fractionBillions = Math.floor((totalRevenue % 1_000_000_000) / 100_000_000);
-    
-    const yearsOfOperation = metadata ? 
-      new Date(metadata.lastDrawDate).getFullYear() - new Date(metadata.firstDrawDate).getFullYear() : 
+
+    const yearsOfOperation = metadata ?
+      new Date(metadata.lastDrawDate).getFullYear() - new Date(metadata.firstDrawDate).getFullYear() :
       new Date().getFullYear() - 1996;
 
     return {
@@ -129,7 +129,7 @@ export function useNotableDraw(): Draw | null {
 
   return useMemo(() => {
     if (draws.length === 0) return null;
-    
+
     // Create a shallow copy before sorting to avoid mutating the store's array
     return [...draws].sort((a, b) => (b.totalRevenue || 0) - (a.totalRevenue || 0))[0] || null;
   }, [draws]);
@@ -143,52 +143,52 @@ export function useNotableDraw(): Draw | null {
  * This ensures components only re-render if the specific data slice changes.
  */
 
-export const useFrequencies = () => 
+export const useFrequencies = () =>
   useLotteryStore(useShallow((state) => state.stats?.frequencies));
 
-export const usePrizeEvolution = () => 
+export const usePrizeEvolution = () =>
   useLotteryStore(useShallow((state) => state.stats?.prizeEvolution));
 
-export const useTopJackpotWinners = () => 
+export const useTopJackpotWinners = () =>
   useLotteryStore(useShallow((state) => state.stats?.topJackpotWinners));
 
-export const useGeoWinners = () => 
+export const useGeoWinners = () =>
   useLotteryStore(useShallow((state) => state.stats?.geoWinners));
 
-export const useParityDistribution = () => 
+export const useParityDistribution = () =>
   useLotteryStore(useShallow((state) => state.stats?.parityDistribution));
 
-export const useSumDistribution = () => 
+export const useSumDistribution = () =>
   useLotteryStore(useShallow((state) => state.stats?.sumDistribution));
 
-export const useTopPairs = () => 
+export const useTopPairs = () =>
   useLotteryStore(useShallow((state) => state.stats?.topPairs));
 
-export const useAccumulationTrend = () => 
+export const useAccumulationTrend = () =>
   useLotteryStore(useShallow((state) => state.stats?.accumulationTrend));
 
-export const usePrizeTierComparison = () => 
+export const usePrizeTierComparison = () =>
   useLotteryStore(useShallow((state) => state.stats?.prizeTierComparison));
 
-export const useTemporalFrequency = () => 
+export const useTemporalFrequency = () =>
   useLotteryStore(useShallow((state) => state.stats?.temporalFrequency));
 
-export const useGapAnalysis = () => 
+export const useGapAnalysis = () =>
   useLotteryStore(useShallow((state) => state.stats?.gapAnalysis));
 
-export const useHotNumbers = () => 
+export const useHotNumbers = () =>
   useLotteryStore(useShallow((state) => state.stats?.hotNumbers));
 
-export const useNumberProfile = () => 
+export const useNumberProfile = () =>
   useLotteryStore(useShallow((state) => state.stats?.numberProfile));
 
-export const useStreakEconomics = () => 
+export const useStreakEconomics = () =>
   useLotteryStore(useShallow((state) => state.stats?.streakEconomics));
 
-export const useTypeComparison = () => 
+export const useTypeComparison = () =>
   useLotteryStore(useShallow((state) => state.stats?.typeComparison));
 
-export const useLotteryMeta = () => 
+export const useLotteryMeta = () =>
   useLotteryStore(useShallow((state) => state.stats?.meta));
 
 /**

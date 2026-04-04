@@ -24,7 +24,7 @@ import { type SemanticTokens } from "./semantic";
  *   type P = TokenPath<{ color: { gold: { "500": string } } }>
  *   // → "color" | "color.gold" | "color.gold.500"
  */
-export type TokenPath<T> = T extends object
+type TokenPath<T> = T extends object
   ? {
       [K in keyof T]: K extends string
         ? T[K] extends object
@@ -41,21 +41,6 @@ export type PrimitiveTokenPath = TokenPath<Primitives>;
 
 /** Union of all valid semantic token paths. */
 export type SemanticTokenPath = TokenPath<SemanticTokens>;
-
-// ─── Token Reference Format ───────────────────────────────────────────────────
-
-/**
- * A typed token reference string.
- * Used in semantic.ts to reference primitive paths: "{color.gold.500}"
- *
- * @example
- *   const ref: TokenRef<PrimitiveTokenPath> = "{color.gold.500}";
- */
-export type TokenRef<Path extends string> = `{${Path}}`;
-
-/** Extracts the path from a token reference string. */
-export type ExtractTokenPath<R extends string> =
-  R extends `{${infer Path}}` ? Path : never;
 
 // ─── Runtime Token Resolver ───────────────────────────────────────────────────
 

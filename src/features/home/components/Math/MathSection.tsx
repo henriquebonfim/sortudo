@@ -1,6 +1,6 @@
 import { useLotteryMath } from "@/application/selectors";
-import { AnimatedCounter } from "@/components/shared";
 import { BALLS_PER_DRAW, MAX_LOTTERY_NUMBER, TOTAL_COMBINATIONS } from "@/domain/lottery/lottery.constants";
+import { AnimatedCounter } from "@/features/shared";
 import { formatNumber } from "@/lib";
 import { motion } from "framer-motion";
 import { Award, Binary, Calculator, Info, Star, Trophy, Zap } from "lucide-react";

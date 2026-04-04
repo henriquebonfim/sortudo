@@ -1,21 +1,20 @@
-import { useTemporalFrequency, useLotteryMeta } from "@/application/selectors";
+import { useLotteryMeta, useTemporalFrequency } from "@/application/selectors";
 import {
   CHART_COLORS,
   CHART_DIMENSIONS,
-} from "@/components/lottery/chart.constants";
+} from "@/features/analytics/charts/chart.constants";
 import { memo, useMemo } from "react";
+import type { TooltipContentProps } from "recharts";
 import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  Tooltip,
-  ResponsiveContainer,
   CartesianGrid,
   Legend,
-  ReferenceLine,
+  Line,
+  LineChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis
 } from "recharts";
-import type { TooltipContentProps } from "recharts";
 
 const PALETTE = [
   CHART_COLORS.AMBER,

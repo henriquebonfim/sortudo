@@ -1,15 +1,15 @@
+import { useLotteryMeta, useStreakEconomics } from "@/application/selectors";
+import { CHART_COLORS } from "@/features/analytics/charts/chart.constants";
 import { useMemo } from "react";
-import { useStreakEconomics, useLotteryMeta } from "@/application/selectors";
 import {
-  BarChart,
   Bar,
+  BarChart,
+  CartesianGrid,
+  ResponsiveContainer,
+  Tooltip,
   XAxis,
   YAxis,
-  Tooltip,
-  ResponsiveContainer,
-  CartesianGrid,
 } from "recharts";
-import { CHART_COLORS } from "@/components/lottery/chart.constants";
 import { StreakTooltip } from "../chart-tooltips";
 
 /** Max streak length to render — trims long tail for readability. */

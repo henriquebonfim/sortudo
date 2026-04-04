@@ -63,3 +63,23 @@ export function ChapterDivider({ icon, title, description, lineClass, iconColorC
     </motion.div>
   );
 }
+/**
+ * Higher-order component wrapper for chart entry animations.
+ * USAGE: Wrap chart contents with <ChartFadeIn staggerIndex={i}>
+ */
+export function ChartFadeIn({ children, delay = 0 }: { children: React.ReactNode; delay?: number }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 15 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-40px" }}
+      transition={{
+        duration: 0.6,
+        delay,
+        ease: [0.21, 1.11, 0.81, 0.99]
+      }}
+    >
+      {children}
+    </motion.div>
+  );
+}

@@ -46,7 +46,7 @@ export const buttonVariants = cva(
 );
 
 export type ButtonVariant = NonNullable<VariantProps<typeof buttonVariants>["variant"]>;
-export type ButtonSize    = NonNullable<VariantProps<typeof buttonVariants>["size"]>;
+type ButtonSize    = NonNullable<VariantProps<typeof buttonVariants>["size"]>;
 
 export interface ButtonProps extends VariantProps<typeof buttonVariants> {
   children?: ReactNode;
@@ -66,7 +66,7 @@ export interface ButtonProps extends VariantProps<typeof buttonVariants> {
   type?: "button" | "submit" | "reset";
 }
 
-export interface ButtonLoaderProps {
+interface ButtonLoaderProps {
   size?: number;
   "aria-label"?: string;
 }
@@ -124,7 +124,7 @@ export interface StatCardProps {
 // ─── BallBadge Types ─────────────────────────────────────────────────────────
 
 export const BALL_SIZES = ["sm", "md", "lg"] as const;
-export type BallSize = (typeof BALL_SIZES)[number];
+type BallSize = (typeof BALL_SIZES)[number];
 
 export const ballSizeStyles = {
   sm: "w-8 h-8 text-xs",
@@ -133,7 +133,7 @@ export const ballSizeStyles = {
 } as const satisfies Record<BallSize, string>;
 
 export const BALL_COLORS = ["cold", "hot", "gold", "muted", "success"] as const;
-export type BallColor = (typeof BALL_COLORS)[number];
+type BallColor = (typeof BALL_COLORS)[number];
 
 export const ballColorValues = {
   cold:    "hsl(var(--cold))",
@@ -143,7 +143,7 @@ export const ballColorValues = {
   success: "hsl(var(--success))",
 } as const satisfies Record<BallColor, string>;
 
-export interface BallBadgeProps {
+interface BallBadgeProps {
   number: number;
   color?: BallColor | (string & {});
   size?: BallSize;
@@ -154,7 +154,7 @@ export interface BallBadgeProps {
 
 // ─── SectionHeader Types ─────────────────────────────────────────────────────
 
-export interface SectionHeaderProps {
+interface SectionHeaderProps {
   title: string | ReactNode;
   icon?: ReactNode;
   subtitle?: string;

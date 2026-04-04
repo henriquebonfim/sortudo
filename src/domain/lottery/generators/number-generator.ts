@@ -1,4 +1,4 @@
-import type { Draw } from '@/domain/lottery/draw';
+import type { Draw } from '@/domain/lottery/data/draw';
 import { MAX_LOTTERY_NUMBER, PRIMES } from '@/domain/lottery/lottery.constants';
 
 // Re-exported here so the domain owns the type definition.
@@ -36,7 +36,7 @@ const EVENS_POOL = Array.from({ length: 30 }, (_, i) => i * 2 + 2);
 
 function pickRandom(pool: number[], count: number, fallbackPool?: number[]): number[] {
   let uniquePool = Array.from(new Set(pool)).filter(n => n >= 1 && n <= MAX_LOTTERY_NUMBER);
-  
+
   // If pool is insufficient, mix with fallback (usually FULL_POOL)
   if (uniquePool.length < count && fallbackPool) {
     const fallbackSet = new Set(fallbackPool);
@@ -47,7 +47,7 @@ function pickRandom(pool: number[], count: number, fallbackPool?: number[]): num
   }
 
   if (uniquePool.length <= count) return [...uniquePool].sort((a, b) => a - b);
-  
+
   const shuffled = [...uniquePool];
   for (let i = shuffled.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -86,12 +86,12 @@ export class NumberGenerator {
   static generate(mode: GenerationMode, ctx: GenerationContext): number[] {
     const strategy = STRATEGIES[mode] || STRATEGIES.random;
     const result = strategy(ctx);
-    
+
     // Safety belt: Even if a strategy is buggy, domain guarantees 6 unique numbers
     if (result.length === 6 && new Set(result).size === 6) {
       return result;
     }
-    
+
     return pickRandom(result, 6, FULL_POOL);
   }
 }

@@ -1,4 +1,4 @@
-import { motion, useMotionValue, animate } from "framer-motion";
+import { animate, useMotionValue } from "framer-motion";
 import { useEffect, useState } from "react";
 
 interface AnimatedCounterProps {
@@ -16,7 +16,7 @@ export function AnimatedCounter({ target, duration = 2000, decimals = 0 }: Anima
       duration: duration / 1000,
       ease: "easeOut",
     });
-    
+
     const unsubscribe = count.on("change", (latest) => {
       setDisplayValue(Number(latest.toFixed(decimals)));
     });

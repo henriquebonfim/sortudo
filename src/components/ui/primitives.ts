@@ -8,7 +8,7 @@
  * compatibility with Tailwind's `hsl(var(--token))` pattern.
  * Chart-specific colors retain hex for recharts/canvas library compatibility.
  *
- * @see src/design-system/semantic.ts for the semantic layer
+ * @see src/components/ui/semantic.ts for the semantic layer
  */
 
 // ─── Color Primitives ────────────────────────────────────────────────────────

@@ -1,6 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { combinations } from '@/domain/math/combinations';
-import { mean, variance, standardDeviation, sum, max, min, poissonProbability, calculateTrueExpectedValue } from '@/domain/math/statistics';
+import { combinations, mean, variance, standardDeviation, sum, max, min, poissonProbability, calculateTrueExpectedValue } from '@/domain/math';
 
 describe('Domain Math & Statistics', () => {
   describe('Combinations (nCr)', () => {

@@ -1,16 +1,18 @@
+import { LLN_CONFIG } from "@/domain/lottery/lottery.constants";
+import { simulateBinomialPoint } from "@/domain/math";
+import { CHART_COLORS } from "@/features/analytics/charts/chart.constants";
 import { useMemo } from "react";
 import {
-  LineChart,
+  CartesianGrid,
   Line,
+  LineChart,
+  ReferenceLine,
+  ResponsiveContainer,
+  Tooltip,
   XAxis,
   YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  ReferenceLine,
 } from "recharts";
-import { CHART_COLORS } from "@/components/lottery/chart.constants";
-import { RECHARTS_TOOLTIP_STYLE, RECHARTS_LABEL_STYLE } from "../chart-styles";
+import { RECHARTS_LABEL_STYLE, RECHARTS_TOOLTIP_STYLE } from "../chart-styles";
 
 // ─── Pure Simulation Logic ─────────────────────────────────────────────────────
 
@@ -29,31 +31,16 @@ interface LLNDataPoint {
  */
 function generateLLNData(): LLNDataPoint[] {
   const drawIncrements = [
-    ...Array.from({ length: 100 }, (_, i) => i + 1),          // 1–100: tight, shows initial volatility
-    ...Array.from({ length: 400 }, (_, i) => 100 + i * 50),   // 150–20050: medium spacing
-    ...Array.from({ length: 500 }, (_, i) => 20100 + i * 1000), // 21100+: large spacing
+    ...Array.from({ length: 100 }, (_, i) => i + 1),          // 1–100: tight
+    ...Array.from({ length: 400 }, (_, i) => 100 + i * 50),   // 150–20050
+    ...Array.from({ length: 500 }, (_, i) => 20100 + i * 1000), // 21100+
   ];
 
-  return drawIncrements.map((drawCount) => {
-    const expectedOdds = drawCount * 0.5;
-    const stdDev = Math.sqrt(drawCount * 0.25);
-
-    // Box-Muller transform for a normal distribution sample
-    let u = 0;
-    let v = 0;
-    while (u === 0) u = Math.random();
-    while (v === 0) v = Math.random();
-    const noise = Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v);
-
-    const syntheticOddHits = expectedOdds + noise * stdDev;
-    const percentage = parseFloat(((syntheticOddHits / drawCount) * 100).toFixed(2));
-
-    return {
-      draws: drawCount,
-      displayDraws: drawCount < 1000 ? `${drawCount}` : `${(drawCount / 1000).toFixed(0)}k`,
-      percentage,
-    };
-  });
+  return drawIncrements.map((drawCount) => ({
+    draws: drawCount,
+    displayDraws: drawCount < 1000 ? `${drawCount}` : `${(drawCount / 1000).toFixed(0)}k`,
+    percentage: simulateBinomialPoint(drawCount, LLN_CONFIG.EXPECTED_PROBABILITY),
+  }));
 }
 
 // ─── Component ────────────────────────────────────────────────────────────────

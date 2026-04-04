@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { parseCaixaExcel } from '@/infrastructure/parser/caixa-excel-parser';
+import { parseCaixaExcel } from '@/infrastructure/parser';
 
 const OFFICIAL_HEADERS = [
   "Concurso", "Data do Sorteio", "Bola1", "Bola2", "Bola3", "Bola4", "Bola5", "Bola6", "Ganhadores 6 acertos",

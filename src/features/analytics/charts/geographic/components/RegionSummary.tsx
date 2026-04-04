@@ -1,7 +1,7 @@
-import { memo, useMemo } from "react";
+import { CHART_COLORS } from "@/features/analytics/charts/chart.constants";
 import { motion } from "framer-motion";
+import { memo, useMemo } from "react";
 import { GeoDataPoint } from "../geo.types";
-import { CHART_COLORS } from "@/components/lottery/chart.constants";
 
 const REGIONS = [
   { name: "Sudeste", states: ["SP", "MG", "RJ", "ES"], color: CHART_COLORS.AMBER },

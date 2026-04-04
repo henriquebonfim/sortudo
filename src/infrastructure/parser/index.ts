@@ -1,5 +1,5 @@
+import { Draw } from '@/domain/lottery/data/draw';
 import * as XLSX from 'xlsx';
-import { Draw } from '@/domain/lottery/draw';
 
 // ─── Parser Utilities ────────────────────────────────────────────────────────
 
@@ -41,22 +41,22 @@ export const parseCurrency = (val: unknown): number => {
 export const normalizeLocation = (str: string): string => {
   const clean = str.trim();
   const normalizedLower = clean.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
-  
+
   if (normalizedLower === 'canal eletronico') {
     return 'Canal Eletrônico';
   }
-  
+
   const parts = clean.split('/').map(s => s.trim());
   if (parts.length === 2) {
     return `${parts[0] || 'não identificado'}/${parts[1] || 'não identificado'}`;
   }
-  
+
   if (parts.length === 1 && parts[0]) {
-    return /^[A-Z]{2}$/.test(parts[0]) 
-      ? `não identificado/${parts[0]}` 
+    return /^[A-Z]{2}$/.test(parts[0])
+      ? `não identificado/${parts[0]}`
       : `${parts[0]}/não identificado`;
   }
-  
+
   return clean;
 };
 
@@ -70,10 +70,10 @@ export const parseDate = (v: unknown): string => {
     return new Date(Math.round((v - 25569) * 864e5)).toISOString().split('T')[0];
   }
   if (typeof v !== 'string') return '';
-  
+
   const dFormat = v.split('/');
   if (dFormat.length < 3) return '';
-  
+
   const [d, m, y] = dFormat;
   const fullYear = y.length === 2 ? '20' + y : y;
   return `${fullYear}-${m.padStart(2, '0')}-${d.padStart(2, '0')}`;
@@ -175,7 +175,7 @@ export class ParserFactory {
     if (Array.isArray(data) && data.length > 0 && Array.isArray(data[0])) {
       return parseCaixaExcel(data as unknown[][]);
     }
-    
+
     // Default fallback or more complex detection logic
     return data as Draw[];
   }
@@ -229,6 +229,6 @@ export function parseExcelToDraws(data: ArrayBuffer | Uint8Array): Draw[] {
   // This transforms the raw rows into the domain model (Draw[])
   const draws = ParserFactory.getParser('caixa-excel')(rows as unknown[][]);
   draws.sort((a, b) => a.id - b.id);
-  
+
   return draws;
 }

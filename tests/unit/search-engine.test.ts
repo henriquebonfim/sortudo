@@ -1,6 +1,6 @@
-import { describe, it, expect } from 'vitest';
-import { searchCombination } from '@/domain/lottery/search-engine';
-import { Draw } from '@/domain/lottery/draw.model';
+import { Draw } from '@/domain/lottery/data/draw';
+import { searchCombination } from '@/domain/lottery/search/search-engine';
+import { describe, expect, it } from 'vitest';
 
 const MOCK_DRAWS: Draw[] = [
   {
@@ -45,7 +45,7 @@ describe('SearchEngine', () => {
     // [1, 2, 3, 4, 5, 10] matches [1, 2, 3, 4, 5] -> 5 matches (fiveHits)
     expect(result.fiveHits).toHaveLength(1);
     expect(result.fiveHits[0].id).toBe(2);
-    
+
     // [1, 2, 3, 10, 20, 30] matches [1, 2, 3] -> 3 matches (threeHits)
     expect(result.threeHits).toHaveLength(1);
     expect(result.threeHits[0].id).toBe(1);
@@ -57,7 +57,7 @@ describe('SearchEngine', () => {
         return MOCK_DRAWS.filter(c => c.numbers.includes(num));
       }
     };
-    
+
     const result = await searchCombination([20, 21, 22, 23, 24, 25], MOCK_DRAWS, mockRepo);
     // Only draw 1 contains 20
     expect(result.totalAnalyzed).toBe(MOCK_DRAWS.length);

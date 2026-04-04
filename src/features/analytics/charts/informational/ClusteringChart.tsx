@@ -1,14 +1,14 @@
+import { useLotteryMeta, useNumberProfile } from "@/application/selectors";
+import { CHART_COLORS } from "@/features/analytics/charts/chart.constants";
 import { useMemo } from "react";
-import { useNumberProfile, useLotteryMeta } from "@/application/selectors";
 import {
-  PieChart,
-  Pie,
   Cell,
-  Tooltip,
-  ResponsiveContainer,
   Legend,
+  Pie,
+  PieChart,
+  ResponsiveContainer,
+  Tooltip,
 } from "recharts";
-import { CHART_COLORS } from "@/components/lottery/chart.constants";
 import { PieSliceTooltip } from "../chart-tooltips";
 
 export function ClusteringChart() {
@@ -20,9 +20,9 @@ export function ClusteringChart() {
     if (!analysis) return [];
     const mixed = Math.max(0, 100 - (analysis.clusteredPct + analysis.fullySpreadPct));
     return [
-      { name: "Aglomerados",          value: analysis.clusteredPct,              color: CHART_COLORS.RED },
-      { name: "Mistos",               value: Number(mixed.toFixed(2)),            color: CHART_COLORS.BLUE },
-      { name: "Totalmente Espalhados",value: analysis.fullySpreadPct,             color: CHART_COLORS.EMERALD },
+      { name: "Aglomerados", value: analysis.clusteredPct, color: CHART_COLORS.RED },
+      { name: "Mistos", value: Number(mixed.toFixed(2)), color: CHART_COLORS.BLUE },
+      { name: "Totalmente Espalhados", value: analysis.fullySpreadPct, color: CHART_COLORS.EMERALD },
     ];
   }, [analysis]);
 

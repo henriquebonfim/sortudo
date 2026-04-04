@@ -1,8 +1,8 @@
-import { describe, it, expect } from 'vitest';
-import { NumberGenerator } from '@/domain/lottery/generators/number-generator';
+import type { Draw } from '@/domain/lottery/data/draw';
 import type { GenerationContext } from '@/domain/lottery/generators/number-generator';
-import type { Draw } from '@/domain/lottery/draw.model';
+import { NumberGenerator } from '@/domain/lottery/generators/number-generator';
 import { PRIMES } from '@/domain/lottery/lottery.constants';
+import { describe, expect, it } from 'vitest';
 
 const MOCK_DRAW: Draw = {
   id: 1,

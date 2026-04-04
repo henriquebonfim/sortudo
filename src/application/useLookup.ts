@@ -1,6 +1,5 @@
-import { useLotteryActions } from '@/application/selectors';
-import { useDraws, useIsInitialized } from '@/application/selectors';
-import type { SearchResult } from '@/domain/lottery/draw';
+import { useDraws, useIsInitialized, useLotteryActions } from '@/application/selectors';
+import type { SearchResult } from '@/domain/lottery/data/draw';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 

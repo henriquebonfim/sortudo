@@ -40,7 +40,6 @@ export const spring = {
   },
 } as const;
 
-export type SpringPreset = keyof typeof spring;
 
 // ─── Duration Scale ───────────────────────────────────────────────────────────
 
@@ -68,7 +67,6 @@ export const duration = {
   heroCounter2: 2.8,
 } as const;
 
-export type DurationKey = keyof typeof duration;
 
 // ─── Delay Scale ─────────────────────────────────────────────────────────────
 
@@ -92,7 +90,6 @@ export const delay = {
   embellishment: 0.3,
 } as const;
 
-export type DelayKey = keyof typeof delay;
 
 // ─── Easing Presets ───────────────────────────────────────────────────────────
 
@@ -229,4 +226,3 @@ export const tailwindAnimations = {
   "accordion-up": "accordion-up 0.2s ease-out",
 } as const;
 
-export type TailwindAnimation = keyof typeof tailwindAnimations;

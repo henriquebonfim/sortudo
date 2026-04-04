@@ -1,17 +1,17 @@
+import { MAX_LOTTERY_NUMBER } from "@/domain/lottery/lottery.constants";
+import { CHART_COLORS } from "@/features/analytics/charts/chart.constants";
 import { memo, useMemo } from "react";
+import type { TooltipContentProps } from "recharts";
 import {
+  Cell,
   ResponsiveContainer,
-  ScatterChart,
   Scatter,
+  ScatterChart,
+  Tooltip,
   XAxis,
   YAxis,
   ZAxis,
-  Tooltip,
-  Cell,
 } from "recharts";
-import type { TooltipContentProps } from "recharts";
-import { CHART_COLORS } from "@/components/lottery/chart.constants";
-import { MAX_LOTTERY_NUMBER } from "@/domain/lottery/lottery.constants";
 
 // ─── Constants ─────────────────────────────────────────────────────────────────
 
@@ -46,9 +46,9 @@ function generateBiasData(): HeatPoint[] {
     const col = i % GRID_COLS;
 
     let bias: number;
-    if (number <= MONTH_THRESHOLD)   bias = EXTREME_BIAS_WEIGHT;
+    if (number <= MONTH_THRESHOLD) bias = EXTREME_BIAS_WEIGHT;
     else if (number <= DAY_THRESHOLD) bias = HIGH_BIAS_WEIGHT;
-    else                              bias = 15 + Math.random() * 20; // Low, noisy range
+    else bias = 15 + Math.random() * 20; // Low, noisy range
 
     return { x: col, y: row, number, bias };
   });
@@ -57,7 +57,7 @@ function generateBiasData(): HeatPoint[] {
 // ─── Tooltip ───────────────────────────────────────────────────────────────────
 
 const RISK_BANDS = [
-  { threshold: 85, bg: "bg-hot/20",   text: "text-hot",   label: "RISCO EXTREMO" },
+  { threshold: 85, bg: "bg-hot/20", text: "text-hot", label: "RISCO EXTREMO" },
   { threshold: 60, bg: "bg-primary/20", text: "text-primary", label: "RISCO ALTO" },
 ] as const;
 
@@ -93,9 +93,9 @@ const BiasTooltip = memo(function BiasTooltip({ active, payload }: TooltipConten
 // ─── Component ─────────────────────────────────────────────────────────────────
 
 function getBubbleStyle(bias: number): { fill: string; opacity: number } {
-  if (bias > 85) return { fill: CHART_COLORS.RED,   opacity: 0.9 };
+  if (bias > 85) return { fill: CHART_COLORS.RED, opacity: 0.9 };
   if (bias > 60) return { fill: CHART_COLORS.AMBER, opacity: 0.7 };
-  return            { fill: CHART_COLORS.SLATE,     opacity: 0.3 };
+  return { fill: CHART_COLORS.SLATE, opacity: 0.3 };
 }
 
 export function SelectionBiasHeatmap() {

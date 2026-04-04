@@ -36,13 +36,13 @@ test.describe('Main User Flow E2E', () => {
     await searchBtn.click();
     
     // Check results and URL navigation
-    const resultBanner = page.getByText(/nunca acertou a sena|já saiu/i);
+    const resultBanner = page.getByText(/Combinação nunca foi sorteada!|Combinação já foi Premiada!/i);
     await expect(resultBanner).toBeVisible({ timeout: 20000 });
     await expect(page).toHaveURL(/\/buscar\/04-05-30-33-41-52/);
 
     // 6. Navigate back to Home and scroll to Math
     await page.goto('/');
-    const mathHeader = page.getByText(/A Matemática da Sorte/i);
+    const mathHeader = page.getByText(/A Matemática do Improvável/i);
     await mathHeader.scrollIntoViewIfNeeded();
     await expect(mathHeader).toBeVisible();
     await expect(page.getByText(/Probabilidade de Ganhar/i)).toBeVisible();

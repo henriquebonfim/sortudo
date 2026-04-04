@@ -13,7 +13,7 @@ test.describe('Home Page E2E', () => {
     await expect(page.getByText('De 1996 aos dias atuais')).toBeVisible();
 
     // Check for Metodologia / Matemática
-    const mathHeader = page.getByText(/A Matemática da Sorte/i);
+    const mathHeader = page.getByText(/A Matemática do Improvável/i);
     await mathHeader.scrollIntoViewIfNeeded();
     await expect(mathHeader).toBeVisible();
     await expect(page.getByText(/Probabilidade de Ganhar/i)).toBeVisible();

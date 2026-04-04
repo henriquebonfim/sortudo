@@ -1,7 +1,7 @@
 import { useLotteryStore } from '@/application/useLotteryStore';
+import type { SearchResult } from '@/domain/lottery/data/draw';
 import { GenerationMode, NumberGenerator } from '@/domain/lottery/generators/number-generator';
 import { MAX_LOTTERY_NUMBER } from '@/domain/lottery/lottery.constants';
-import type { SearchResult } from '@/domain/lottery/draw';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 const SHUFFLE_TICKS = 15;

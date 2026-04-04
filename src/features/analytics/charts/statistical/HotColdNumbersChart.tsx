@@ -1,5 +1,5 @@
 import { useHotNumbers, useLotteryMeta } from "@/application/selectors";
-import { CHART_COLORS } from "@/components/lottery/chart.constants";
+import { CHART_COLORS } from "@/features/analytics/charts/chart.constants";
 import { motion } from "framer-motion";
 import { memo, useMemo } from "react";
 

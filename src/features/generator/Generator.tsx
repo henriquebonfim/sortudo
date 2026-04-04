@@ -1,8 +1,8 @@
 import { useSimulator } from '@/application/useSimulator';
-import { MatchesTable, ResultBanner, ShareButton } from '@/components/shared';
-import { FrequenciesResponse } from '@/domain/lottery/draw';
+import { FrequenciesResponse } from '@/domain/lottery/data/draw';
 import { GenerationMode } from '@/domain/lottery/generators/number-generator';
 import { TOTAL_COMBINATIONS } from '@/domain/lottery/lottery.constants';
+import { ResultBanner, ShareButton } from '@/features/shared';
 import { formatNumber, getBallColor } from '@/lib';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ChevronDown, Clock, Dices, Trash2 } from 'lucide-react';
@@ -91,40 +91,13 @@ function BallDisplay({ displayNums, shuffling, freq }: {
   );
 }
 
-/**
- * Historical mini ball for the dropdown.
- */
-function MiniBall({ num, freq }: { num: number; freq: FrequenciesResponse | null }) {
-  const freqValues = freq ? Object.values(freq.frequencies) : [];
-  const min = freqValues.length ? Math.min(...freqValues) : 0;
-  const max = freqValues.length ? Math.max(...freqValues) : 0;
-  const color = freq && num > 0
-    ? getBallColor(
-      freq.frequencies[String(num)] ?? (freqValues.reduce((a, b) => a + b, 0) / freqValues.length),
-      min,
-      max,
-    )
-    : 'hsl(228 22% 22%)';
-
-  return (
-    <span
-      className="inline-flex items-center justify-center w-7 h-7 rounded-full text-[11px] font-mono font-bold text-white select-none shrink-0"
-      style={{
-        background: color,
-        boxShadow: `0 2px 6px ${color}55, inset 0 1px 0 rgba(255,255,255,0.2)`,
-      }}
-    >
-      {String(num).padStart(2, '0')}
-    </span>
-  );
-}
+import { MiniBall } from '@/features/shared/MiniBall';
 
 /**
  * Dropdown showing previous generations.
  */
-function HistoryDropdown({ history, freq, currentNumbers, onClear, onSelect }: {
+function HistoryDropdown({ history, currentNumbers, onClear, onSelect }: {
   history: GeneratedEntry[];
-  freq: FrequenciesResponse | null;
   currentNumbers: number[];
   onClear: () => void;
   onSelect: (nums: number[]) => void;
@@ -202,7 +175,7 @@ function HistoryDropdown({ history, freq, currentNumbers, onClear, onSelect }: {
                     className={`w-full flex items-center gap-3 px-4 py-3 cursor-pointer transition-all duration-150 text-left border-b border-white/5 ${isSelected ? 'bg-primary/10' : 'hover:bg-white/5'}`}
                   >
                     <span className="text-[10px] font-mono tabular-nums w-5 text-right shrink-0 text-muted-foreground/40">#{history.length - i}</span>
-                    <div className="flex gap-1 flex-1">{entry.numbers.map((n) => <MiniBall key={n} num={n} freq={freq} />)}</div>
+                    <div className="flex gap-1 flex-1">{entry.numbers.map((n) => <MiniBall key={n} number={n} size="xs" />)}</div>
                     <span className="text-[10px] font-mono tabular-nums shrink-0 text-muted-foreground/40">{formatTime(entry.timestamp)}</span>
                   </motion.button>
                 );
@@ -338,12 +311,14 @@ export function Generator() {
             <button onClick={generate} disabled={shuffling || !freq} className="btn-generate w-72 h-16 text-lg font-bold flex items-center justify-center gap-3 transition-transform active:scale-95 shadow-glow-gold/20">
               {shuffling ? 'Gerando...' : 'Gerar Combinação'}
             </button>
-            <HistoryDropdown history={history} freq={freq ?? null} currentNumbers={numbers} onClear={() => setHistory([])} onSelect={loadNumbers} />
+            <HistoryDropdown history={history} currentNumbers={numbers} onClear={() => setHistory([])} onSelect={loadNumbers} />
           </div>
         </motion.div>
 
         <ModeSelector currentMode={mode} onModeChange={setMode} disabled={shuffling} />
         <ContextMessage mode={mode} hasNumbers={numbers.length > 0} />
+
+        <div className="flex justify-center mt-10"><ShareButton /></div>
 
         <AnimatePresence>
           {searched && result && (
@@ -356,8 +331,6 @@ export function Generator() {
             >
               <div className="h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
               <ResultBanner result={result} />
-              <MatchesTable result={result} />
-              <div className="flex justify-center"><ShareButton result={result} /></div>
             </motion.div>
           )}
         </AnimatePresence>

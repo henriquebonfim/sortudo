@@ -1,7 +1,7 @@
-import { describe, it, expect } from 'vitest';
+import { Draw } from '@/domain/lottery/data/draw';
+import { GenerationMode, NumberGenerator } from '@/domain/lottery/generators/number-generator';
 import * as fc from 'fast-check';
-import { NumberGenerator, GenerationMode } from '@/domain/lottery/generators/number-generator';
-import { Draw } from '@/domain/lottery/draw.model';
+import { describe, expect, it } from 'vitest';
 
 describe('Domain - NumberGenerator Property Tests', () => {
   const modes: GenerationMode[] = [
@@ -23,7 +23,7 @@ describe('Domain - NumberGenerator Property Tests', () => {
     fc.assert(
       fc.property(fc.constantFrom(...modes), contextArb, (mode, ctx) => {
         const numbers = NumberGenerator.generate(mode, ctx);
-        
+
         const isCorrectLength = numbers.length === 6;
         const areInBound = numbers.every(n => n >= 1 && n <= 60);
         const areUnique = new Set(numbers).size === 6;
@@ -53,7 +53,7 @@ describe('Domain - NumberGenerator Property Tests', () => {
 
   it('should handle empty context by falling back to full pool (coverage for lines 49, 50, 56)', () => {
     const emptyCtx = { hotNumbers: [], coldNumbers: [], draws: [] };
-    
+
     // Explicitly test branches discovered as "uncovered"
     const hotResult = NumberGenerator.generate('hot', emptyCtx);
     const coldResult = NumberGenerator.generate('cold', emptyCtx);

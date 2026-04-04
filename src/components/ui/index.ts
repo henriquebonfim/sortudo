@@ -31,11 +31,8 @@ export {
   cssVar,
 } from "./token-utils";
 export type {
-  TokenPath,
   PrimitiveTokenPath,
   SemanticTokenPath,
-  TokenRef,
-  ExtractTokenPath,
 } from "./token-utils";
 
 // ── Motion Tokens ────────────────────────────────────────────────────────────
@@ -47,12 +44,6 @@ export {
   stagger,
   variants,
   tailwindAnimations,
-} from "./motion";
-export type {
-  SpringPreset,
-  DurationKey,
-  DelayKey,
-  TailwindAnimation,
 } from "./motion";
 
 // ── Component Types ──────────────────────────────────────────────────────────
@@ -68,8 +59,6 @@ export {
 export type {
   ButtonProps,
   ButtonVariant,
-  ButtonSize,
-  ButtonLoaderProps,
 } from "./types";
 
 // StatCard
@@ -89,14 +78,8 @@ export {
   ballSizeStyles,
   ballColorValues,
 } from "./types";
-export type {
-  BallSize,
-  BallColor,
-  BallBadgeProps,
-} from "./types";
 
 // SectionHeader
-export type { SectionHeaderProps } from "./types";
 
 // ── Theme Layer (Layer 4 — Runtime Constants) ─────────────────────────────
 export { THEME, COLORS } from "./theme";

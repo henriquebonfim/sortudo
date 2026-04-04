@@ -1,47 +1,29 @@
-import { memo, useMemo } from "react";
-import { usePrizeEvolution, useLotteryMeta } from "@/application/selectors";
-import { formatCompactCurrency } from "@/lib";
-import {
-  AreaChart,
-  Area,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  ReferenceLine,
-} from "recharts";
-import type { TooltipContentProps } from "recharts";
-import {
-  CHART_COLORS,
-  CHART_DIMENSIONS,
-} from "@/components/lottery/chart.constants";
+import { useLotteryMeta, usePrizeEvolution } from "@/application/selectors";
 import {
   MEGA_DA_VIRADA_START_YEAR,
 } from "@/domain/lottery/lottery.constants";
+import {
+  CHART_COLORS,
+  CHART_DIMENSIONS,
+} from "@/features/analytics/charts/chart.constants";
+import { formatCompactCurrency } from "@/lib";
+import {
+  Area,
+  AreaChart,
+  CartesianGrid,
+  ReferenceLine,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
 
 const LEGEND_ITEMS = [
   { color: CHART_COLORS.AMBER, label: "Prêmio máximo do ano" },
   { color: CHART_COLORS.BLUE, label: "Total distribuídos" },
 ];
 
-const CustomTooltip = memo(function CustomTooltip({
-  active,
-  payload,
-  label,
-}: TooltipContentProps<number, string>) {
-  if (!active || !payload?.length) return null;
-  return (
-    <div className="glass-card border border-border p-3 text-xs font-mono space-y-1">
-      <p className="text-foreground font-bold">{label}</p>
-      {payload.map((p) => (
-        <p key={String(p.dataKey)} style={{ color: p.color }}>
-          {p.name}: {formatCompactCurrency(p.value as number)}
-        </p>
-      ))}
-    </div>
-  );
-});
+import { CurrencyTooltip } from "../chart-tooltips";
 
 export function PrizeEvolutionChart() {
   const meta = useLotteryMeta();
@@ -77,7 +59,7 @@ export function PrizeEvolutionChart() {
             tick={{ fontSize: 10, fill: CHART_COLORS.TICK_LABEL }}
             width={64}
           />
-          <Tooltip content={(props) => <CustomTooltip {...props} />} />
+          <Tooltip content={(props) => <CurrencyTooltip {...props} formatter={formatCompactCurrency} />} />
           <ReferenceLine
             x={megaViradaYear}
             stroke={CHART_COLORS.EMERALD}

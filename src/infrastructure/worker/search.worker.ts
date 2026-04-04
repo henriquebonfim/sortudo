@@ -1,4 +1,4 @@
-import { searchCombination } from '@/domain/lottery/search-engine';
+import { searchCombination } from '@/domain/lottery/search/search-engine';
 import { WorkerCommand, WorkerCommandType, WorkerResponse } from './types';
 
 self.onmessage = async (event: MessageEvent<WorkerCommand>) => {

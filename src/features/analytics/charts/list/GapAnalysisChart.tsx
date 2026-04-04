@@ -1,16 +1,16 @@
-import { memo } from "react";
 import { useGapAnalysis, useLotteryMeta } from "@/application/selectors";
+import { CHART_COLORS } from "@/features/analytics/charts/chart.constants";
+import { memo } from "react";
 import {
-  BarChart,
   Bar,
+  BarChart,
+  CartesianGrid,
+  Cell,
+  ResponsiveContainer,
+  Tooltip,
   XAxis,
   YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  Cell,
 } from "recharts";
-import { CHART_COLORS } from "@/components/lottery/chart.constants";
 
 type GapEntry = { number: number; currentGap: number; maxGap: number };
 
@@ -44,7 +44,7 @@ const CustomTooltip = memo(function CustomTooltip({ active, payload }: CustomToo
   if (!active || !payload?.length) return null;
   const data = payload[0].payload;
   const ratio = data.maxGap > 0 ? Math.round((data.currentGap / data.maxGap) * 100) : 0;
-  
+
   return (
     <div className="glass-card border border-border p-3 text-xs font-mono">
       <p className="text-foreground font-bold text-sm mb-1">Nº {data.number}</p>

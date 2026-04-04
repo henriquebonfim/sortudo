@@ -1,18 +1,18 @@
+import { TICKET_PRICE, TOTAL_COMBINATIONS } from "@/domain/lottery/lottery.constants";
+import { calculateTrueExpectedValue } from "@/domain/math";
+import { CHART_COLORS } from "@/features/analytics/charts/chart.constants";
 import { useMemo } from "react";
 import {
-  LineChart,
+  CartesianGrid,
   Line,
+  LineChart,
+  ReferenceLine,
+  ResponsiveContainer,
+  Tooltip,
   XAxis,
   YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  ReferenceLine,
 } from "recharts";
-import { CHART_COLORS } from "@/components/lottery/chart.constants";
-import { RECHARTS_TOOLTIP_STYLE, RECHARTS_LABEL_STYLE } from "../chart-styles";
-import { TOTAL_COMBINATIONS, TICKET_PRICE } from "@/domain/lottery/lottery.constants";
-import { calculateTrueExpectedValue } from "@/domain/math";
+import { RECHARTS_LABEL_STYLE, RECHARTS_TOOLTIP_STYLE } from "../chart-styles";
 
 export function TrueNetEVChart() {
   const chartData = useMemo(() => {
@@ -20,12 +20,12 @@ export function TrueNetEVChart() {
     const ticketCost = TICKET_PRICE; // R$ 6,00 (standard Mega-Sena)
     const jackpotOdds = TOTAL_COMBINATIONS; // 50,063,860
     const secondaryPrizesEV = 1.20; // Average R$ from smaller prizes (Quina/Quadra)
-    
+
     // Simulate jackpot growth from 2M to 150M
     for (let jackpot = 2_000_000; jackpot <= 200_000_000; jackpot += 5_000_000) {
       // Estimate tickets sold based on jackpot size (exponential hype curve)
-      const ticketsSold = Math.min(250_000_000, Math.max(2_000_000, Math.pow(jackpot, 1.05) * 0.5)); 
-      
+      const ticketsSold = Math.min(250_000_000, Math.max(2_000_000, Math.pow(jackpot, 1.05) * 0.5));
+
       const ev = calculateTrueExpectedValue(
         ticketCost,
         jackpot,
@@ -33,7 +33,7 @@ export function TrueNetEVChart() {
         ticketsSold,
         secondaryPrizesEV
       );
-      
+
       data.push({
         jackpot: jackpot,
         displayJackpot: `R$ ${(jackpot / 1_000_000).toFixed(0)}M`,
@@ -54,23 +54,23 @@ export function TrueNetEVChart() {
           <br /><br />
           Mesmo em jackpots astronômicos, o aumento exponencial de jogadores destrói a rentabilidade teórica, mantendo o "lucro esperado" abaixo de zero.
         </p>
-        
+
         <ResponsiveContainer width="100%" height={400}>
           <LineChart data={chartData} margin={{ left: 10, right: 30, top: 20, bottom: 40 }}>
             <CartesianGrid strokeDasharray="3 3" stroke={CHART_COLORS.GRID_STROKE} vertical={false} />
-            <XAxis 
-              dataKey="displayJackpot" 
-              tick={{ fontSize: 11, fill: CHART_COLORS.TICK_LABEL, fontFamily: "monospace" }} 
+            <XAxis
+              dataKey="displayJackpot"
+              tick={{ fontSize: 11, fill: CHART_COLORS.TICK_LABEL, fontFamily: "monospace" }}
               angle={-45}
               textAnchor="end"
               dy={15}
             />
-            <YAxis 
-              tick={{ fontSize: 11, fill: CHART_COLORS.TICK_LABEL, fontFamily: "monospace" }} 
+            <YAxis
+              tick={{ fontSize: 11, fill: CHART_COLORS.TICK_LABEL, fontFamily: "monospace" }}
               domain={[-6, 1]}
               tickFormatter={(val) => `R$${val.toFixed(1)}`}
             />
-            
+
             <Tooltip
               contentStyle={RECHARTS_TOOLTIP_STYLE}
               itemStyle={{ color: CHART_COLORS.EMERALD, fontWeight: 'bold', fontSize: '13px' }}
@@ -78,10 +78,10 @@ export function TrueNetEVChart() {
               labelStyle={RECHARTS_LABEL_STYLE}
             />
             <ReferenceLine y={0} stroke={CHART_COLORS.RED} strokeWidth={2} strokeDasharray="4 4" label={{ position: 'top', value: 'Equilíbrio (R$ 0)', fill: CHART_COLORS.RED, fontSize: 12, fontWeight: 'bold' }} />
-            <Line 
-              type="monotone" 
-              dataKey="ev" 
-              stroke={CHART_COLORS.EMERALD} 
+            <Line
+              type="monotone"
+              dataKey="ev"
+              stroke={CHART_COLORS.EMERALD}
               strokeWidth={3}
               dot={false}
               activeDot={{ r: 6, fill: CHART_COLORS.EMERALD, stroke: RECHARTS_TOOLTIP_STYLE.backgroundColor, strokeWidth: 2 }}

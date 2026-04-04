@@ -97,3 +97,33 @@ export const OverlapBarTooltip = memo(function OverlapBarTooltip({
     </div>
   );
 });
+/**
+ * Generic currency tooltip for charts like PrizeEvolutionChart.
+ * Expects formatted label and colored payload items.
+ *
+ * Usage: `content={(props) => <CurrencyTooltip {...props} formatter={formatCompactCurrency} />}`
+ */
+export const CurrencyTooltip = memo(function CurrencyTooltip({
+  active,
+  payload,
+  label,
+  formatter = (v: number) => `R$${v.toLocaleString()}`,
+}: TooltipContentProps<number, string> & { formatter?: (v: number) => string }) {
+  if (!active || !payload?.length) return null;
+  return (
+    <div className="glass-card border border-border p-3 text-[11px] font-mono space-y-1.5 shadow-xl">
+      <p className="text-foreground font-bold border-b border-border/50 pb-1.5 mb-1.5">{label}</p>
+      {payload.map((p) => (
+        <div key={String(p.dataKey)} className="flex items-center justify-between gap-4">
+          <div className="flex items-center gap-2">
+            <div className="w-2 h-2 rounded-full" style={{ backgroundColor: p.color }} />
+            <span className="text-muted-foreground">{p.name}:</span>
+          </div>
+          <span className="font-bold whitespace-nowrap" style={{ color: p.color }}>
+            {formatter(p.value as number)}
+          </span>
+        </div>
+      ))}
+    </div>
+  );
+});

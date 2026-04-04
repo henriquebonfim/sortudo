@@ -1,5 +1,5 @@
 import { useLotteryMeta, useNumberProfile } from "@/application/selectors";
-import { CHART_COLORS } from "@/components/lottery/chart.constants";
+import { CHART_COLORS } from "@/features/analytics/charts/chart.constants";
 import { useMemo } from "react";
 import {
   Cell,

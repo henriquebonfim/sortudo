@@ -1,8 +1,7 @@
+import { useLotteryMeta, useParityDistribution } from "@/application/selectors";
 import { useMemo } from "react";
-import { useParityDistribution, useLotteryMeta } from "@/application/selectors";
-import { CHART_COLORS } from "@/components/lottery/chart.constants";
-import { ParityBar, ParityData } from "./components/ParityBar";
 import { Legend } from "./components/Legend";
+import { ParityBar } from "./components/ParityBar";
 
 export function ParityDistributionChart() {
   const meta = useLotteryMeta();

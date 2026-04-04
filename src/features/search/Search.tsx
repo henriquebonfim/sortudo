@@ -1,7 +1,7 @@
 import { useLookup } from '@/application/useLookup';
-import { LoadingBalls, MatchesTable, ResultBanner, SearchForm, ShareButton } from '@/components/shared';
+import { LoadingBalls, ResultBanner } from '@/features/shared';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Search as SearchIcon } from 'lucide-react';
+import { SearchCode, Search as SearchIcon } from 'lucide-react';
 
 export function Search() {
   const {
@@ -83,15 +83,87 @@ export function Search() {
               >
                 <div className="section-divider" />
                 <ResultBanner result={result} />
-                <MatchesTable result={result} />
-                <div className="flex justify-center pt-2">
-                  <ShareButton result={result} />
-                </div>
               </motion.div>
             )}
           </AnimatePresence>
         </section>
       </div>
+    </div>
+  );
+}
+
+/**
+ * Search input form.
+ */
+function NumberInput({ value, onChange, error }: { value: string; onChange: (v: string) => void; error?: boolean }) {
+  return (
+    <input
+      type="text"
+      inputMode="numeric"
+      maxLength={2}
+      value={value}
+      onChange={(e) => {
+        const v = e.target.value.replace(/\D/g, "");
+        if (v === "" || (Number(v) >= 1 && Number(v) <= 60)) onChange(v);
+      }}
+      placeholder="?"
+      className={[
+        "h-14 w-14 rounded-full border-2 bg-card text-center",
+        "font-mono text-lg font-semibold text-foreground",
+        "outline-none transition-all tabular-nums placeholder:text-muted-foreground/30",
+        "sm:h-16 sm:w-16 sm:text-xl",
+        error
+          ? "border-hot shadow-[0_0_12px_hsl(var(--hot)/0.3)]"
+          : value
+            ? "border-primary shadow-[0_0_12px_hsl(var(--primary)/0.2)]"
+            : "border-border focus:border-primary",
+      ].join(" ")}
+    />
+  );
+}
+
+
+function SearchForm({ inputs, onChange, hasDuplicates, isValid, onSearch, drawCount }: {
+  inputs: string[];
+  onChange: (idx: number, val: string) => void;
+  hasDuplicates: boolean;
+  isValid: boolean;
+  onSearch: () => void;
+  drawCount: number;
+}) {
+  return (
+    <div className="w-full max-w-3xl flex flex-col items-center gap-10">
+      <div className="glass-card p-8 md:p-12 w-full rounded-[32px] border-primary/10 shadow-2xl">
+        <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground/60 font-bold text-center mb-8">
+          ESCOLHA 6 NÚMEROS (1–60)
+        </p>
+
+        <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6">
+          {inputs.map((val, idx) => (
+            <NumberInput
+              key={idx}
+              value={val}
+              onChange={(v) => onChange(idx, v)}
+              error={val !== '' && inputs.filter((x) => x === val && x !== '').length > 1}
+            />
+          ))}
+        </div>
+
+        {hasDuplicates && (
+          <p className="mt-8 text-center text-sm font-bold text-hot tracking-wide animate-bounce">
+            Números repetidos não são permitidos.
+          </p>
+        )}
+      </div>
+
+      <button
+        onClick={onSearch}
+        disabled={!isValid}
+        className="btn-generate cursor-pointer w-72 h-16 flex items-center justify-center gap-3 transition-all active:scale-95 group"
+      >
+        <SearchCode className="w-4 h-4  group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
+        Buscar
+      </button>
     </div>
   );
 }
