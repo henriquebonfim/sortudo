@@ -1,8 +1,8 @@
 import { create } from 'zustand';
 import { SyncService } from './services/SyncService';
-import type { LotteryStats, SearchResult } from '@/domain/lottery/lottery.types';
-import { Draw, LotteryMetadata } from '@/domain/lottery/draw.model';
-import { searchCombination } from '@/domain/lottery/search-engine';
+import type { LotteryStats, SearchResult } from '@/domain/lottery/draw';
+import { Draw, LotteryMetadata } from '@/domain/lottery/draw';
+import { WorkerClient } from '@/infrastructure/worker';
 
 const SIMULATION_COUNT_KEY = 'total_simulations';
 
@@ -70,7 +70,7 @@ export const useLotteryStore = create<LotteryState>((set, get) => {
 
     search: async (numbers: number[]) => {
       const { draws } = get();
-      return searchCombination(numbers, draws, undefined);
+      return WorkerClient.getInstance().searchCombination({ numbers, draws });
     },
 
     incrementSimulation: () => {

@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { StatisticsService } from '../../src/domain/lottery/statistics.service';
-import { Draw, LotteryStats } from '../../src/domain/lottery/lottery.types';
+import { StatisticsService } from '@/domain/lottery/statistics.service';
+import { Draw, LotteryStats } from '@/domain/lottery/lottery.types';
 import { REAL_DRAWS } from '../fixtures/real-data';
 
 describe('StatisticsService (Integration Tests with Real Data)', () => {

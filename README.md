@@ -1,8 +1,8 @@
-# Sortudo? (Lucky?) 🍀 — Simulador Educativo da Mega-Sena
+# Sortudo? (Lucky?) 🍀 — Mega-Sena Insights
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-**Sortudo?** é um simulador educativo e de código aberto projetado para desmistificar a matemática por trás das loterias. Usando dados históricos reais da Mega-Sena, o projeto demonstra visualmente as probabilidades e o impacto financeiro de apostar a longo prazo.
+**Sortudo?** é uma ferramenta de auditoria cidadã projetada para desmistificar a matemática por trás das loterias. Usando dados históricos reais da Mega-Sena, o projeto demonstra visualmente as probabilidades e o impacto financeiro de apostar a longo prazo.
 
 > "A sorte é um erro de cálculo. A matemática não é cruel — só honesta."
 
@@ -12,7 +12,6 @@
 
 -   **📊 Painel de Dados**: Importe os resultados oficiais da Caixa (XLSX) e visualize estatísticas de frequência.
 -   **💸 Calculadora de Perdas**: Descubra quanto você já gastou historicamente e o que esse dinheiro teria rendido em Tesouro Selic ou Ibovespa.
--   **🎲 Simulador 40 Anos**: Veja como seu patrimônio se comporta em décadas de apostas ininterruptas.
 -   **🔍 Buscador de Combinações**: Verifique se seus números da "sorte" já saíram alguma vez nos 2.800+ concursos.
 -   **🏗️ Arquitetura DDD**: Código limpo, testável e desacoplado, seguindo padrões de Domain-Driven Design.
 

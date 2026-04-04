@@ -1,7 +1,5 @@
-export * from './BallBadge';
-export * from './ChartTooltip';
-export * from './LoadingBalls';
-export * from './NumberInput';
-export * from './ScrollSection';
-export * from './SectionHeader';
-export * from './StatCard';
+export { LoadingBalls } from './LoadingBalls';
+export { ScrollSection } from './ScrollSection';
+export * from './LotteryResults';
+export { AnimatedCounter } from './AnimatedCounter';
+export { MiniBall } from './MiniBall';

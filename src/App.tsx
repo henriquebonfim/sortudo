@@ -1,17 +1,16 @@
-import { Footer } from "@/components/layout/Footer";
-import { Header } from "@/components/layout/Header";
-import { LoadingBalls } from "@/components/shared/LoadingBalls";
-import { Toaster as Sonner } from "@/components/ui/sonner";
+import { useLotteryStore } from "@/application/useLotteryStore";
+import { LoadingBalls } from "@/components/shared";
+import { Footer, Header } from "@/components/ui/components";
+import { ThemeProvider } from "@/components/ui/ThemeProvider";
 import { lazy, Suspense, useEffect } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import NotFound from "@/pages/NotFound";
-import { useLotteryStore } from "@/application/useLotteryStore";
 
-const Index = lazy(() => import("@/pages/Index"));
+const Hero = lazy(() => import("@/pages/Hero"));
 const About = lazy(() => import("@/pages/About"));
 const Search = lazy(() => import("@/pages/Search"));
 const Generator = lazy(() => import("@/pages/Generator"));
-const DataDashboard = lazy(() => import("@/pages/DataDashboard"));
+const Analytics = lazy(() => import("@/pages/Analytics"));
+const NotFound = lazy(() => import("@/pages/NotFound"));
 
 function StoreInitializer() {
   const initialize = useLotteryStore((state) => state.initialize);
@@ -30,25 +29,24 @@ function LazyPage({ children }: { children: React.ReactNode }) {
 }
 
 const App = () => (
-  <>
+  <ThemeProvider>
     <StoreInitializer />
-    <Sonner />
     <BrowserRouter>
       <Header />
-      <main className="pt-14 min-h-screen">
+      <main className="pt-16 min-h-screen">
         <Routes>
-          <Route path="/" element={<LazyPage><Index /></LazyPage>} />
-          <Route path="/dados" element={<LazyPage><DataDashboard /></LazyPage>} />
-          <Route path="/sobre" element={<LazyPage><About /></LazyPage>} />
+          <Route path="/" element={<LazyPage><Hero /></LazyPage>} />
+          <Route path="/dados" element={<LazyPage><Analytics /></LazyPage>} />
+          <Route path="/gerador" element={<LazyPage><Generator /></LazyPage>} />
           <Route path="/buscar" element={<LazyPage><Search /></LazyPage>} />
           <Route path="/buscar/:jogo" element={<LazyPage><Search /></LazyPage>} />
-          <Route path="/gerador" element={<LazyPage><Generator /></LazyPage>} />
+          <Route path="/sobre" element={<LazyPage><About /></LazyPage>} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </main>
       <Footer />
     </BrowserRouter>
-  </>
+  </ThemeProvider>
 );
 
 export default App;

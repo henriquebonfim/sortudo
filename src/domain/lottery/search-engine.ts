@@ -1,10 +1,12 @@
-import { Draw } from '@/domain/lottery/draw.model';
-import type { SearchResult } from '@/domain/lottery/lottery.types';
+import type { Draw, SearchResult } from '@/domain/lottery/draw';
 
+/**
+ * Searches for a specific combination of numbers within the draw history.
+ * PURE logic, safe for workers.
+ */
 export async function searchCombination(
   numbers: number[],
-  draws: Draw[],
-  repo?: { getDrawsByNumber: (num: number) => Promise<Draw[]> }
+  draws: Draw[]
 ): Promise<SearchResult> {
   const set = new Set(numbers);
   const result: SearchResult = {
@@ -16,15 +18,7 @@ export async function searchCombination(
     totalAnalyzed: draws.length,
   };
 
-  let pool = draws;
-  if (repo && numbers.length > 0) {
-    const filtered = await repo.getDrawsByNumber(numbers[0]);
-    if (filtered.length > 0) {
-      pool = filtered;
-    }
-  }
-
-  for (const c of pool) {
+  for (const c of draws) {
     const matches = c.numbers.filter((b) => set.has(b)).length;
     if (matches === 6) result.jackpot.push(c);
     else if (matches === 5) result.fiveHits.push(c);

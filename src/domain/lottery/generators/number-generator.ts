@@ -1,4 +1,4 @@
-import type { Draw } from '@/domain/lottery/draw.model';
+import type { Draw } from '@/domain/lottery/draw';
 import { MAX_LOTTERY_NUMBER, PRIMES } from '@/domain/lottery/lottery.constants';
 
 // Re-exported here so the domain owns the type definition.
@@ -34,9 +34,21 @@ const FULL_POOL = Array.from({ length: MAX_LOTTERY_NUMBER }, (_, i) => i + 1);
 const ODDS_POOL = Array.from({ length: 30 }, (_, i) => i * 2 + 1);
 const EVENS_POOL = Array.from({ length: 30 }, (_, i) => i * 2 + 2);
 
-function pickRandom(pool: number[], count: number): number[] {
-  if (pool.length <= count) return [...pool].sort((a, b) => a - b);
-  const shuffled = [...pool];
+function pickRandom(pool: number[], count: number, fallbackPool?: number[]): number[] {
+  let uniquePool = Array.from(new Set(pool)).filter(n => n >= 1 && n <= MAX_LOTTERY_NUMBER);
+  
+  // If pool is insufficient, mix with fallback (usually FULL_POOL)
+  if (uniquePool.length < count && fallbackPool) {
+    const fallbackSet = new Set(fallbackPool);
+    uniquePool.forEach(num => fallbackSet.delete(num));
+    const needed = count - uniquePool.length;
+    const additional = pickRandom(Array.from(fallbackSet), needed);
+    uniquePool = [...uniquePool, ...additional];
+  }
+
+  if (uniquePool.length <= count) return [...uniquePool].sort((a, b) => a - b);
+  
+  const shuffled = [...uniquePool];
   for (let i = shuffled.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
@@ -46,8 +58,8 @@ function pickRandom(pool: number[], count: number): number[] {
 
 const STRATEGIES: Record<GenerationMode, GeneratorStrategy> = {
   random: () => pickRandom(FULL_POOL, 6),
-  hot: (ctx) => pickRandom(ctx.hotNumbers.length > 0 ? ctx.hotNumbers : FULL_POOL, 6),
-  cold: (ctx) => pickRandom(ctx.coldNumbers.length > 0 ? ctx.coldNumbers : FULL_POOL, 6),
+  hot: (ctx) => pickRandom(ctx.hotNumbers, 6, FULL_POOL),
+  cold: (ctx) => pickRandom(ctx.coldNumbers, 6, FULL_POOL),
   sequential: () => [1, 2, 3, 4, 5, 6],
   dates: () => pickRandom(DATES_POOL, 6),
   primes: () => pickRandom(PRIMES, 6),
@@ -55,7 +67,7 @@ const STRATEGIES: Record<GenerationMode, GeneratorStrategy> = {
   winners: (ctx) => {
     if (ctx.draws.length === 0) return pickRandom(FULL_POOL, 6);
     const draw = ctx.draws[Math.floor(Math.random() * ctx.draws.length)];
-    return [...draw.numbers].sort((a, b) => a - b);
+    return pickRandom(draw.numbers, 6, FULL_POOL);
   },
   '0odds-6evens': () => pickRandom(EVENS_POOL, 6),
   '1odd-5evens': () => [...pickRandom(ODDS_POOL, 1), ...pickRandom(EVENS_POOL, 5)].sort((a, b) => a - b),
@@ -73,6 +85,13 @@ const STRATEGIES: Record<GenerationMode, GeneratorStrategy> = {
 export class NumberGenerator {
   static generate(mode: GenerationMode, ctx: GenerationContext): number[] {
     const strategy = STRATEGIES[mode] || STRATEGIES.random;
-    return strategy(ctx);
+    const result = strategy(ctx);
+    
+    // Safety belt: Even if a strategy is buggy, domain guarantees 6 unique numbers
+    if (result.length === 6 && new Set(result).size === 6) {
+      return result;
+    }
+    
+    return pickRandom(result, 6, FULL_POOL);
   }
 }

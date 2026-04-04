@@ -19,10 +19,10 @@ interface ChartTooltipProps {
   }>;
 }
 
-export const ChartTooltip = memo(function ChartTooltip({ 
-  active, 
-  payload, 
-  title, 
+export const ChartTooltip = memo(function ChartTooltip({
+  active,
+  payload,
+  title,
   items,
   formatter,
   label: _label
@@ -32,21 +32,21 @@ export const ChartTooltip = memo(function ChartTooltip({
   const data = payload[0].payload as Record<string, string | number | undefined>;
 
   return (
-    <div className="glass-card border border-primary/20 p-3 text-xs font-mono shadow-xl bg-background/95 backdrop-blur-md">
-      {(title || data.number || data.name || data.label) && (
-        <p className="text-foreground font-bold text-sm mb-1.5 border-b border-white/5 pb-1">
+    <div className="glass-card border border-border p-3 text-xs font-mono shadow-xl bg-background/95 backdrop-blur-md">
+      {(title || data?.number || data?.name || data?.label) && (
+        <p className="text-foreground font-bold text-sm mb-1.5 border-b border-border pb-1">
           {title || (data.number ? `Número ${data.number}` : data.name || data.label)}
         </p>
       )}
-      
+
       <div className="space-y-1.5">
         {items ? (
           items.map((item, i) => {
             // If value is a string, it's likely a key in the data object
-            const val = typeof item.value === 'string' && data[item.value] !== undefined 
-              ? data[item.value] 
+            const val = typeof item.value === 'string' && data[item.value] !== undefined
+              ? data[item.value]
               : item.value;
-              
+
             const displayVal = formatter ? formatter(val, item.label) : `${val}${item.suffix || ""}`;
             return (
               <p key={i} className="text-muted-foreground flex justify-between gap-4">

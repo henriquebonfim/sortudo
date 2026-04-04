@@ -1,32 +1,33 @@
-import { formatCurrency } from "@/lib/formatters";
-import { motion } from "framer-motion";
+import { Button } from "@/components/ui/components/button";
+import { formatCurrency } from "@/lib";
+import { BarChart3 } from "lucide-react";
 import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
-import { fadeUp, tooltipStyle } from "../Common/shared-animations";
+import { tooltipStyle } from "../Common/shared-animations";
 
-import { Smartphone, Store } from "lucide-react";
-import { useState } from "react";
-import { getRevenueDistributionData } from "./money-flow.constants";
-
-
-interface MoneyFlowChartProps {
-  expected: {
-    betAmount: number;
-    returnPercentage: number;
-    expectedValue: number;
-    percentageLoss: number;
-    loss: number;
-  };
+interface DistributionItem {
+  name: string;
+  value: number;
+  color: string;
 }
 
-export function MoneyFlowChart({ expected }: MoneyFlowChartProps) {
+interface ExpectedStats {
+  betAmount: number;
+  returnPercentage: number;
+  expectedValue: number;
+  percentageLoss: number;
+  loss: number;
+}
+
+interface MoneyFlowChartProps {
+  distributionData: DistributionItem[];
+  expectedStats: ExpectedStats;
+}
+
+export function MoneyFlowChart({ distributionData, expectedStats }: MoneyFlowChartProps) {
   const fmt = formatCurrency;
 
-  const [isOnline, setIsOnline] = useState(false);
-  const data = getRevenueDistributionData(isOnline);
-
-
   return (
-    <motion.div variants={fadeUp} className="glass-card p-6 top-6 sticky">
+    <div className="glass-card p-6 top-6 ">
       <h3 className="font-display font-bold text-base text-foreground mb-1">
         Destino de cada R$ apostado
       </h3>
@@ -37,7 +38,7 @@ export function MoneyFlowChart({ expected }: MoneyFlowChartProps) {
         <ResponsiveContainer width={240} height={240}>
           <PieChart>
             <Pie
-              data={data}
+              data={distributionData}
               cx="50%"
               cy="50%"
               innerRadius="50%"
@@ -46,7 +47,7 @@ export function MoneyFlowChart({ expected }: MoneyFlowChartProps) {
               dataKey="value"
               stroke="none"
             >
-              {data.map((entry, i) => (
+              {distributionData.map((entry, i) => (
                 <Cell key={i} fill={entry.color} />
               ))}
             </Pie>
@@ -62,61 +63,21 @@ export function MoneyFlowChart({ expected }: MoneyFlowChartProps) {
       <div className="mt-5 pt-4 border-t border-border space-y-2 font-mono text-xs">
         <div className="flex justify-between">
           <span className="text-muted-foreground">Você aposta:</span>
-          <span className="text-foreground font-bold">{fmt(expected.betAmount)}</span>
+          <span className="text-foreground font-bold">{fmt(expectedStats.betAmount)}</span>
         </div>
         <div className="flex justify-between">
-          <span className="text-muted-foreground">Retorno esperado ({expected.returnPercentage}%):</span>
-          <span className="text-success font-bold">{fmt(expected.expectedValue)}</span>
+          <span className="text-muted-foreground">Retorno esperado ({expectedStats.returnPercentage}%):</span>
+          <span className="text-success font-bold">{fmt(expectedStats.expectedValue)}</span>
         </div>
         <div className="flex justify-between border-t border-border pt-2">
           <span className="text-muted-foreground">Perda esperada:</span>
-          <span className="text-hot font-bold">−{fmt(expected.loss)} (-{expected.percentageLoss}%)</span>
+          <span className="text-hot font-bold">−{fmt(expectedStats.loss)} (-{expectedStats.percentageLoss}%)</span>
         </div>
       </div>
 
-      <div className="flex bg-secondary/50 p-1 rounded-xl mb-4 w-fit mx-auto border border-border/50">
-        <button
-          onClick={() => setIsOnline(false)}
-          className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${!isOnline ? 'bg-background shadow text-foreground' : 'text-muted-foreground hover:text-foreground'}`}
-        >
-          <Store className="w-4 h-4" />
-          Lotérica Física
-        </button>
-        <button
-          onClick={() => setIsOnline(true)}
-          className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${isOnline ? 'bg-background shadow text-foreground' : 'text-muted-foreground hover:text-foreground'}`}
-        >
-          <Smartphone className="w-4 h-4" />
-          Canais Eletrônicos
-        </button>
+      <div className="pt-6 flex justify-center">
+        <Button asChild variant="outline" size="lg" className="w-full sm:w-auto rounded-2xl border-primary/20 hover:bg-primary/5 hover:text-primary transition-all"><a href="https://loterias.caixa.gov.br/Paginas/Mega-Sena.aspx#:~:text=Repasses%20Sociais-,Repasses%20Sociais,-Ao%20jogar%20na" target="_blank" rel="noopener noreferrer"><BarChart3 className="mr-2 h-5 w-5" />Entender os repasses oficiais</a></Button>
       </div>
-
-      <div className="space-y-2.5 overflow-y-auto pr-2 custom-scrollbar border border-border/50 rounded-xl p-4 bg-background/50">
-        {data.map((d) => (
-          <div key={d.name}>
-            <div className="flex justify-between text-xs mb-1.5 gap-4">
-              <div className="flex items-center gap-2 overflow-hidden">
-                <div
-                  className="w-2.5 h-2.5 rounded-full shrink-0"
-                  style={{ backgroundColor: d.color }}
-                />
-                <span className="text-muted-foreground truncate" title={d.name}>{d.name}</span>
-              </div>
-              <span className="font-mono font-bold text-foreground whitespace-nowrap">{d.value}%</span>
-            </div>
-            <div className="h-1.5 bg-secondary rounded-full overflow-hidden">
-              <motion.div
-                className="h-full rounded-full"
-                style={{ backgroundColor: d.color }}
-                initial={{ width: 0 }}
-                whileInView={{ width: `${d.value}%` }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.8, delay: 0.1, ease: "easeOut" }}
-              />
-            </div>
-          </div>
-        ))}
-      </div>
-    </motion.div>
+    </div>
   );
 }

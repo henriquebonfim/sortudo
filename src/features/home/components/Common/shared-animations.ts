@@ -1,3 +1,5 @@
+import { spring } from "@/components/ui";
+
 export const stagger = {
   hidden: {},
   show: { transition: { staggerChildren: 0.12 } },
@@ -8,15 +10,20 @@ export const fadeUp = {
   show: {
     opacity: 1,
     y: 0,
-    transition: { type: "spring" as const, stiffness: 300, damping: 30 },
+    transition: spring.standard,
   },
 };
 
+/**
+ * Shared recharts Tooltip contentStyle.
+ * Uses CSS variables so values remain in sync with the design system.
+ */
 export const tooltipStyle = {
-  background: "hsl(240 25% 12%)",
-  border: "1px solid hsl(38 92% 50% / 0.3)",
+  background: "hsl(var(--card))",
+  border: "1px solid hsl(var(--primary) / 0.3)",
   borderRadius: 8,
   backdropFilter: "blur(8px)",
-  fontFamily: "JetBrains Mono",
+  fontFamily: "var(--font-mono, 'JetBrains Mono', monospace)",
   fontSize: 12,
-};
+} as const;
+

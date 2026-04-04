@@ -6,43 +6,45 @@ test.describe('Main User Flow E2E', () => {
     await page.goto('/');
     await expect(page.getByText(/A sorte é um erro de cálculo/i)).toBeVisible();
 
-    // 2. Scroll to Generator
-    const generatorSection = page.locator('#simular');
-    await generatorSection.scrollIntoViewIfNeeded();
-    await expect(page.getByText('Gerador de Apostas')).toBeVisible();
+    // 2. Navigate to Generator (it's a separate page now)
+    const mainNav = page.getByLabel('Navegação principal');
+    await mainNav.getByRole('link', { name: 'Gerador' }).click();
+    await expect(page).toHaveURL(/\/gerador/);
+    await expect(page.getByText(/Gerador da Sorte/i)).toBeVisible();
 
     // 3. Generate a game
-    await page.getByRole('button', { name: '🎲 Gerar' }).click();
+    await page.getByRole('button', { name: 'Gerar Combinação' }).click();
     // Wait for animation (shuffle ticks)
     await page.waitForTimeout(2000); 
     
-    // Check that we have 6 generated balls (using the BallDisplay logic)
-    await expect(generatorSection.locator('.ball-shadow')).toHaveCount(6, { timeout: 10000 });
+    // Check that we have 6 generated balls
+    await expect(page.locator('.lottery-ball')).toHaveCount(6, { timeout: 20000 });
 
-    // 4. Scroll to Search
-    const searchSection = page.locator('#buscar');
-    await searchSection.scrollIntoViewIfNeeded();
+    // 4. Navigate to Search
+    await mainNav.getByRole('link', { name: 'Buscar' }).click();
+    await expect(page).toHaveURL(/\/buscar/);
     await expect(page.getByRole('heading', { name: 'Já fui sorteado?' })).toBeVisible();
 
     // 5. Perform a Search
-    const inputs = page.locator('input[type="text"]');
     const numbers = ['04', '05', '30', '33', '41', '52'];
     for (let i = 0; i < 6; i++) {
-        await inputs.nth(i).fill(numbers[i]);
+        await page.locator('input[type="text"]').nth(i).fill(numbers[i]);
     }
-    await page.getByRole('button', { name: /Buscar nos/ }).click();
+    
+    const searchBtn = page.getByRole('button', { name: /buscar/i });
+    await expect(searchBtn).toBeEnabled();
+    await searchBtn.click();
     
     // Check results and URL navigation
-    await expect(page.getByText(/NUNCA foi sorteada|Sua combinação saiu/)).toBeVisible();
+    const resultBanner = page.getByText(/nunca acertou a sena|já saiu/i);
+    await expect(resultBanner).toBeVisible({ timeout: 20000 });
     await expect(page).toHaveURL(/\/buscar\/04-05-30-33-41-52/);
 
-    // 6. Navigate to Dashboard
-    // Use direct goto to avoid flakiness in the test environment link interaction
-    await page.goto('/dados');
-    await expect(page.getByRole('heading', { name: /Dashboard Analítico/i })).toBeVisible({ timeout: 15000 });
-    
-    // Verify a KPI card
-    await expect(page.getByText('Total de concursos').first()).toBeVisible();
-    await expect(page.getByText(/2[.,]98/).first()).toBeVisible();
+    // 6. Navigate back to Home and scroll to Math
+    await page.goto('/');
+    const mathHeader = page.getByText(/A Matemática da Sorte/i);
+    await mathHeader.scrollIntoViewIfNeeded();
+    await expect(mathHeader).toBeVisible();
+    await expect(page.getByText(/Probabilidade de Ganhar/i)).toBeVisible();
   });
 });

@@ -18,18 +18,21 @@
     "noUnusedParameters": false,
     "paths": {
       "@/*": [
-        "./src/*"
+        "./src/*",
+        "./tests/*"
       ]
     },
     "skipLibCheck": true,
     "strict": false,
     "target": "ES2020",
     "types": [
-      "vitest/globals"
+      "vitest/globals",
+      "vite/client"
     ],
     "useDefineForClassFields": true
   },
   "include": [
-    "src"
-, "test"  ]
+    "src",
+    "tests"
+  ]
 }

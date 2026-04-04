@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, Mock } from 'vitest';
-import { SyncService } from '../../src/application/services/SyncService';
+import { SyncService } from '@/application/services/SyncService';
 import { REAL_DRAWS } from '../fixtures/real-data';
 
 describe('SyncService (Unit Tests)', () => {

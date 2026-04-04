@@ -27,3 +27,4 @@ dist-ssr
 .firebase
 scripts/*.json
 .geminiignore
+tests/coverage

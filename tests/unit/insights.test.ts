@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { StatisticsService } from '../../src/domain/lottery/statistics.service';
-import { Draw } from '../../src/domain/lottery/lottery.types';
+import { StatisticsService } from '@/domain/lottery/statistics.service';
+import { Draw } from '@/domain/lottery/lottery.types';
 
 describe('StatisticsService (Unit Tests for Insights)', () => {
   const mockData: Draw[] = [

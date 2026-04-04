@@ -1,7 +1,8 @@
+/* eslint-disable no-console */
 import * as fs from 'fs';
-import { DrawMapper } from '../src/domain/lottery/draw.mapper';
-import { StatisticsService } from '../src/domain/lottery/statistics.service';
-import { parseExcelToDraws } from '../src/infrastructure/parser/excel-reader';
+import { DrawMapper } from '../src/domain/lottery/draw';
+import { StatisticsService } from '../src/domain/lottery/services';
+import { parseExcelToDraws } from '../src/infrastructure/parser/index';
 
 const FILE_PATH = './scripts/Mega-Sena.xlsx';
 const OUTPUT_PATH = './public/data.json';
@@ -17,17 +18,17 @@ async function sync() {
   }
 
   try {
-    console.log(`📂 Reading ${FILE_PATH}...`);
+    console.info(`📂 Reading ${FILE_PATH}...`);
     const data = fs.readFileSync(FILE_PATH);
 
-    console.log('🧪 Parsing Excel contents...');
+    console.info('🧪 Parsing Excel contents...');
     const draws = parseExcelToDraws(data);
 
     if (draws.length === 0) {
       throw new Error('No draws were parsed from the Excel file.');
     }
 
-    console.log(`📊 Calculating statistics for ${draws.length} draws...`);
+    console.info(`📊 Calculating statistics for ${draws.length} draws...`);
     const stats = StatisticsService.calculateAllStats(draws);
     const metadata = DrawMapper.extractMetadata({}, draws);
 
@@ -38,11 +39,11 @@ async function sync() {
       sync_at: new Date().toISOString()
     };
 
-    console.log(`💾 Writing minified JSON to ${OUTPUT_PATH}...`);
+    console.info(`💾 Writing minified JSON to ${OUTPUT_PATH}...`);
     // Minify JSON to save bytes (no spaces)
     fs.writeFileSync(OUTPUT_PATH, JSON.stringify(output));
 
-    console.log(`✅ Success! Synchronized ${draws.length} records.`);
+    console.info(`✅ Success! Synchronized ${draws.length} records.`);
   } catch (err) {
     console.error(`❌ ERROR: ${err instanceof Error ? err.message : String(err)}`);
     process.exit(1);

@@ -12,12 +12,12 @@ export function OpenSource() {
       </p>
       <div className="flex flex-wrap gap-3">
         <a
-          href="https://github.com/henriquebonfim/odds-are-not-with-you"
+          href="https://github.com/henriquebonfim/sortudo"
           target="_blank"
           rel="noopener noreferrer"
           className="pill-btn pill-btn-inactive flex items-center gap-2"
         >
-          <Globe className="h-4 w-4" /> Código Fonte (Frontend)
+          <Globe className="h-4 w-4" /> Código Fonte
         </a>
       </div>
     </div>

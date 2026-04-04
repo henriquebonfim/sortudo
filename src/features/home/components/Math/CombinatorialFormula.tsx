@@ -1,8 +1,7 @@
-import { TOTAL_COMBINATIONS, MAX_LOTTERY_NUMBER, BALLS_PER_DRAW } from "@/domain/lottery/lottery.constants";
-import { AnimatedCounter } from "../Hero/AnimatedCounter";
-import { fadeUp } from "../Common/shared-animations";
+import { BALLS_PER_DRAW, MAX_LOTTERY_NUMBER, TOTAL_COMBINATIONS } from "@/domain/lottery/lottery.constants";
 import { motion } from "framer-motion";
-import { formatNumber } from "@/lib/formatters";
+import { fadeUp } from "../Common/shared-animations";
+import { AnimatedCounter } from "../Hero/AnimatedCounter";
 
 export function CombinatorialFormula() {
   const nMinusK = MAX_LOTTERY_NUMBER - BALLS_PER_DRAW;
@@ -46,13 +45,6 @@ export function CombinatorialFormula() {
           </div>
           <p className="text-xs text-muted-foreground">combinações possíveis</p>
         </div>
-      </div>
-
-      <div className="educational-box">
-        <p className="terminal-text text-sm">
-          São mais de <strong className="text-primary">{formatNumber(Math.floor(TOTAL_COMBINATIONS / 1_000_000))} milhões</strong> de
-          combinações únicas — e você tem apenas uma por bilhete de R$ 6,00.
-        </p>
       </div>
     </motion.div>
   );

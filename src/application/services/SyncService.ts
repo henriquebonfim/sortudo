@@ -1,7 +1,7 @@
-import { DrawMapper } from '@/domain/lottery/draw.mapper';
-import { StatisticsService } from '@/domain/lottery/statistics.service';
-import { Draw, LotteryMetadata } from '@/domain/lottery/draw.model';
-import { LotteryStats } from '@/domain/lottery/lottery.types';
+import { DrawMapper } from '@/domain/lottery/draw';
+import { StatisticsService } from '@/domain/lottery/services';
+import { Draw, LotteryMetadata } from '@/domain/lottery/draw';
+import { LotteryStats } from '@/domain/lottery/draw';
 
 interface SyncData {
   draws: Draw[];

@@ -1,0 +1,81 @@
+import { useLotteryActions } from '@/application/selectors';
+import { useDraws, useIsInitialized } from '@/application/selectors';
+import type { SearchResult } from '@/domain/lottery/draw';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+
+export function useLookup(isTimeline = false) {
+  const draws = useDraws();
+  const initialized = useIsInitialized();
+  const { search } = useLotteryActions();
+  const { jogo } = useParams<{ jogo?: string }>();
+  const navigate = useNavigate();
+
+  const loading = !initialized;
+  const drawCount = useMemo(() => draws.length, [draws.length]);
+
+  const initialNums = useMemo(() => {
+    if (!jogo) return [];
+    return jogo.split(/[- ,]/).filter(Boolean).slice(0, 6);
+  }, [jogo]);
+
+  const [inputs, setInputs] = useState<string[]>(
+    initialNums.length === 6 ? initialNums : ['', '', '', '', '', '']
+  );
+  const [result, setResult] = useState<SearchResult | null>(null);
+  const [searched, setSearched] = useState(false);
+
+  const handleChange = useCallback((idx: number, val: string) => {
+    setInputs((prev) => {
+      const next = [...prev];
+      next[idx] = val;
+      return next;
+    });
+  }, []);
+
+  useEffect(() => {
+    if (!isTimeline && initialNums.length === 6) {
+      // We need to sync inputs when the URL param changes (e.g. navigating back).
+      // setState-in-effect is intentional here — this is a controlled sync, not a loop.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setInputs(initialNums);
+    }
+  }, [initialNums, isTimeline]);
+
+  const numbers = inputs.map(Number).filter((n) => n >= 1 && n <= 60);
+  const hasDuplicates = new Set(numbers).size < numbers.length;
+  const isValid = numbers.length === 6 && !hasDuplicates;
+
+  const handleSearch = useCallback(async () => {
+    if (!isValid) return;
+    if (isTimeline) {
+      navigate(`/buscar/${inputs.join('-')}`, { replace: true });
+      return;
+    }
+    const res = await search(numbers);
+    setResult(res);
+    setSearched(true);
+    navigate(`/buscar/${inputs.join('-')}`, { replace: true });
+  }, [isValid, numbers, search, inputs, navigate, isTimeline]);
+
+  useEffect(() => {
+    if (!isTimeline && initialized && isValid && initialNums.length === 6 && !searched) {
+      // Auto-search on page load when a valid combination is already in the URL.
+      // This is intentional — we want a single search on mount, not a reactive loop.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      handleSearch();
+    }
+  }, [initialized, isValid, initialNums.length, searched, handleSearch, isTimeline]);
+
+  return {
+    inputs,
+    handleChange,
+    isValid,
+    hasDuplicates,
+    handleSearch,
+    result,
+    searched,
+    loading,
+    drawCount
+  };
+}

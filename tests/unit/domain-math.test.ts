@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { combinations } from '../../src/domain/math/combinations';
-import { mean, variance, standardDeviation, sum, max, min } from '../../src/domain/math/statistics';
+import { combinations } from '@/domain/math/combinations';
+import { mean, variance, standardDeviation, sum, max, min, poissonProbability, calculateTrueExpectedValue } from '@/domain/math/statistics';
 
 describe('Domain Math & Statistics', () => {
   describe('Combinations (nCr)', () => {
@@ -57,6 +57,25 @@ describe('Domain Math & Statistics', () => {
       expect(standardDeviation(single)).toBe(0);
       expect(max(single)).toBe(10);
       expect(min(single)).toBe(10);
+    });
+  });
+
+  describe('Poisson and Expected Value', () => {
+    it('calculates poissonProbability', () => {
+      expect(poissonProbability(1, 0)).toBeCloseTo(0.367879, 4); // exp(-1)
+      expect(poissonProbability(1, 1)).toBeCloseTo(0.367879, 4); // exp(-1)
+      expect(poissonProbability(3, 2)).toBeCloseTo(0.224, 3);
+      expect(poissonProbability(-1, 5)).toBe(0); // validate negative lambda handling
+    });
+
+    it('calculates true expected value with jackpot splitting risk', () => {
+      // 5 cost, 10M jackpot, 50M odds, 25M sold
+      // lambda = 25M / 50M = 0.5
+      const ev = calculateTrueExpectedValue(5, 10_000_000, 50_000_000, 25_000_000, 0);
+      // shareFactor = (1 - exp(-0.5)) / 0.5 ≈ 0.7869
+      // expectedJackpot = (10M * 0.7869) / 50M = 0.157...
+      // ev = 0.157 - 5 = -4.84
+      expect(ev).toBeCloseTo(-4.84, 2);
     });
   });
 });
