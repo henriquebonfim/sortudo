@@ -1,8 +1,8 @@
 /* eslint-disable no-console */
 import * as fs from 'fs';
-import { DrawMapper } from '../src/domain/lottery/draw';
-import { StatisticsService } from '../src/domain/lottery/services';
-import { parseExcelToDraws } from '../src/infrastructure/parser/index';
+import { calculateAllStats } from '../src/features/analytics/lib/calculations';
+import { parseExcelToGames } from '../src/lib/lottery/parser';
+import { Game } from '../src/lib/lottery/types';
 
 const FILE_PATH = './scripts/Mega-Sena.xlsx';
 const OUTPUT_PATH = './public/data.json';
@@ -22,21 +22,27 @@ async function sync() {
     const data = fs.readFileSync(FILE_PATH);
 
     console.info('🧪 Parsing Excel contents...');
-    const draws = parseExcelToDraws(data);
+    const draws: Game[] = parseExcelToGames(data);
 
     if (draws.length === 0) {
       throw new Error('No draws were parsed from the Excel file.');
     }
 
     console.info(`📊 Calculating statistics for ${draws.length} draws...`);
-    const stats = StatisticsService.calculateAllStats(draws);
-    const metadata = DrawMapper.extractMetadata({}, draws);
+    const stats = calculateAllStats(draws);
+
+    const metadata = {
+      totalGames: draws.length,
+      firstGameDate: draws[0].date,
+      lastGameDate: draws[draws.length - 1].date,
+      lastUpdate: new Date().toISOString(),
+    };
 
     const output = {
       draws,
       stats,
       metadata,
-      sync_at: new Date().toISOString()
+      sync_at: new Date().toISOString(),
     };
 
     console.info(`💾 Writing minified JSON to ${OUTPUT_PATH}...`);

@@ -7,7 +7,7 @@ typecheck:
 test:
 	bun run test
 
-test:e2e:
+test-e2e:
 	bun run test:e2e
 
 build:
