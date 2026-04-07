@@ -7,8 +7,6 @@ interface PrizePyramidProps {
 }
 
 export function PrizePyramid({ sortedData }: PrizePyramidProps) {
-  // Sort from Sena (top) to Quadra (bottom)
-  const pyramidData = [...sortedData].reverse(); // Quadra, Quina, Sena
 
   return (
     <div className="relative flex flex-col items-center py-10 overflow-hidden">

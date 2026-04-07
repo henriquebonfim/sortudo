@@ -1,9 +1,10 @@
 import { motion } from 'framer-motion';
+import type { ReactNode } from 'react';
 
 interface KpiCardProps {
   label: string;
   value: string;
-  icon: React.ReactNode;
+  icon: ReactNode;
   accentClass: string; // gradient class for the top accent bar
   valueClass: string; // text color class for the value
   delay?: number;

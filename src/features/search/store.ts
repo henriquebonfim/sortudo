@@ -62,8 +62,8 @@ export const useSearchStore = createStore<SearchState>('search', (set, get) => (
       set({ result, searched: true, loading: false });
     } catch (err) {
       console.error('Search failed:', err);
-      set({ loading: false });
-      // We could add an error state here if needed
+      const error = err instanceof Error ? err.message : 'Search failed unexpectedly';
+      set({ loading: false, error, searched: true });
     }
   },
 }));

@@ -1,7 +1,8 @@
 import { motion } from 'framer-motion';
+import type { ReactNode } from 'react';
 
 interface ChapterNavProps {
-  chapters: Array<{ id: string; title: string; icon: React.ReactNode }>;
+  chapters: Array<{ id: string; title: string; icon: ReactNode }>;
   currentChapterIndex: number;
   onChapterSelect: (index: number) => void;
 }

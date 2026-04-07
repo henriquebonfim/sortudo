@@ -1,4 +1,4 @@
-import { BALLS_PER_DRAW, MAX_LOTTERY_NUMBER } from '@/lib/lottery/constants';
+import { BALLS_PER_DRAW, MAX_LOTTERY_NUMBER, TOTAL_COMBINATIONS } from '@/lib/lottery/constants';
 import { combinations } from '@/lib/lottery/utils';
 
 /**
@@ -62,7 +62,7 @@ export function calculateTheoreticalParity(label: string): number {
 
   const even = BALLS_PER_DRAW - odd;
   // Total combinations for 6 numbers (60 total: 30 odd, 30 even)
-  const total = 50063860;
+  const total = TOTAL_COMBINATIONS;
 
   // We have 30 odd and 30 even numbers in 1-60
   const nOdd = MAX_LOTTERY_NUMBER / 2;

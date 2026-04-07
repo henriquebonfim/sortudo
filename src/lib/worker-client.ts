@@ -35,7 +35,9 @@ export class FeatureWorkerClient<TCommand, TResponse> {
 
   private handleError(e: ErrorEvent) {
     console.error('Worker error:', e);
-    // Notify all pending requests on fatal error if needed
+    const error = e.error || new Error('Worker execution failed');
+    this.pending.forEach((req) => req.reject(error));
+    this.pending.clear();
   }
 
   /**

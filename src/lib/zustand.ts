@@ -3,9 +3,6 @@ import { devtools, persist, PersistOptions, subscribeWithSelector } from 'zustan
 
 /**
  * Factory for a standard store with DevTools and SubscribeWithSelector.
- *
- * Using 'any' for the middleware list to allow flexible composition without
- * complex generic propagation in every store file.
  */
 export function createStore<T extends object>(name: string, fn: StateCreator<T, [], []>) {
   return create<T>()(subscribeWithSelector(devtools(fn, { name })));

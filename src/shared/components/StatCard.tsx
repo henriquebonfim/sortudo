@@ -1,12 +1,13 @@
 import { cn } from '@/shared/utils/cn';
 import { spring } from '@/shared/utils/motion';
 import { motion } from 'framer-motion';
+import type { ReactNode } from 'react';
 import { statCardVariantStyles, StatCardVariant } from './StatCard.variants';
 
 export interface StatCardProps {
   label: string;
   value: string;
-  icon?: React.ReactNode;
+  icon?: ReactNode;
   variant?: StatCardVariant;
   className?: string;
   'aria-label'?: string;

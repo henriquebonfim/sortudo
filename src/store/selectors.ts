@@ -16,7 +16,7 @@ import { useAnalyticsStore } from '@/features/analytics/store';
 
 /** Returns true if the lottery data is still being loaded/initialized. */
 export function useIsSeeding() {
-  return !useLotteryStore((s) => s.initialized);
+  return useLotteryStore((s) => s.isSeeding || !s.initialized);
 }
 
 /** Returns the raw array of all historical games. */
