@@ -230,7 +230,7 @@ function MatchGroup({
   );
 }
 
-export function ResultBanner({ result }: { result: SearchResult }) {
+export function ResultBanner({ result, contestId }: { result: SearchResult; contestId?: string }) {
   const hasJackpot = result.jackpot.length > 0;
 
   return (
@@ -245,12 +245,14 @@ export function ResultBanner({ result }: { result: SearchResult }) {
         }`}
       >
         <h2 className="text-2xl md:text-3xl font-display font-bold mb-4 tracking-tight">
-          {hasJackpot ? 'Combinação já foi Premiada!' : 'Combinação nunca foi sorteada!'}
+          {contestId ? `Concurso #${contestId}` : hasJackpot ? 'Combinação já foi Premiada!' : 'Combinação nunca foi sorteada!'}
         </h2>
         <p className="text-muted-foreground leading-relaxed max-w-2xl mx-auto font-medium">
-          {hasJackpot
-            ? `Este exato conjunto de dezenas foi sorteado ${result.jackpot.length} ${result.jackpot.length === 1 ? 'vez' : 'vezes'} entre os ${formatNumber(result.totalAnalyzed)} concursos oficiais da Mega-Sena.`
-            : `Esta combinação nunca saiu para o prêmio máximo. É um resultado encorajador? Nenhuma combinação de 6 números se repetiu até hoje na história.`}
+          {contestId 
+            ? `Confira o resultado oficial e as estatísticas de premiação para este concurso.`
+            : hasJackpot
+              ? `Este exato conjunto de dezenas foi sorteado ${result.jackpot.length} ${result.jackpot.length === 1 ? 'vez' : 'vezes'} entre os ${formatNumber(result.totalAnalyzed)} concursos oficiais da Mega-Sena.`
+              : `Esta combinação nunca saiu para o prêmio máximo. É um resultado encorajador? Nenhuma combinação de 6 números se repetiu até hoje na história.`}
         </p>
 
         <div className="flex flex-col items-center gap-8 mt-8">

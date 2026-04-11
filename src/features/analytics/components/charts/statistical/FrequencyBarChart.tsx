@@ -1,7 +1,7 @@
-import { CHART_COLORS } from '@/shared/constants/chart-colors';
 import { ChartTooltip } from '@/features/analytics/components/shared/ChartTooltip';
-import { LotteryStats } from '@/lib/lottery/types';
-import { useMemo, useState } from 'react';
+import { CHART_COLORS } from '@/shared/constants/chart-colors';
+import { useFrequencies } from '@/store/selectors';
+import { useMemo } from 'react';
 import {
   Bar,
   BarChart,
@@ -13,22 +13,21 @@ import {
   XAxis,
   YAxis,
 } from 'recharts';
-import { FILTER_OPTIONS, FilterMode, LEGEND_ITEMS, getColor } from './frequency-bar.constants';
+import { freqToColor } from './bubble-chart.utils';
+import { FilterMode } from './frequency-bar.constants';
 
 interface FrequencyBarChartProps {
-  stats?: LotteryStats | null;
+  filter: FilterMode;
 }
 
-export function FrequencyBarChart({ stats }: FrequencyBarChartProps) {
-  const [filter, setFilter] = useState<FilterMode>('top10');
-
-  const data = stats?.frequencies;
+export function FrequencyBarChart({ filter }: FrequencyBarChartProps) {
+  const data = useFrequencies();
 
   const chartData = useMemo(() => {
     if (!data?.ranking) return [];
     const ranking = [...data.ranking];
-    if (filter === 'top10') return ranking.slice(0, 10);
-    if (filter === 'bottom10') return ranking.slice(-10).reverse();
+    if (filter === 'top30') return ranking.slice(0, 30);
+    if (filter === 'bottom30') return ranking.slice(-30).reverse();
     return ranking;
   }, [data, filter]);
 
@@ -36,25 +35,12 @@ export function FrequencyBarChart({ stats }: FrequencyBarChartProps) {
     return <div className="h-64 animate-pulse bg-muted/20 rounded-xl" />;
   }
 
-  const height = filter === 'all' ? 480 : 300;
   const totalItems = data.ranking.length;
 
   return (
-    <div className="space-y-4">
-      <div className="flex flex-wrap gap-2">
-        {FILTER_OPTIONS.map((f) => (
-          <button
-            key={f.id}
-            onClick={() => setFilter(f.id)}
-            className={`pill-btn ${filter === f.id ? 'pill-btn-active' : 'pill-btn-inactive'}`}
-          >
-            {f.label}
-          </button>
-        ))}
-      </div>
-
-      <div className="glass-card p-4">
-        <ResponsiveContainer width="100%" height={height}>
+    <div className=" ">
+      <div className="p-4">
+        <ResponsiveContainer width="100%" height={500}>
           <BarChart
             data={chartData}
             layout="vertical"
@@ -82,7 +68,10 @@ export function FrequencyBarChart({ stats }: FrequencyBarChartProps) {
             />
             <Bar dataKey="frequency" radius={[0, 6, 6, 0]} maxBarSize={28}>
               {chartData.map((entry) => (
-                <Cell key={entry.number} fill={getColor(entry.position, totalItems)} />
+                <Cell
+                  key={entry.number}
+                  fill={freqToColor(entry.frequency, data.min.frequency, data.max.frequency)}
+                />
               ))}
               <LabelList
                 dataKey="percentage"
@@ -99,14 +88,7 @@ export function FrequencyBarChart({ stats }: FrequencyBarChartProps) {
         </ResponsiveContainer>
       </div>
 
-      <div className="flex gap-4 text-xs text-muted-foreground">
-        {LEGEND_ITEMS.map((c) => (
-          <div key={c.label} className="flex items-center gap-1.5">
-            <div className="w-3 h-3 rounded-full" style={{ backgroundColor: c.color }} />
-            {c.label}
-          </div>
-        ))}
-      </div>
+
     </div>
   );
 }

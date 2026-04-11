@@ -1,6 +1,6 @@
 import { useHotNumbers } from '@/features/analytics/hooks/use-analytics';
 import { CHART_COLORS } from '@/shared/constants/chart-colors';
-import { useLotteryMeta } from '@/store/selectors';
+import { useGames, useLotteryMeta } from '@/store/selectors';
 import { motion } from 'framer-motion';
 import { memo, useMemo } from 'react';
 
@@ -49,8 +49,8 @@ const HotNumberBadge = memo(function HotNumberBadge({
       className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full ring-1`}
       style={getTemperatureStyles(count)}
     >
-      <span className="font-mono font-bold text-sm">{String(number).padStart(2, '0')}</span>
-      <span className="text-[10px] opacity-75">×{count}</span>
+      <span className="font-mono font-bold text-sm tracking-tighter">{String(number).padStart(2, '0')}</span>
+      <span className="text-[10px] opacity-75 leading-none">×{count}</span>
     </motion.div>
   );
 });
@@ -60,8 +60,8 @@ const GridCell = memo(function GridCell({ num, count }: { num: number; count: nu
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      transition={{ delay: num * 0.008 }}
-      className={`w-9 h-9 rounded-lg flex items-center justify-center font-mono text-xs font-medium ring-1 transition-all duration-200 hover:scale-110 cursor-default`}
+      transition={{ delay: num * 0.005 }}
+      className={`w-6 h-6 sm:w-7 sm:h-7 rounded-lg flex items-center justify-center font-mono text-[10px] sm:text-xs font-medium ring-1 transition-all duration-200 hover:scale-110 cursor-default shadow-sm`}
       style={getTemperatureStyles(count)}
       title={`Nº ${num}: ${count > 1 ? 'vezes' : 'vez'} nos últimos 10 sorteios`}
     >
@@ -78,7 +78,7 @@ export function HotColdNumbersChart() {
     const map: Record<number, number> = {};
     if (!hotData) return map;
     for (const h of hotData) {
-      map[h.number] = h.count;
+      map[h.number] = h.frequency ?? (h as any).count ?? 0;
     }
     return map;
   }, [hotData]);
@@ -89,31 +89,58 @@ export function HotColdNumbersChart() {
 
   return (
     <div className="space-y-4">
-      <div className="flex flex-wrap gap-2">
-        {hotData.slice(0, 10).map((h, i) => (
-          <HotNumberBadge key={h.number} number={h.number} count={h.count} index={i} />
+      <div className="flex flex-wrap gap-1.5 justify-center">
+        {hotData.slice(0, 5).map((h, i) => (
+          <HotNumberBadge
+            key={h.number}
+            number={h.number}
+            count={h.frequency ?? (h as any).count ?? 0}
+            index={i}
+          />
         ))}
       </div>
 
-      <div className="glass-card p-4">
-        <div className="grid gap-1.5">
-          {GRID_STRUCTURE.map((row, ri) => (
-            <div key={ri} className="flex gap-1.5 justify-center">
-              {row.map((num) => (
-                <GridCell key={num} num={num} count={allFreqs[num] || 0} />
-              ))}
-            </div>
+      <div className="glass-card p-3 sm:p-4 overflow-hidden">
+        <div className="grid grid-cols-10 gap-1 sm:gap-1.5 w-max mx-auto lg:w-full lg:grid-cols-10 lg:place-items-center">
+          {Array.from({ length: 60 }, (_, i) => i + 1).map((num) => (
+            <GridCell key={num} num={num} count={allFreqs[num] || 0} />
           ))}
         </div>
       </div>
-
-      <div className="flex flex-wrap gap-3 text-xs text-muted-foreground">
+      <div className="flex flex-wrap gap-x-4 gap-y-2 text-[10px] text-muted-foreground">
         {LEGEND_ITEMS.map((item) => (
           <div key={item.label} className="flex items-center gap-1.5">
-            <div className={`w-4 h-4 rounded`} style={getTemperatureStyles(item.count)} />
+            <div className={`w-3 h-3 rounded`} style={getTemperatureStyles(item.count)} />
             <span>{item.label}</span>
           </div>
         ))}
+      </div>      <div className="pt-4 border-t border-border space-y-3">
+        <div className="flex items-center justify-between">
+          <h4 className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/70">
+            Últimos 10 Sorteios
+          </h4>
+          <span className="text-[10px] text-muted-foreground/40 font-mono italic">
+            Fonte dos dados acima
+          </span>
+        </div>
+        <div className="space-y-2 max-h-[160px] overflow-y-auto pr-2 custom-scrollbar">
+          {useGames().slice(-10).reverse().map((game) => (
+            <div key={game.id} className="flex items-center justify-between group py-1 border-b border-border/20 last:border-0 hover:bg-primary/5 px-2 rounded-md transition-colors">
+              <span className="text-[10px] font-medium text-muted-foreground min-w-[32px]">#{game.id}</span>
+              <div className="flex gap-1.5">
+                {game.numbers.map((n) => (
+                  <span
+                    key={n}
+                    className="w-5 h-5 rounded-md flex items-center justify-center text-[10px] font-bold font-mono transition-colors shadow-sm ring-1 ring-white/5"
+                    style={getTemperatureStyles(allFreqs[n] || 0)}
+                  >
+                    {String(n).padStart(2, '0')}
+                  </span>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

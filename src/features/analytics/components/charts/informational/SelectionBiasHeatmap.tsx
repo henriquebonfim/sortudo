@@ -1,78 +1,87 @@
 import { CHART_COLORS } from '@/shared/constants/chart-colors';
-import { HeatPoint, generateBiasData } from '../../../lib/chartData';
+import { generateBiasData } from '../../../lib/chartData';
 import { memo, useMemo } from 'react';
-import type { TooltipContentProps } from 'recharts';
-import {
-  Cell,
-  ResponsiveContainer,
-  Scatter,
-  ScatterChart,
-  Tooltip,
-  XAxis,
-  YAxis,
-  ZAxis,
-} from 'recharts';
+import { motion } from 'framer-motion';
 
-// ─── Tooltip ───────────────────────────────────────────────────────────────────
+// ─── Styles ───────────────────────────────────────────────────────────────────
 
-const RISK_BANDS = [
-  { threshold: 85, bg: 'bg-hot/20', text: 'text-hot', label: 'RISCO EXTREMO' },
-  { threshold: 60, bg: 'bg-primary/20', text: 'text-primary', label: 'RISCO ALTO' },
-] as const;
-
-function getRiskBand(bias: number) {
-  return (
-    RISK_BANDS.find((b) => bias > b.threshold) ?? {
-      bg: 'bg-muted',
-      text: 'text-muted-foreground',
-      label: 'FAIXA SEGURA',
-    }
-  );
+function getBiasStyles(bias: number) {
+  // Red: Months (1-12)
+  if (bias >= 85) return {
+    backgroundColor: `${CHART_COLORS.RED}e6`,
+    color: 'white',
+    boxShadow: `inset 0 0 0 1px ${CHART_COLORS.RED}`
+  };
+  // Amber: Days (13-31)
+  if (bias >= 60) return {
+    backgroundColor: `${CHART_COLORS.AMBER}cc`,
+    color: 'white',
+    boxShadow: `inset 0 0 0 1px ${CHART_COLORS.AMBER}`
+  };
+  // Default: Random (32-60)
+  return {
+    backgroundColor: 'rgba(255,255,255,0.05)',
+    color: 'rgba(255,255,255,0.4)',
+    boxShadow: `inset 0 0 0 1px rgba(255,255,255,0.1)`
+  };
 }
 
-const BiasTooltip = memo(function BiasTooltip({
-  active,
-  payload,
-}: TooltipContentProps<number, string>) {
-  if (!active || !payload?.length) return null;
-  const d = payload[0].payload as HeatPoint;
-  const band = getRiskBand(d.bias);
-
+const GridCell = memo(function GridCell({ num, bias }: { num: number; bias: number }) {
   return (
-    <div className="bg-card/95 border border-border p-3 rounded-xl shadow-xl backdrop-blur-md">
-      <div className="text-xs text-muted-foreground mb-1 font-mono uppercase tracking-wider">
-        Número {d.number}
-      </div>
-      <div className="text-lg font-bold text-foreground mb-2 flex items-center gap-2">
-        {d.bias.toFixed(0)}%{' '}
-        <span className="text-xs font-normal text-muted-foreground">de popularidade</span>
-      </div>
-      <div
-        className={`text-[10px] font-bold px-2 py-0.5 rounded-full w-fit ${band.bg} ${band.text}`}
-      >
-        {band.label}
-      </div>
-    </div>
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ delay: num * 0.005 }}
+      className={`w-6 h-6 sm:w-7 sm:h-7 rounded-lg flex items-center justify-center font-mono text-[10px] sm:text-xs font-medium transition-all duration-200 hover:scale-110 cursor-default shadow-sm`}
+      style={getBiasStyles(bias)}
+      title={`Nº ${num}: ${bias.toFixed(0)}% de popularidade`}
+    >
+      {String(num).padStart(2, '0')}
+    </motion.div>
   );
 });
 
 // ─── Component ─────────────────────────────────────────────────────────────────
 
-function getBubbleStyle(bias: number): { fill: string; opacity: number } {
-  if (bias > 85) return { fill: CHART_COLORS.RED, opacity: 0.9 };
-  if (bias > 60) return { fill: CHART_COLORS.AMBER, opacity: 0.7 };
-  return { fill: CHART_COLORS.SLATE, opacity: 0.3 };
-}
-
 export function SelectionBiasHeatmap() {
   const data = useMemo(() => generateBiasData(), []);
 
+  const biasMap = useMemo(() => {
+    const map: Record<number, number> = {};
+    data.forEach((d) => {
+      map[d.number] = d.bias;
+    });
+    return map;
+  }, [data]);
+
   return (
-    <div className="space-y-4">
-      <div className="glass-card p-6 border-l-4 border-l-primary/50">
-        <h3 className="text-xl font-bold mb-2 text-foreground font-display">
-          Viés de Seleção Humano
-        </h3>
+    <div className="space-y-6 flex flex-col content-between items-center justify-between">
+
+
+      <div className="glass-card p-3  overflow-hidden bg-black/20 border border-white/5">
+        <div className="grid grid-cols-10 gap-1 sm:gap-1.5 w-max mx-auto lg:w-full lg:grid-cols-10 lg:place-items-center">
+          {Array.from({ length: 60 }, (_, i) => i + 1).map((num) => (
+            <GridCell key={num} num={num} bias={biasMap[num] || 0} />
+          ))}
+        </div>
+      </div>
+
+      <div className="flex flex-wrap justify-center mt-6 gap-x-8 gap-y-3 text-[11px] font-medium text-muted-foreground">
+        <div className="flex items-center gap-2.5">
+          <div className="w-2.5 h-2.5 rounded-full bg-hot shadow-[0_0_8px_hsl(var(--hot)/0.5)]" />
+          Alta Popularidade (1-12)
+        </div>
+        <div className="flex items-center gap-2.5">
+          <div className="w-2.5 h-2.5 rounded-full bg-primary shadow-[0_0_8px_hsl(var(--primary)/0.5)]" />
+          Popularidade Média (13-31)
+        </div>
+        <div className="flex items-center gap-2.5">
+          <div className="w-2.5 h-2.5 rounded-full bg-muted-foreground/30" />
+          Baixa Popularidade (32-60)
+        </div>
+      </div>
+
+      <div className=" p-6  border-t-4 border-t-primary/50">
         <p className="text-sm text-muted-foreground mb-6 max-w-2xl leading-relaxed">
           Embora o sorteio seja matemático e uniforme, as escolhas humanas são profundamente
           enviesadas. Os pontos em <span className="text-hot font-bold">Vermelho</span> e{' '}
@@ -85,47 +94,6 @@ export function SelectionBiasHeatmap() {
             com dezenas de outros apostadores, o que reduz drasticamente o lucro real por bilhete.
           </span>
         </p>
-
-        <ResponsiveContainer width="100%" height={350}>
-          <ScatterChart margin={{ top: 20, right: 30, bottom: 20, left: -20 }}>
-            <XAxis type="number" dataKey="x" name="col" hide domain={[0, 9]} />
-            <YAxis type="number" dataKey="y" name="row" hide domain={[5.5, -0.5]} />
-            <ZAxis type="number" dataKey="bias" range={[200, 1800]} />
-            <Tooltip
-              cursor={{ strokeDasharray: '4 4', stroke: 'rgba(255,255,255,0.1)' }}
-              content={(props) => <BiasTooltip {...props} />}
-            />
-            <Scatter name="Lottery Numbers" data={data}>
-              {data.map((entry, index) => {
-                const { fill, opacity } = getBubbleStyle(entry.bias);
-                return (
-                  <Cell
-                    key={`cell-${index}`}
-                    fill={fill}
-                    fillOpacity={opacity}
-                    stroke={entry.bias > 60 ? fill : 'transparent'}
-                    strokeWidth={1}
-                  />
-                );
-              })}
-            </Scatter>
-          </ScatterChart>
-        </ResponsiveContainer>
-
-        <div className="flex flex-wrap justify-center mt-6 gap-x-8 gap-y-3 text-[11px] font-medium text-muted-foreground">
-          <div className="flex items-center gap-2.5">
-            <div className="w-2.5 h-2.5 rounded-full bg-hot shadow-[0_0_8px_hsl(var(--hot)/0.5)]" />
-            Meses (1-12)
-          </div>
-          <div className="flex items-center gap-2.5">
-            <div className="w-2.5 h-2.5 rounded-full bg-primary shadow-[0_0_8px_hsl(var(--primary)/0.5)]" />
-            Dias (13-31)
-          </div>
-          <div className="flex items-center gap-2.5">
-            <div className="w-2.5 h-2.5 rounded-full bg-muted-foreground/30" />
-            Aleatório (32-60)
-          </div>
-        </div>
       </div>
     </div>
   );

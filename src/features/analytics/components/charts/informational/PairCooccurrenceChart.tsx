@@ -80,8 +80,11 @@ export function PairCooccurrenceChart() {
     const total = Math.max(metadata.totalGames, 1);
     return rawData.map((item) => ({
       ...item,
+      number1: item.numbers[0],
+      number2: item.numbers[1],
+      pair: `${String(item.numbers[0]).padStart(2, '0')}-${String(item.numbers[1]).padStart(2, '0')}`,
       pct: Math.round((item.count / total) * 1000) / 10,
-    }));
+    })) as ExtendedPairData[];
   }, [rawData, metadata]);
 
   if (!metadata || !rawData || data.length === 0) {
@@ -92,7 +95,7 @@ export function PairCooccurrenceChart() {
 
   return (
     <div className="space-y-4">
-      <div className="glass-card p-4">
+      <div className="p-4">
         <ResponsiveContainer width="100%" height={300}>
           <BarChart
             data={data}
@@ -120,8 +123,8 @@ export function PairCooccurrenceChart() {
               cursor={{ fill: CHART_COLORS.CURSOR }}
             />
             <Bar dataKey="count" radius={[0, 6, 6, 0]} maxBarSize={22}>
-              {data.map((d, i) => (
-                <Cell key={d.pair} fill={`hsla(${271 - i * 10}, 80%, ${60 - i * 1.5}%, 0.85)`} />
+              {data.map((d) => (
+                <Cell key={d.pair} fill={`hsla(${271 - data.indexOf(d) * 10}, 80%, ${60 - data.indexOf(d) * 1.5}%, 0.85)`} />
               ))}
             </Bar>
           </BarChart>

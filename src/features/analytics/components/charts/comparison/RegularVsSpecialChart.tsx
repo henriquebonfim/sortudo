@@ -1,17 +1,16 @@
-import { useLotteryMeta } from '@/store/selectors';
+import { ChartTooltip } from '@/features/analytics/components/shared/ChartTooltip';
 import { useTypeComparison } from '@/features/analytics/hooks/use-analytics';
 import { CHART_COLORS } from '@/shared/constants/chart-colors';
-import { ChartTooltip } from '@/features/analytics/components/shared/ChartTooltip';
+import { useLotteryMeta } from '@/store/selectors';
 import {
   Bar,
   BarChart,
   CartesianGrid,
   Cell,
-  Legend,
   ResponsiveContainer,
   Tooltip,
   XAxis,
-  YAxis,
+  YAxis
 } from 'recharts';
 
 export function RegularVsSpecialChart() {
@@ -76,7 +75,6 @@ export function RegularVsSpecialChart() {
               }
               cursor={{ fill: 'rgba(255, 255, 255, 0.05)' }}
             />
-            <Legend verticalAlign="top" height={36} />
             <Bar dataKey="avg" name="Prêmio Médio" radius={[4, 4, 0, 0]} maxBarSize={40}>
               {chartData.map((entry, index) => (
                 <Cell key={`avg-${index}`} fill={entry.color} fillOpacity={0.8} />
@@ -107,10 +105,7 @@ export function RegularVsSpecialChart() {
         ))}
       </div>
 
-      <p className="text-[10px] text-muted-foreground italic text-center px-4">
-        * Comparação direta entre a rentabilidade média de sorteios semanais vs. o evento anual
-        especial.
-      </p>
+
     </div>
   );
 }

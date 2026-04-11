@@ -1,6 +1,4 @@
 import { LotteryStats } from '@/lib/lottery/types';
-import { getEconomicsChapter } from './chapters/economics-chapter';
-import { getGeographyChapter } from './chapters/geography-chapter';
 import { getNumbersChapter } from './chapters/numbers-chapter';
 import { getProbabilityChapter } from './chapters/probability-chapter';
 import { getTemporalChapter } from './chapters/temporal-chapter';
@@ -17,8 +15,6 @@ const CHAPTER_FACTORIES = [
   getNumbersChapter,
   getTemporalChapter,
   getProbabilityChapter,
-  getEconomicsChapter,
-  getGeographyChapter,
 ];
 
 /**

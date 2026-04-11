@@ -4,6 +4,8 @@ import { useMemo, useState } from 'react';
 import { ChartLegend } from './ChartLegend';
 import { StreakChartTab } from './StreakChartTab';
 import { StreakTableTab } from './StreakTableTab';
+import { StreakFrequencyChart } from './StreakFrequencyChart';
+import { Button } from '@/shared/components/ui/Button';
 
 const VIEW_OPTIONS = [
   { id: 'chart' as const, label: 'Gráfico' },
@@ -17,7 +19,7 @@ export function StreakEconomicsChart() {
 
   const filteredData = useMemo(() => {
     if (!rawData) return [];
-    return rawData.filter((d) => d.drawsCount >= 2 && d.streakLength <= 20);
+    return rawData.filter((d) => d.count >= 2 && d.streak <= 20);
   }, [rawData]);
 
   if (!meta || !rawData || rawData.length === 0) {
@@ -26,15 +28,15 @@ export function StreakEconomicsChart() {
 
   return (
     <div className="space-y-4">
-      <div className="flex gap-2">
+      <div className="flex m-auto justify-center gap-2">
         {VIEW_OPTIONS.map((f) => (
-          <button
+          <Button
             key={f.id}
             onClick={() => setView(f.id)}
-            className={`pill-btn ${view === f.id ? 'pill-btn-active' : 'pill-btn-inactive'}`}
+
           >
             {f.label}
-          </button>
+          </Button>
         ))}
       </div>
 
@@ -44,7 +46,10 @@ export function StreakEconomicsChart() {
         <StreakTableTab data={rawData} />
       )}
 
+
       <ChartLegend />
+
+
     </div>
   );
 }

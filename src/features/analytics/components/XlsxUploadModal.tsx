@@ -1,27 +1,26 @@
-import * as React from 'react';
-import {
-  Upload,
-  FileCheck,
-  AlertCircle,
-  Loader2,
-  Calendar,
-  Database,
-  ArrowRight,
-} from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { parseExcelToGames } from '@/lib/lottery/parser';
+import { Button } from '@/shared/components/ui/Button';
 import {
   Dialog,
-  DialogHeader,
   DialogBody,
-  DialogFooter,
-  DialogTitle,
   DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
 } from '@/shared/components/ui/Dialog';
-import { Button } from '@/shared/components/ui/Button';
-import { parseExcelToGames } from '@/lib/lottery/parser';
-import { useLotteryStore } from '@/store/lottery';
-import { Game } from '@/lib/lottery/types';
 import { cn } from '@/shared/utils/cn';
+import { useLotteryStore } from '@/store/lottery';
+import { AnimatePresence, motion } from 'framer-motion';
+import {
+  AlertCircle,
+  ArrowRight,
+  Calendar,
+  Database,
+  FileCheck,
+  Loader2,
+  Upload,
+} from 'lucide-react';
+import * as React from 'react';
 
 interface XlsxUploadModalProps {
   open: boolean;
@@ -118,7 +117,7 @@ export function XlsxUploadModal({ open, onClose, onSuccess }: XlsxUploadModalPro
       <DialogHeader>
         <DialogTitle>Atualizar Banco de Dados</DialogTitle>
         <DialogDescription>
-          Carregue o arquivo oficial da Mega-Sena (.xlsx) para atualizar as estatísticas.
+          Carregue o <a className='text-primary underline' target='_blank' rel='noopener noreferrer' href="https://loterias.caixa.gov.br/Paginas/Mega-Sena.aspx#:~:text=Resultados%20da%20Mega%2DSena%20por%20ordem%20crescente.">  Arquivo Oficial  </a> da Mega-Sena (.xlsx) para atualizar as estatísticas.
         </DialogDescription>
       </DialogHeader>
 
@@ -291,7 +290,6 @@ export function XlsxUploadModal({ open, onClose, onSuccess }: XlsxUploadModalPro
           <Button
             onClick={onConfirm}
             leftIcon={<FileCheck size={16} />}
-            disabled={step === 'applying' || step === 'validating'}
           >
             Aplicar Dados
           </Button>

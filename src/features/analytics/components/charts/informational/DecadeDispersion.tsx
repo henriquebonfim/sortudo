@@ -13,7 +13,7 @@ export const DecadeDispersion = memo(function DecadeDispersion({
       <div className="grid grid-cols-2 gap-3">
         <div className="text-center p-3 rounded-lg border border-success/20 bg-success/10">
           <span className="font-mono font-bold text-lg text-success">{fullySpreadPct}%</span>
-          <p className="text-[10px] text-muted-foreground mt-1">6 dezenas different</p>
+          <p className="text-[10px] text-muted-foreground mt-1">6 dezenas diferentes</p>
         </div>
         <div className="flex items-center gap-3 p-3 rounded-xl border border-primary/20 bg-primary/10">
           <span className="text-2xl font-display font-bold text-primary">{clusteredPct}%</span>

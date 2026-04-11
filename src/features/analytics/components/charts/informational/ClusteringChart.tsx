@@ -29,10 +29,8 @@ export function ClusteringChart() {
   }
 
   return (
-    <div className="glass-card p-4 flex flex-col items-center">
-      <h4 className="text-sm font-semibold mb-1 text-foreground/90 w-full text-center">
-        Agrupamento nas Dezenas
-      </h4>
+    <div className=" p-4 flex flex-col items-center">
+
       <p className="text-[10px] text-muted-foreground mb-4 text-center">
         Como os números se espalham pelas linhas (1-9, 10-19...).
       </p>

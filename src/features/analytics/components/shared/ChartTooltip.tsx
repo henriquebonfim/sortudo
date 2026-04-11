@@ -5,7 +5,7 @@ interface ChartTooltipProps {
   payload?: readonly PayloadEntry[];
   label?: string | number;
   title?: string;
-  formatter?: (value: number | string, name: string) => string;
+  formatter?: (value: any, name: any, ...args: any[]) => any;
   items?: Array<{
     label: string;
     value: string | number;
@@ -15,10 +15,10 @@ interface ChartTooltipProps {
 }
 
 interface PayloadEntry {
-  payload: Record<string, string | number | undefined>;
-  name: string;
-  value: number | string;
-  color: string;
+  payload?: any;
+  name?: any;
+  value?: any;
+  color?: string;
 }
 
 export const ChartTooltip = memo(function ChartTooltip({
@@ -30,13 +30,20 @@ export const ChartTooltip = memo(function ChartTooltip({
 }: ChartTooltipProps) {
   if (!active || !payload?.length) return null;
 
-  const data = payload[0].payload as Record<string, string | number | undefined>;
+  const entry = payload[0];
+  const data = entry.payload as Record<string, string | number | undefined>;
+  const name = entry.name;
+  const value = entry.value;
+  const color = entry.color;
 
   return (
     <div className="glass-card border border-border p-3 text-xs font-mono shadow-xl bg-background/95 backdrop-blur-md">
-      {(title || data?.number || data?.name || data?.label) && (
+      {(title || data?.number || data?.name || data?.label || name) && (
         <p className="text-foreground font-bold text-sm mb-1.5 border-b border-border pb-1">
-          {title || (data?.number ? `Número ${data.number}` : data?.name || data?.label)}
+          {title ||
+            (data?.number
+              ? `Número ${data.number}`
+              : String(data?.name || data?.label || name || 'Dados'))}
         </p>
       )}
 
@@ -61,9 +68,11 @@ export const ChartTooltip = memo(function ChartTooltip({
             })
           : payload.map((entry, i) => (
               <p key={i} className="text-muted-foreground flex justify-between gap-4">
-                <span className="opacity-80">{entry.name}:</span>
+                <span className="opacity-80">{String(entry.name || 'Valor')}:</span>
                 <span className="text-foreground font-bold" style={{ color: entry.color }}>
-                  {formatter ? formatter(entry.value, entry.name || '') : entry.value}
+                  {formatter
+                    ? formatter(entry.value ?? '', String(entry.name ?? ''))
+                    : (entry.value ?? '')}
                 </span>
               </p>
             ))}

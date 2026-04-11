@@ -1,14 +1,14 @@
 import React from 'react';
 
 export type InfographicType =
-  | 'Statistical'
-  | 'Timeline'
-  | 'Comparison'
-  | 'Hierarchical'
-  | 'Geographic'
-  | 'Informational'
-  | 'List'
-  | 'Process';
+  | 'Estatístico'
+  | 'Cronológico'
+  | 'Comparativo'
+  | 'Hierárquico'
+  | 'Geográfico'
+  | 'Informacional'
+  | 'Lista'
+  | 'Processo';
 
 export interface Section {
   id: string;

@@ -1,6 +1,13 @@
 import { DataParsingProcessChart } from '@/features/about/components/DataParsingProcessChart';
 import { motion } from 'framer-motion';
 import { Code2, Database, ExternalLink, Info, Shield, ShieldCheck, Terminal } from 'lucide-react';
+import { SuggestedFeaturesPanel } from './SuggestedFeaturesPanel';
+
+interface NavigatorExtended extends Navigator {
+  deviceMemory?: number;
+}
+
+const nav = navigator as NavigatorExtended;
 
 const sources = [
   'https://loterias.caixa.gov.br/Paginas/Mega-Sena.aspx',
@@ -103,10 +110,21 @@ export function About() {
             </h3>
             <div className="h-[400px] w-full">
               <DataParsingProcessChart />
+              <p className="text-xs text-muted-foreground/50 text-center mt-12 italic">
+                * O processamento ocorre localmente para garantir privacidade e performance.
+              </p>
+
             </div>
-            <p className="text-xs text-muted-foreground/50 text-center mt-12 italic">
-              * O processamento ocorre localmente para garantir privacidade e performance.
-            </p>
+
+            <code className="text-muted-foreground leading-relaxed text-xs">
+              <ul>
+                <li>User Status: {nav.onLine ? "Online" : "Offline"}</li >
+                <li>User CPU: {nav.hardwareConcurrency}</li >
+                <li>User RAM: {nav.deviceMemory}</li >
+                <li>User Language: {nav.language}</li>
+                <li>User Agent: {nav.userAgent}</li>
+              </ul>
+            </code>
           </motion.div>
 
           {/* Open Source & Sources */}
@@ -146,6 +164,11 @@ export function About() {
                 Acreditamos que algoritmos de loteria devem ser auditáveis. Por isso, 100% do nosso
                 código está disponível no GitHub sob licença MIT.
               </p>
+
+              <p className="text-muted-foreground leading-relaxed">
+                Confira as sugestões de melhorias e novas funcionalidades que planejamos para o Sortudo.
+              </p>
+              <SuggestedFeaturesPanel />
               <div className="flex flex-wrap gap-4 pt-2">
                 <a
                   href="https://github.com/henriquebonfim/sortudo"

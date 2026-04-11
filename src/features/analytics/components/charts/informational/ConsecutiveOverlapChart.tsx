@@ -1,14 +1,25 @@
 import { useNumberProfile } from '@/features/analytics/hooks/use-analytics';
+import { useAnalyticsStore } from '@/features/analytics/store';
 import { CHART_COLORS } from '@/shared/constants/chart-colors';
 import { useLotteryMeta } from '@/store/selectors';
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import { Cell, Legend, Pie, PieChart, ResponsiveContainer, Tooltip } from 'recharts';
 import { PieSliceTooltip } from '../chart-tooltips';
 
 export function ConsecutiveOverlapChart() {
   const meta = useLotteryMeta();
   const profile = useNumberProfile();
-  const overlaps = profile?.drawOverlaps;
+  const calculateStats = useAnalyticsStore((s) => s.calculateStats);
+
+  // Automatically migrate legacy cached data
+  useEffect(() => {
+    if (profile && !profile.overlapExamples) {
+      console.log('[Analytics] Detected legacy overlap cache, forcing recalculation...');
+      calculateStats(true);
+    }
+  }, [profile, calculateStats]);
+
+  const overlaps = profile?.gameOverlaps;
 
   const chartData = useMemo(() => {
     if (!overlaps) return [];
@@ -28,10 +39,7 @@ export function ConsecutiveOverlapChart() {
   }
 
   return (
-    <div className="glass-card p-4 flex flex-col items-center">
-      <h4 className="text-sm font-semibold mb-1 text-slate-200 w-full text-center">
-        Números Repetidos
-      </h4>
+    <div className="p-4 flex flex-col items-center">
       <p className="text-[10px] text-muted-foreground mb-4 text-center">
         Frequência em que números do sorteio anterior se repetem no atual.
       </p>
@@ -57,6 +65,33 @@ export function ConsecutiveOverlapChart() {
           </PieChart>
         </ResponsiveContainer>
       </div>
+
+      {profile?.overlapExamples && profile.overlapExamples.length > 0 && (
+        <div className="w-full mt-8">
+          <h5 className="text-[10px] font-bold text-muted-foreground uppercase mb-3 tracking-widest border-b border-border pb-1">
+            Exemplos Recentes (2+ Repetições)
+          </h5>
+          <div className="space-y-2 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
+            {profile.overlapExamples.map((ex) => (
+              <div key={ex.drawId} className="p-2 rounded bg-muted/10 border border-border hover:bg-muted/20 transition-colors flex flex-col gap-1.5">
+                <div className="flex justify-between items-center font-mono">
+                  <span className="text-[10px] text-primary font-bold">CONCURSO {ex.prevDrawId} - {ex.drawId}</span>
+                  <span className="text-[9px] text-muted-foreground opacity-60">{ex.date}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <div className="flex gap-1 flex-wrap">
+                    {ex.numbers.map(n => (
+                      <span key={n} className="w-5 h-5 flex items-center justify-center rounded-full bg-primary/20 text-primary text-[9px] font-bold border border-primary/30">
+                        {String(n).padStart(2, '0')}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

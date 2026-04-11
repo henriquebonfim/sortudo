@@ -14,10 +14,12 @@ export function generateBiasData(): HeatPoint[] {
   const data: HeatPoint[] = [];
   for (let i = 0; i < 60; i++) {
     const num = i + 1;
-    // Bias based on "birthday numbers" (1-31) and "months" (1-12)
-    let bias = 20 + Math.random() * 20;
-    if (num <= 12) bias += 40 + Math.random() * 20;
-    else if (num <= 31) bias += 20 + Math.random() * 20;
+    let baseBias = 20; // Default for 32-60
+    if (num <= 12) baseBias = 85; // Months
+    else if (num <= 31) baseBias = 60; // Days
+
+    // Add controlled jitter to keep it within the intended visual band mostly
+    const bias = baseBias + Math.random() * 14;
 
     data.push({
       x: i % 10,

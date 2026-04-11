@@ -6,6 +6,7 @@ import { BrazilMap } from './BrazilMap';
 import { GeoBarChart } from './GeoBarChart';
 import { RegionSummary } from './RegionSummary';
 
+
 export function GeoWinnersChart() {
   const meta = useLotteryMeta();
   const data = useGeoWinners();
@@ -19,11 +20,16 @@ export function GeoWinnersChart() {
 
   if (chartData.length === 0) {
     return (
-      <div className="glass-card p-4 text-center space-y-2">
-        <p className="text-muted-foreground text-sm">
-          Dados geográficos não disponíveis. Certifique-se que a coluna{' '}
-          <code className="text-primary">Cidade / UF</code> está presente.
-        </p>
+      <div className="h-64 flex flex-col items-center justify-center text-center space-y-3 bg-muted/5 border border-dashed rounded-xl px-4">
+        <MapIcon className="w-8 h-8 text-muted-foreground/20" />
+        <div className="space-y-1">
+          <p className="text-muted-foreground text-sm font-medium">
+            Dados geográficos não encontrados
+          </p>
+          <p className="text-[11px] text-muted-foreground/50 max-w-[200px]">
+            Para visualizar este mapa, os dados precisam incluir o campo de localidade.
+          </p>
+        </div>
       </div>
     );
   }
@@ -48,7 +54,7 @@ export function GeoWinnersChart() {
         </button>
       </div>
 
-      <RegionSummary data={chartData} />
+      <RegionSummary data={data || []} />
       {view === 'map' ? <BrazilMap data={data || []} /> : <GeoBarChart data={chartData} />}
     </div>
   );

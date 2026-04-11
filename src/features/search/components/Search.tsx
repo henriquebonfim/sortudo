@@ -8,12 +8,18 @@ export function Search() {
   const {
     inputs,
     handleChange,
+    contestId,
+    handleContestChange,
+    searchType,
+    setSearchType,
     isValid,
     hasDuplicates,
     handleSearch,
+    lastSearchedContestId,
     result,
     searched,
     loading,
+    error,
     drawCount,
   } = useLookup(false);
 
@@ -46,11 +52,30 @@ export function Search() {
             <span className="font-semibold text-foreground">
               {drawCount.toLocaleString('pt-BR')}
             </span>{' '}
-            sorteios e descubra quantas vezes a combinação já foi sorteada.
+            sorteios e descubra se sua combinação ou um concurso específico já foi premiado.
           </p>
         </motion.div>
 
         <section className="py-12 md:py-16 flex flex-col items-center">
+          <div className="flex bg-white/5 p-1 rounded-2xl mb-8 border border-white/10">
+            <button
+              onClick={() => setSearchType('numbers')}
+              className={`px-6 py-2 rounded-xl text-sm font-bold transition-all ${
+                searchType === 'numbers' ? 'bg-primary text-black' : 'text-muted-foreground hover:text-foreground'
+              }`}
+            >
+              Por Números
+            </button>
+            <button
+              onClick={() => setSearchType('contest')}
+              className={`px-6 py-2 rounded-xl text-sm font-bold transition-all ${
+                searchType === 'contest' ? 'bg-primary text-black' : 'text-muted-foreground hover:text-foreground'
+              }`}
+            >
+              Por Concurso
+            </button>
+          </div>
+
           <motion.div
             initial={{ opacity: 0, scale: 0.97 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -60,16 +85,24 @@ export function Search() {
             <SearchForm
               inputs={inputs}
               onChange={handleChange}
+              contestId={contestId}
+              onContestChange={handleContestChange}
+              searchType={searchType}
               hasDuplicates={hasDuplicates}
               isValid={isValid}
               onSearch={handleSearch}
-              drawCount={drawCount}
             />
           </motion.div>
 
           {loading && (
             <div className="mt-16">
               <LoadingBalls />
+            </div>
+          )}
+
+          {error && (
+            <div className="mt-8 p-4 rounded-xl bg-hot/10 border border-hot/20 text-hot font-bold text-center">
+              {error}
             </div>
           )}
 
@@ -83,7 +116,10 @@ export function Search() {
                 className="mt-12 w-full max-w-2xl space-y-5"
               >
                 <div className="section-divider" />
-                <ResultBanner result={result} />
+                <ResultBanner
+                  result={result}
+                  contestId={lastSearchedContestId || undefined}
+                />
               </motion.div>
             )}
           </AnimatePresence>
@@ -134,37 +170,57 @@ function NumberInput({
 function SearchForm({
   inputs,
   onChange,
+  contestId,
+  onContestChange,
+  searchType,
   hasDuplicates,
   isValid,
   onSearch,
-  drawCount,
 }: {
   inputs: string[];
   onChange: (idx: number, val: string) => void;
+  contestId: string;
+  onContestChange: (val: string) => void;
+  searchType: 'numbers' | 'contest';
   hasDuplicates: boolean;
   isValid: boolean;
   onSearch: () => void;
-  drawCount: number;
 }) {
   return (
     <div className="w-full max-w-3xl flex flex-col items-center gap-10">
       <div className="glass-card p-8 md:p-12 w-full rounded-[32px] border-primary/10 shadow-2xl">
         <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground/60 font-bold text-center mb-8">
-          ESCOLHA 6 NÚMEROS (1–60)
+          {searchType === 'numbers' ? 'ESCOLHA 6 NÚMEROS (1–60)' : 'DIGITE O NÚMERO DO CONCURSO'}
         </p>
 
-        <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6">
-          {inputs.map((val, idx) => (
-            <NumberInput
-              key={idx}
-              value={val}
-              onChange={(v) => onChange(idx, v)}
-              error={val !== '' && inputs.filter((x) => x === val && x !== '').length > 1}
+        {searchType === 'numbers' ? (
+          <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6">
+            {inputs.map((val, idx) => (
+              <NumberInput
+                key={idx}
+                value={val}
+                onChange={(v) => onChange(idx, v)}
+                error={val !== '' && inputs.filter((x) => x === val && x !== '').length > 1}
+              />
+            ))}
+          </div>
+        ) : (
+          <div className="flex justify-center">
+            <input
+              type="text"
+              inputMode="numeric"
+              value={contestId}
+              onChange={(e) => {
+                const v = e.target.value.replace(/\D/g, '');
+                onContestChange(v);
+              }}
+              placeholder="Ex: 2000"
+              className="h-16 w-48 rounded-2xl border-2 bg-card text-center font-mono text-2xl font-bold text-foreground outline-none transition-all border-border focus:border-primary shadow-lg"
             />
-          ))}
-        </div>
+          </div>
+        )}
 
-        {hasDuplicates && (
+        {searchType === 'numbers' && hasDuplicates && (
           <p className="mt-8 text-center text-sm font-bold text-hot tracking-wide animate-bounce">
             Números repetidos não são permitidos.
           </p>

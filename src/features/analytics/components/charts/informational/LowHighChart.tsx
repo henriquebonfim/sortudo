@@ -23,7 +23,7 @@ export function LowHighChart() {
   }
 
   return (
-    <div className="glass-card p-4 flex flex-col items-center">
+    <div className="  p-4 flex flex-col items-center">
       <h4 className="text-sm font-semibold mb-1 text-slate-200 w-full text-center">
         Dezenas Baixas vs Altas
       </h4>

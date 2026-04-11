@@ -42,7 +42,7 @@ export function getYear(date: string) {
 
 export function getDecade(date: string) {
   const y = getYear(date);
-  return `Década de ${String(Math.floor(y / 10) * 10).substring(2)}`;
+  return `${Math.floor(y / 10) * 10}`;
 }
 
 // --- Formatting ---

@@ -1,6 +1,6 @@
 import { buildChapters } from '@/features/analytics/configs/dashboard-config';
 import { useAnalyticsMetadata } from '@/features/analytics/hooks/use-analytics-metadata';
-import { Button } from '@/shared/components/ui/Button';
+import { useAnalyticsStore } from '@/features/analytics/store';
 import {
   Card,
   CardContent,
@@ -14,11 +14,10 @@ import { downloadAsJson } from '@/shared/utils/download';
 import { useDataSourceStore } from '@/store/data';
 import { useGames, useIsSeeding, useLotteryMeta, useLotteryMetadata } from '@/store/selectors';
 import { AnimatePresence, motion } from 'framer-motion';
-import { ChevronLeft, ChevronRight, Lightbulb, Sparkles } from 'lucide-react';
+import { Lightbulb, Sparkles } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import { useLotteryFullStats } from '../hooks/use-analytics';
 import { AnalyticsEmpty, AnalyticsLoading } from './AnalyticsStates';
-import { SuggestedFeaturesPanel } from './charts/list/SuggestedFeaturesPanel';
 import { ChapterDivider, TypeBadge } from './DashboardComponents';
 import { DashboardHeader } from './DashboardHeader';
 import { DashboardKpiStrip } from './DashboardKpiStrip';
@@ -33,9 +32,48 @@ export function Analytics() {
 
   const [currentChapterIndex, setCurrentChapterIndex] = useState(0);
   const [isUploadOpen, setIsUploadOpen] = useState(false);
+  const { calculateStats } = useAnalyticsStore();
+
+  const chapters = useMemo(() => (stats ? buildChapters(stats) : []), [stats]);
+
+  // Handle hash-based navigation
+  useEffect(() => {
+    const handleHashChange = () => {
+      const hash = window.location.hash.replace('#', '');
+      if (hash && chapters.length > 0) {
+        const index = chapters.findIndex((ch) => ch.id === hash);
+        if (index !== -1) {
+          setCurrentChapterIndex(index);
+        }
+      }
+    };
+
+    if (chapters.length > 0) {
+      handleHashChange();
+    }
+
+    window.addEventListener('hashchange', handleHashChange);
+    return () => window.removeEventListener('hashchange', handleHashChange);
+  }, [chapters]);
+
+  const onChapterSelect = (index: number) => {
+    setCurrentChapterIndex(index);
+    if (chapters[index]) {
+      window.history.pushState(null, '', `#${chapters[index].id}`);
+    }
+  };
+
+  useEffect(() => {
+    if (stats?.hotNumbers?.length) {
+      const isOldSchema = 'count' in stats.hotNumbers[0] && !('frequency' in stats.hotNumbers[0]);
+      if (isOldSchema) {
+        console.warn('Old analytics schema detected, forcing recalculation...');
+        calculateStats(true);
+      }
+    }
+  }, [stats, calculateStats]);
 
   const { toasts, toast, closeToast } = useToast();
-  const { setSource, markLocalReady } = useDataSourceStore();
 
   const { isStale, freshnessLabel } = useAnalyticsMetadata(metadata);
 
@@ -54,7 +92,6 @@ export function Analytics() {
   };
 
   const hasData = metadata && metadata.totalGames > 0;
-  const chapters = useMemo(() => (stats ? buildChapters(stats) : []), [stats]);
 
   if (isSeeding) return <AnalyticsLoading />;
   if (!hasData) return <AnalyticsEmpty />;
@@ -62,21 +99,7 @@ export function Analytics() {
   const safeChapterIndex =
     chapters.length > 0 && currentChapterIndex >= chapters.length ? 0 : currentChapterIndex;
   const currentChapter = chapters[safeChapterIndex];
-  const isLastChapter = safeChapterIndex === chapters.length - 1;
 
-  const nextChapter = () => {
-    if (safeChapterIndex < chapters.length - 1) {
-      setCurrentChapterIndex(safeChapterIndex + 1);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-  };
-
-  const prevChapter = () => {
-    if (safeChapterIndex > 0) {
-      setCurrentChapterIndex(safeChapterIndex - 1);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-  };
 
   return (
     <div className="min-h-screen bg-background">
@@ -88,7 +111,7 @@ export function Analytics() {
         onOpenUpload={() => setIsUploadOpen(true)}
         chapters={chapters}
         currentChapterIndex={currentChapterIndex}
-        onChapterSelect={setCurrentChapterIndex}
+        onChapterSelect={onChapterSelect}
       />
 
       <div className="container py-8 md:py-12 space-y-12">
@@ -109,7 +132,7 @@ export function Analytics() {
             className="space-y-8"
           >
             {currentChapter && (
-              <div id={`chapter-${currentChapter.id}`} className="scroll-mt-24">
+              <div id={currentChapter.id} className="scroll-mt-24">
                 <ChapterDivider
                   icon={currentChapter.icon}
                   title={currentChapter.title}
@@ -119,7 +142,7 @@ export function Analytics() {
                   index={currentChapterIndex}
                 />
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 m-auto max-w-7xl">
                   {currentChapter.sections.map((s, sIdx) => (
                     <motion.div
                       key={s.id}
@@ -188,75 +211,6 @@ export function Analytics() {
                 </div>
               </div>
             )}
-
-            {isLastChapter && (
-              <div id="chapter-next-steps" className="mt-16 pt-8 border-t border-border">
-                <ChapterDivider
-                  icon={<Lightbulb className="w-4 h-4" />}
-                  title="Próximos Passos"
-                  description="Ideias para expandir a plataforma"
-                  lineClass="bg-rose-500/40"
-                  iconColorClass="text-rose-400"
-                  index={chapters.length}
-                />
-                <SuggestedFeaturesPanel />
-              </div>
-            )}
-
-            {/* Navigation Controls */}
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-6 pt-12 border-t border-border mt-12">
-              <Button
-                variant="ghost"
-                onClick={prevChapter}
-                disabled={currentChapterIndex === 0}
-                className="group flex items-center gap-2 text-muted-foreground hover:text-foreground transition-all px-6 py-6 rounded-2xl border border-transparent hover:border-border"
-              >
-                <ChevronLeft className="w-5 h-5 group-hover:-translate-x-1 transition-transform" />
-                <div className="text-left">
-                  <p className="text-[10px] font-bold uppercase tracking-widest opacity-50">
-                    Anterior
-                  </p>
-                  <p className="text-sm font-semibold">
-                    {currentChapterIndex > 0 ? chapters[currentChapterIndex - 1].title : 'Início'}
-                  </p>
-                </div>
-              </Button>
-
-              <div className="flex items-center gap-2">
-                {chapters.map((_, idx) => (
-                  <button
-                    key={idx}
-                    onClick={() => {
-                      setCurrentChapterIndex(idx);
-                      window.scrollTo({ top: 0, behavior: 'smooth' });
-                    }}
-                    className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                      idx === currentChapterIndex
-                        ? 'w-8 bg-primary shadow-[0_0_8px_rgba(251,197,49,0.4)]'
-                        : 'bg-border hover:bg-muted-foreground/30'
-                    }`}
-                    aria-label={`Ir para capítulo ${idx + 1}`}
-                  />
-                ))}
-              </div>
-
-              <Button
-                variant="outline"
-                onClick={nextChapter}
-                disabled={isLastChapter}
-                className="group flex items-center gap-2 border-primary/20 hover:border-primary/50 text-foreground hover:bg-primary/5 transition-all px-8 py-6 rounded-2xl"
-              >
-                <div className="text-right">
-                  <p className="text-[10px] font-bold uppercase tracking-widest text-primary/70">
-                    Próximo
-                  </p>
-                  <p className="text-sm font-semibold">
-                    {!isLastChapter ? chapters[currentChapterIndex + 1].title : 'Fim'}
-                  </p>
-                </div>
-                <ChevronRight className="w-5 h-5 text-primary group-hover:translate-x-1 transition-transform" />
-              </Button>
-            </div>
           </motion.div>
         </AnimatePresence>
 

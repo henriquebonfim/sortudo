@@ -46,74 +46,71 @@ export function TrueNetEVChart() {
 
   return (
     <div className="space-y-4">
-      <div className="glass-card p-6 border-l-4 border-l-emerald-500/50">
-        <h3 className="text-xl font-bold mb-2 text-white font-display">
-          Expectativa de Valor Líquido (EV)
-        </h3>
+
+
+      <ResponsiveContainer width="100%" height={400}>
+        <LineChart data={chartData} margin={{ left: 10, right: 30, top: 20, bottom: 40 }}>
+          <CartesianGrid
+            strokeDasharray="3 3"
+            stroke={CHART_COLORS.GRID_STROKE}
+            vertical={false}
+          />
+          <XAxis
+            dataKey="displayJackpot"
+            tick={{ fontSize: 11, fill: CHART_COLORS.TICK_LABEL, fontFamily: 'monospace' }}
+            angle={-45}
+            textAnchor="end"
+            dy={15}
+          />
+          <YAxis
+            tick={{ fontSize: 11, fill: CHART_COLORS.TICK_LABEL, fontFamily: 'monospace' }}
+            domain={[-6, 1]}
+            tickFormatter={(val) => `R$${val.toFixed(1)}`}
+          />
+
+          <Tooltip
+            contentStyle={RECHARTS_TOOLTIP_STYLE}
+            itemStyle={{ color: CHART_COLORS.EMERALD, fontWeight: 'bold', fontSize: '13px' }}
+            formatter={(value: number) => [`R$ ${value}`, 'EV Estimado']}
+            labelStyle={RECHARTS_LABEL_STYLE}
+          />
+          <ReferenceLine
+            y={0}
+            stroke={CHART_COLORS.RED}
+            strokeWidth={2}
+            strokeDasharray="4 4"
+            label={{
+              position: 'top',
+              value: 'Equilíbrio (R$ 0)',
+              fill: CHART_COLORS.RED,
+              fontSize: 12,
+              fontWeight: 'bold',
+            }}
+          />
+          <Line
+            type="monotone"
+            dataKey="ev"
+            stroke={CHART_COLORS.EMERALD}
+            strokeWidth={3}
+            dot={false}
+            activeDot={{
+              r: 6,
+              fill: CHART_COLORS.EMERALD,
+              stroke: RECHARTS_TOOLTIP_STYLE.backgroundColor,
+              strokeWidth: 2,
+            }}
+          />
+        </LineChart>
+      </ResponsiveContainer>
+
+      <div className=" p-6 border-t-4 border-t-emerald-500/50">
+
         <p className="text-sm text-slate-300 mb-6 max-w-2xl leading-relaxed">
           O Valor Esperado (EV) calcula quanto você ganha ou perde em média por aposta. Devido ao
           risco de divisão do prêmio e impostos,{' '}
           <strong>na Mega-Sena o EV é quase sempre negativo.</strong>
-          <br />
-          <br />
-          Mesmo em jackpots astronômicos, o aumento exponencial de jogadores destrói a rentabilidade
-          teórica, mantendo o "lucro esperado" abaixo de zero.
+
         </p>
-
-        <ResponsiveContainer width="100%" height={400}>
-          <LineChart data={chartData} margin={{ left: 10, right: 30, top: 20, bottom: 40 }}>
-            <CartesianGrid
-              strokeDasharray="3 3"
-              stroke={CHART_COLORS.GRID_STROKE}
-              vertical={false}
-            />
-            <XAxis
-              dataKey="displayJackpot"
-              tick={{ fontSize: 11, fill: CHART_COLORS.TICK_LABEL, fontFamily: 'monospace' }}
-              angle={-45}
-              textAnchor="end"
-              dy={15}
-            />
-            <YAxis
-              tick={{ fontSize: 11, fill: CHART_COLORS.TICK_LABEL, fontFamily: 'monospace' }}
-              domain={[-6, 1]}
-              tickFormatter={(val) => `R$${val.toFixed(1)}`}
-            />
-
-            <Tooltip
-              contentStyle={RECHARTS_TOOLTIP_STYLE}
-              itemStyle={{ color: CHART_COLORS.EMERALD, fontWeight: 'bold', fontSize: '13px' }}
-              formatter={(value: number) => [`R$ ${value}`, 'EV Estimado']}
-              labelStyle={RECHARTS_LABEL_STYLE}
-            />
-            <ReferenceLine
-              y={0}
-              stroke={CHART_COLORS.RED}
-              strokeWidth={2}
-              strokeDasharray="4 4"
-              label={{
-                position: 'top',
-                value: 'Equilíbrio (R$ 0)',
-                fill: CHART_COLORS.RED,
-                fontSize: 12,
-                fontWeight: 'bold',
-              }}
-            />
-            <Line
-              type="monotone"
-              dataKey="ev"
-              stroke={CHART_COLORS.EMERALD}
-              strokeWidth={3}
-              dot={false}
-              activeDot={{
-                r: 6,
-                fill: CHART_COLORS.EMERALD,
-                stroke: RECHARTS_TOOLTIP_STYLE.backgroundColor,
-                strokeWidth: 2,
-              }}
-            />
-          </LineChart>
-        </ResponsiveContainer>
       </div>
     </div>
   );

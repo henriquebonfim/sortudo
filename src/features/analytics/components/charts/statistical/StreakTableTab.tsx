@@ -4,7 +4,7 @@ import { StreakEntry } from './StreakChartTab';
 
 export const StreakTableTab = memo(function StreakTableTab({ data }: { data: StreakEntry[] }) {
   const tableData = useMemo(() => {
-    return data.filter((d) => d.drawsCount >= 1).slice(0, 15);
+    return data.filter((d) => d.count >= 1).slice(0, 15);
   }, [data]);
 
   return (
@@ -20,9 +20,9 @@ export const StreakTableTab = memo(function StreakTableTab({ data }: { data: Str
         </thead>
         <tbody>
           {tableData.map((d) => (
-            <tr key={d.streakLength} className="border-b border-border hover:bg-white/5">
-              <td className="py-1.5 px-2 text-foreground font-semibold">{d.streakLength}</td>
-              <td className="py-1.5 px-2 text-right text-muted-foreground">{d.drawsCount}</td>
+            <tr key={d.streak} className="border-b border-border hover:bg-white/5">
+              <td className="py-1.5 px-2 text-foreground font-semibold">{d.streak}</td>
+              <td className="py-1.5 px-2 text-right text-muted-foreground">{d.count}</td>
               <td className="py-1.5 px-2 text-right text-emerald-400">
                 {formatCompactCurrency(d.avgCollection)}
               </td>

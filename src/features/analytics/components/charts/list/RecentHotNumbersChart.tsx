@@ -20,8 +20,12 @@ export function RecentHotNumbersChart() {
 
   return (
     <div className="flex flex-wrap gap-2 py-2">
-      {hotData.map((h) => (
-        <HotBadge key={h.number} number={h.number} count={h.count} />
+      {hotData.slice(0, 10).map((h) => (
+        <HotBadge 
+          key={h.number} 
+          number={h.number} 
+          count={h.frequency ?? (h as any).count ?? 0} 
+        />
       ))}
     </div>
   );

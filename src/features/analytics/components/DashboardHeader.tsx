@@ -4,6 +4,7 @@ import { BarChart3, Download, Upload } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { ChapterNav } from './ChapterNav';
 import { DataSourceToggle } from './DataSourceToggle';
+import { useDataSourceStore } from '@/store/data';
 
 interface DashboardHeaderProps {
   metadata: {
@@ -29,6 +30,7 @@ export function DashboardHeader({
   currentChapterIndex,
   onChapterSelect,
 }: DashboardHeaderProps) {
+  const { hasLocalData } = useDataSourceStore()
   return (
     <div className="relative overflow-hidden border-b border-border">
       {/* Background layers */}
@@ -64,11 +66,10 @@ export function DashboardHeader({
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.8 }}
-                  className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full border text-xs font-medium ${
-                    isStale
-                      ? 'bg-rose-500/10 border-rose-500/30 text-rose-400'
-                      : 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
-                  }`}
+                  className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full border text-xs font-medium ${isStale
+                    ? 'bg-rose-500/10 border-rose-500/30 text-rose-400'
+                    : 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
+                    }`}
                 >
                   <span
                     className={`w-1.5 h-1.5 rounded-full animate-pulse ${isStale ? 'bg-rose-500' : 'bg-emerald-500'}`}
@@ -85,6 +86,14 @@ export function DashboardHeader({
               Relatório estatístico completo dos sorteios da Mega-Sena — padrões, frequências e
               probabilidades.
             </p>
+            {/* Chapter quick-nav */}
+            <div className="mt-7 pt-5  flex">
+              <ChapterNav
+                chapters={chapters.map((ch) => ({ id: ch.id, title: ch.title, icon: ch.icon }))}
+                currentChapterIndex={currentChapterIndex}
+                onChapterSelect={onChapterSelect}
+              />
+            </div>
           </motion.div>
 
           {/* Right: Actions & Toggle */}
@@ -94,8 +103,6 @@ export function DashboardHeader({
             transition={{ delay: 0.15, duration: 0.4 }}
             className="flex flex-col items-start lg:items-end gap-4"
           >
-            <DataSourceToggle />
-
             <div className="flex items-center gap-2">
               <Button
                 variant="outline"
@@ -121,17 +128,15 @@ export function DashboardHeader({
                 </span>
               </Button>
             </div>
+
+            {hasLocalData && (
+              <DataSourceToggle />
+            )}
+
           </motion.div>
         </div>
 
-        {/* Chapter quick-nav */}
-        <div className="mt-7 pt-5 border-t border-border">
-          <ChapterNav
-            chapters={chapters.map((ch) => ({ id: ch.id, title: ch.title, icon: ch.icon }))}
-            currentChapterIndex={currentChapterIndex}
-            onChapterSelect={onChapterSelect}
-          />
-        </div>
+
       </div>
     </div>
   );

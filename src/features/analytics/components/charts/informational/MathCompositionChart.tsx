@@ -14,9 +14,9 @@ export function MathCompositionChart() {
     const outros = Math.max(
       0,
       100 -
-        (profile.primesPercentage +
-          profile.multiplesOf5Percentage +
-          profile.multiplesOf10Percentage)
+      (profile.primesPercentage +
+        profile.multiplesOf5Percentage +
+        profile.multiplesOf10Percentage)
     );
     return [
       { name: 'Primos', value: profile.primesPercentage, color: CHART_COLORS.VIOLET },
@@ -35,10 +35,7 @@ export function MathCompositionChart() {
   }
 
   return (
-    <div className="glass-card p-4 flex flex-col items-center">
-      <h4 className="text-sm font-semibold mb-1 text-slate-200 w-full text-center">
-        Composição Matemática
-      </h4>
+    <div className=" p-4 flex flex-col items-center">
       <p className="text-[10px] text-muted-foreground mb-4 text-center">
         Tipos de números mais sorteados.
       </p>

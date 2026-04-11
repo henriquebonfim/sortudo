@@ -1,6 +1,6 @@
 import { memo, useMemo } from 'react';
-import { GeoDataPoint } from './geo.types';
 import { BRAZIL_STATES_PATH_DATA } from './brazil-map.data';
+import { GeoDataPoint } from './geo.types';
 
 interface BrazilMapProps {
   data: GeoDataPoint[];
@@ -35,7 +35,7 @@ export const BrazilMap = memo(function BrazilMap({ data }: BrazilMapProps) {
               key={d.state}
               d={path}
               fill={`rgba(var(--primary-rgb), ${0.15 + intensity * 0.85})`}
-              stroke={isDF ? 'rgba(255,255,255,0.8)' : 'rgba(255,255,255,0.2)'}
+              stroke={isDF ? 'rgba(0,0,0,0.2)' : 'rgba(255,255,255,0.2)'}
               strokeWidth={isDF ? '1' : '0.5'}
               className="transition-all duration-300 hover:fill-primary cursor-pointer"
             >
