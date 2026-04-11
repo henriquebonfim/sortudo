@@ -53,15 +53,7 @@ export function PrizeDistributionChart() {
         </button>
       </div>
 
-      {hasRatio && (
-        <div className="flex items-center gap-3 p-3 rounded-xl bg-amber-500/10 border border-amber-500/20">
-          <span className="text-2xl font-display font-bold text-amber-400">{ratio}×</span>
-          <span className="text-sm text-muted-foreground">
-            O prêmio da Sena é em média <strong className="text-foreground">{ratio}× maior</strong>{' '}
-            que o da Quina
-          </span>
-        </div>
-      )}
+
 
       {view === 'pyramid' ? (
         <PrizePyramid sortedData={sorted} />

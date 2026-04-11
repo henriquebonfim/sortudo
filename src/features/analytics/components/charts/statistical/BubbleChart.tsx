@@ -1,23 +1,20 @@
-import { useFrequencies } from '@/store/selectors';
 import { LoadingBalls } from '@/shared/components/LoadingBalls';
-import { StatCard } from '@/shared/components/StatCard';
-import { useLotteryMeta } from '@/store/selectors';
+import { useFrequencies, useLotteryMeta, useLotteryMetadata } from '@/store/selectors';
 import { MouseEvent, useEffect, useMemo, useRef, useState } from 'react';
-import { BubbleNode, Filter } from './bubble-chart.types';
+import { BubbleNode } from './bubble-chart.types';
 import { applyPhysics, freqToColor, renderNodes } from './bubble-chart.utils';
+import { FilterMode } from './frequency-bar.constants';
+
+interface BubbleChartProps {
+  filter: FilterMode;
+}
 
 const START_YEAR = 1996;
-const FILTER_OPTIONS: { id: Filter; label: string }[] = [
-  { id: 'all', label: 'Todos (60)' },
-  { id: 'top15', label: 'Top 15 Mais Sorteados' },
-  { id: 'bottom15', label: 'Top 15 Menos Sorteados' },
-  { id: 'mid', label: 'Médios (Intermediários)' },
-];
 
-export function BubbleChart() {
-  const meta = useLotteryMeta();
+export function BubbleChart({ filter }: BubbleChartProps) {
+  const analyticsMeta = useLotteryMeta();
+  const lotteryMeta = useLotteryMetadata();
   const data = useFrequencies();
-  const [filter, setFilter] = useState<Filter>('all');
   const [tooltip, setTooltip] = useState<{ x: number; y: number; node: BubbleNode } | null>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -31,12 +28,10 @@ export function BubbleChart() {
       .sort((a, b) => b.frequency - a.frequency);
 
     switch (filter) {
-      case 'top15':
-        return entries.slice(0, 15);
-      case 'bottom15':
-        return [...entries].sort((a, b) => a.frequency - b.frequency).slice(0, 15);
-      case 'mid':
-        return entries.slice(15, 45);
+      case 'top30':
+        return entries.slice(0, 30);
+      case 'bottom30':
+        return [...entries].sort((a, b) => a.frequency - b.frequency).slice(0, 30);
       default:
         return entries;
     }
@@ -132,45 +127,17 @@ export function BubbleChart() {
   const yearsPassed = Math.max(1, currentYear - START_YEAR);
   const getRanking = (n: number) => rankingData.findIndex((s) => s.n === n) + 1;
 
-  if (!data || !meta || !data.frequencies || !data.max || !data.min) {
+  if (!data || !analyticsMeta || !lotteryMeta || !data.frequencies || !data.max || !data.min) {
     return <LoadingBalls />;
   }
 
   const freqDiff = data.max.frequency - data.min.frequency;
-  const yearlyDiff = (freqDiff / yearsPassed).toFixed(0);
 
   return (
-    <>
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-        <StatCard label="Total de concursos" value={meta.totalGames.toLocaleString('pt-BR')} />
-        <StatCard label="Sem ganhador" value={`${meta.pctWithoutWinner}%`} variant="hot" />
-        <StatCard
-          label="Total ganhadores"
-          value={meta.totalJackpotWinners.toLocaleString('pt-BR')}
-          variant="brand"
-        />
-        <StatCard
-          label="Nº mais sorteado"
-          value={`${data.max.number} (${data.max.frequency}x)`}
-          variant="brand"
-        />
-      </div>
-
-      <div className="flex flex-wrap gap-2 mb-6">
-        {FILTER_OPTIONS.map((f) => (
-          <button
-            key={f.id}
-            onClick={() => setFilter(f.id)}
-            className={`pill-btn ${filter === f.id ? 'pill-btn-active' : 'pill-btn-inactive'}`}
-          >
-            {f.label}
-          </button>
-        ))}
-      </div>
-
+    <section className="space-y-6">
       <div
         ref={containerRef}
-        className="glass-card p-2 relative"
+        className="p-2 relative"
         aria-label="Gráfico de bolhas com frequências dos números da Mega-Sena"
       >
         <canvas
@@ -190,25 +157,12 @@ export function BubbleChart() {
             <p className="text-foreground font-bold text-base mb-1">Nº {tooltip.node.number}</p>
             <p className="text-muted-foreground">Aparições: {tooltip.node.frequency}</p>
             <p className="text-muted-foreground">
-              {((tooltip.node.frequency / meta.totalGames) * 100).toFixed(1)}% dos jogos
+              {((tooltip.node.frequency / lotteryMeta.totalGames) * 100).toFixed(1)}% dos jogos
             </p>
             <p className="text-primary">Ranking #{getRanking(tooltip.node.number)} de 60</p>
           </div>
         )}
       </div>
-
-      <div className="educational-box mt-8">
-        <p className="text-sm text-muted-foreground">
-          O número {data.max.number} saiu {data.max.frequency} vezes. O {data.min.number} saiu{' '}
-          {data.min.frequency} vezes. São {freqDiff} sorteios de diferença em {yearsPassed} anos —
-          menos de {yearlyDiff} por ano.
-          <strong className="text-foreground">
-            {' '}
-            Isso não prevê absolutamente nada sobre o próximo sorteio. Cada bola tem exatamente 1/60
-            de chance. Sempre.
-          </strong>
-        </p>
-      </div>
-    </>
+    </section>
   );
 }

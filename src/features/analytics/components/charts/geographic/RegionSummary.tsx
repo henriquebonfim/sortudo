@@ -22,7 +22,8 @@ interface RegionSummaryProps {
 export const RegionSummary = memo(function RegionSummary({ data }: RegionSummaryProps) {
   const regionTotals = useMemo(() => {
     const grandTotal = data.reduce((s, d) => s + d.total, 0) || 1;
-    return REGIONS.map((r) => {
+    
+    const regions: { name: string; states: string[]; color: string; total: number; percentage: number }[] = REGIONS.map((r) => {
       const regionTotal = data
         .filter((d) => r.states.includes(d.state))
         .reduce((sum, d) => sum + d.total, 0);
@@ -31,11 +32,27 @@ export const RegionSummary = memo(function RegionSummary({ data }: RegionSummary
         total: regionTotal,
         percentage: Math.round((regionTotal / grandTotal) * 1000) / 10,
       };
-    }).sort((a, b) => b.total - a.total);
+    });
+
+    const digitalTotal = data
+      .filter((d) => d.state === 'ELECT')
+      .reduce((sum, d) => sum + d.total, 0);
+
+    if (digitalTotal > 0) {
+      regions.push({
+        name: 'Digital',
+        states: ['ELECT'],
+        color: CHART_COLORS.SLATE,
+        total: digitalTotal,
+        percentage: Math.round((digitalTotal / grandTotal) * 1000) / 10,
+      });
+    }
+
+    return regions.sort((a, b) => b.total - a.total);
   }, [data]);
 
   return (
-    <div className="grid grid-cols-5 gap-2 mb-4">
+    <div className={`grid gap-2 mb-4 ${regionTotals.length > 5 ? 'grid-cols-6' : 'grid-cols-5'}`}>
       {regionTotals.map((r, i) => (
         <motion.div
           key={r.name}

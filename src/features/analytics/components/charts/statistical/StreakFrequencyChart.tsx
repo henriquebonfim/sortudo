@@ -16,8 +16,8 @@ export function StreakFrequencyChart() {
     if (!economics) return [];
 
     const mapped = economics
-      .filter((d) => d.streakLength <= MAX_STREAK_DISPLAY)
-      .map((d) => ({ streak: d.streakLength, count: d.drawsCount }));
+      .filter((d) => d.streak <= MAX_STREAK_DISPLAY)
+      .map((d) => ({ streak: d.streak, count: d.count }));
 
     // Fill in gaps so the axis is continuous from 0 to MAX_STREAK_DISPLAY
     for (let i = 0; i <= MAX_STREAK_DISPLAY; i++) {

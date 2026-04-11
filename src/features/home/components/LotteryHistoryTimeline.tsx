@@ -5,7 +5,8 @@ import { useLotteryMeta, usePrizeEvolution } from '@/store/selectors';
 import { motion } from 'framer-motion';
 import { Calendar, Star, TrendingUp, Trophy } from 'lucide-react';
 import { memo, useCallback, useMemo, useState } from 'react';
-import type { TooltipContentProps } from 'recharts';
+import type { TooltipProps } from 'recharts';
+
 import {
   Bar,
   CartesianGrid,
@@ -80,7 +81,7 @@ const CustomTooltip = memo(function CustomTooltip({
   active,
   payload,
   label,
-}: TooltipContentProps<number, string>) {
+}: TooltipProps<number, string>) {
   if (!active || !payload?.length) return null;
 
   const isMilestone = MILESTONE_YEARS.has(Number(label));
@@ -210,14 +211,12 @@ export function LotteryHistoryTimeline() {
               <button
                 key={m.year}
                 onClick={() => setSelectedYear(isActive ? null : m.year)}
-                className={`relative pl-6 text-left transition-opacity duration-300 w-full outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-lg ${
-                  isActive || !selectedYear ? 'opacity-100' : 'opacity-40 hover:opacity-100'
-                }`}
+                className={`relative pl-6 text-left transition-opacity duration-300 w-full outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-lg ${isActive || !selectedYear ? 'opacity-100' : 'opacity-40 hover:opacity-100'
+                  }`}
               >
                 <div
-                  className={`absolute -left-[13px] top-0 w-6 h-6 rounded-full flex items-center justify-center border-2 bg-background transition-colors duration-300 shadow-sm ${
-                    isActive ? '' : 'border-border text-muted-foreground'
-                  }`}
+                  className={`absolute -left-[13px] top-0 w-6 h-6 rounded-full flex items-center justify-center border-2 bg-background transition-colors duration-300 shadow-sm ${isActive ? '' : 'border-border text-muted-foreground'
+                    }`}
                   style={
                     isActive
                       ? { borderColor: m.color, color: m.color, boxShadow: `0 0 10px ${m.color}40` }
@@ -274,7 +273,7 @@ export function LotteryHistoryTimeline() {
               />
 
               <Tooltip
-                content={(props) => <CustomTooltip {...props} />}
+                content={<CustomTooltip />}
                 cursor={{ fill: CHART_COLORS.CURSOR }}
               />
 
@@ -339,22 +338,20 @@ export function LotteryHistoryTimeline() {
         <div className="flex flex-wrap items-center justify-center gap-6 mt-6 text-xs text-muted-foreground select-none">
           <button
             onClick={() => toggleSeries('maxPrize')}
-            className={`flex items-center gap-2 transition-opacity duration-200 outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded ${
-              visibleSeries.maxPrize
+            className={`flex items-center gap-2 transition-opacity duration-200 outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded ${visibleSeries.maxPrize
                 ? 'opacity-100 hover:opacity-80'
                 : 'opacity-40 hover:opacity-60'
-            }`}
+              }`}
           >
             <div className="w-4 h-1 rounded-full" style={{ backgroundColor: CHART_COLORS.AMBER }} />
             <span>Maior Prêmio</span>
           </button>
           <button
             onClick={() => toggleSeries('totalDistributed')}
-            className={`flex items-center gap-2 transition-opacity duration-200 outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded ${
-              visibleSeries.totalDistributed
+            className={`flex items-center gap-2 transition-opacity duration-200 outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded ${visibleSeries.totalDistributed
                 ? 'opacity-100 hover:opacity-80'
                 : 'opacity-40 hover:opacity-60'
-            }`}
+              }`}
           >
             <div
               className="w-4 h-0.5 border-t-2 border-dashed"
@@ -364,11 +361,10 @@ export function LotteryHistoryTimeline() {
           </button>
           <button
             onClick={() => toggleSeries('totalRevenue')}
-            className={`flex items-center gap-2 transition-opacity duration-200 outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded ${
-              visibleSeries.totalRevenue
+            className={`flex items-center gap-2 transition-opacity duration-200 outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded ${visibleSeries.totalRevenue
                 ? 'opacity-100 hover:opacity-80'
                 : 'opacity-40 hover:opacity-60'
-            }`}
+              }`}
           >
             <div
               className="w-3 h-3 rounded"

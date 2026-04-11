@@ -75,12 +75,12 @@ export function GapAnalysisChart() {
     return <div className="h-64 animate-pulse bg-muted/20 rounded-xl" />;
   }
 
-  const top15 = data.slice(0, 15);
+  const top15 = [...data].sort((a, b) => b.currentGap - a.currentGap).slice(0, 15);
 
   return (
     <div className="space-y-3">
       <div className="glass-card p-4">
-        <ResponsiveContainer width="100%" height={400}>
+        <ResponsiveContainer width="100%" height={500}>
           <BarChart
             data={top15}
             layout="vertical"

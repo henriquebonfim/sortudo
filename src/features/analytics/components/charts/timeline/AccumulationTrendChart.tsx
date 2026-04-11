@@ -11,6 +11,7 @@ import {
   XAxis,
   YAxis,
 } from 'recharts';
+import { StreakFrequencyChart } from '../statistical/StreakFrequencyChart';
 
 interface CustomTooltipProps {
   active?: boolean;
@@ -68,40 +69,43 @@ export function AccumulationTrendChart() {
 
   return (
     <div className="space-y-4">
+
+      <ResponsiveContainer width="100%" height={500}>
+        <BarChart data={data} margin={{ left: -30, right: 12, top: 8, bottom: 4 }}>
+          <CartesianGrid
+            strokeDasharray="3 3"
+            stroke={CHART_COLORS.GRID_STROKE}
+            vertical={false}
+          />
+          <XAxis dataKey="year" tick={{ fontSize: 11, fill: CHART_COLORS.TICK_LABEL }} />
+          <YAxis tick={{ fontSize: 11, fill: CHART_COLORS.TICK_LABEL }} />
+          <Tooltip content={<CustomTooltip />} cursor={{ fill: CHART_COLORS.CURSOR }} />
+          <Legend
+            formatter={(value) => <span className="text-xs text-muted-foreground">{value}</span>}
+          />
+          <Bar
+            dataKey="nonAccumulated"
+            name="Com Ganhador"
+            stackId="a"
+            fill={CHART_COLORS.EMERALD}
+            fillOpacity={0.8}
+            radius={[0, 0, 0, 0]}
+          />
+          <Bar
+            dataKey="accumulated"
+            name="Acumulado"
+            stackId="a"
+            fill={CHART_COLORS.VIOLET}
+            fillOpacity={0.85}
+            radius={[4, 4, 0, 0]}
+          />
+        </BarChart>
+      </ResponsiveContainer>
+
       <AverageIndicator avgPct={avgPct} />
-      <div className="glass-card p-4">
-        <ResponsiveContainer width="100%" height={300}>
-          <BarChart data={data} margin={{ left: 0, right: 12, top: 8, bottom: 4 }}>
-            <CartesianGrid
-              strokeDasharray="3 3"
-              stroke={CHART_COLORS.GRID_STROKE}
-              vertical={false}
-            />
-            <XAxis dataKey="year" tick={{ fontSize: 11, fill: CHART_COLORS.TICK_LABEL }} />
-            <YAxis tick={{ fontSize: 11, fill: CHART_COLORS.TICK_LABEL }} />
-            <Tooltip content={<CustomTooltip />} cursor={{ fill: CHART_COLORS.CURSOR }} />
-            <Legend
-              formatter={(value) => <span className="text-xs text-muted-foreground">{value}</span>}
-            />
-            <Bar
-              dataKey="nonAccumulated"
-              name="Com Ganhador"
-              stackId="a"
-              fill={CHART_COLORS.EMERALD}
-              fillOpacity={0.8}
-              radius={[0, 0, 0, 0]}
-            />
-            <Bar
-              dataKey="accumulated"
-              name="Acumulado"
-              stackId="a"
-              fill={CHART_COLORS.VIOLET}
-              fillOpacity={0.85}
-              radius={[4, 4, 0, 0]}
-            />
-          </BarChart>
-        </ResponsiveContainer>
-      </div>
+
+
+      <StreakFrequencyChart />
     </div>
   );
 }

@@ -66,8 +66,8 @@ export const LotteryStatsSchema = z.object({
     .array(
       z.object({
         state: z.string(),
-        winners: z.number(),
-        prize: z.number(),
+        total: z.number(),
+        percentage: z.number(),
       })
     )
     .default([]),
@@ -84,16 +84,22 @@ export const LotteryStatsSchema = z.object({
   prizeEvolution: z
     .array(
       z.object({
-        date: z.string(),
-        prize: z.number(),
-        accumulated: z.boolean(),
+        year: z.number(),
+        maxPrize: z.number(),
+        totalDistributed: z.number(),
+        totalRevenue: z.number(),
+        totalGames: z.number(),
+        totalWinners: z.number(),
+        megaDaVirada: z.boolean(),
       })
     )
     .default([]),
   sumDistribution: z
     .array(
       z.object({
-        sum: z.number(),
+        bucket: z.string(),
+        min: z.number(),
+        max: z.number(),
         count: z.number(),
       })
     )
@@ -109,8 +115,10 @@ export const LotteryStatsSchema = z.object({
   accumulationTrend: z
     .array(
       z.object({
-        length: z.number(),
-        count: z.number(),
+        year: z.number(),
+        accumulated: z.number(),
+        nonAccumulated: z.number(),
+        pctAccumulated: z.number(),
       })
     )
     .default([]),
@@ -118,8 +126,10 @@ export const LotteryStatsSchema = z.object({
     .array(
       z.object({
         tier: z.string(),
-        winners: z.number(),
-        prize: z.number(),
+        label: z.string(),
+        avgPrize: z.number(),
+        maxPrize: z.number(),
+        totalWinners: z.number(),
       })
     )
     .default([]),
@@ -155,16 +165,37 @@ export const LotteryStatsSchema = z.object({
     .default([]),
   numberProfile: z
     .object({
-      mostFrequent: z.number(),
-      leastFrequent: z.number(),
-      averageGap: z.number(),
+      lowHighSplit: z.object({ low: z.number(), high: z.number() }),
+      primesPercentage: z.number(),
+      multiplesOf5Percentage: z.number(),
+      multiplesOf10Percentage: z.number(),
+      decadeAnalysis: z.object({ fullySpreadPct: z.number(), clusteredPct: z.number() }),
+      gameOverlaps: z.object({
+        zero: z.number(),
+        one: z.number(),
+        two: z.number(),
+        threePlus: z.number(),
+      }),
+      overlapExamples: z
+        .array(
+          z.object({
+            drawId: z.number(),
+            prevDrawId: z.number(),
+            date: z.string(),
+            numbers: z.array(z.number()),
+            count: z.number(),
+          })
+        )
+        .default([]),
     })
     .optional(),
   streakEconomics: z
     .array(
       z.object({
         streak: z.number(),
-        revenue: z.number(),
+        count: z.number(),
+        avgCollection: z.number(),
+        avgPrize: z.number(),
       })
     )
     .default([]),

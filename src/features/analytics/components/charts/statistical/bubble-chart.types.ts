@@ -1,5 +1,3 @@
-export type Filter = 'all' | 'top15' | 'bottom15' | 'mid';
-
 export interface BubbleNode {
   number: number;
   frequency: number;

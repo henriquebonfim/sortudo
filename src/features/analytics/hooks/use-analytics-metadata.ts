@@ -19,7 +19,7 @@ export function useAnalyticsMetadata(metadata: LotteryMetadata | null) {
     );
     if (days === 0) return 'Atualizado hoje';
     if (days === 1) return 'Atualizado ontem';
-    return `Há ${days} dias`;
+    return `Há ${Math.abs(days)} dias`;
   }, [metadata]);
 
   return {

@@ -86,7 +86,7 @@ export function TopNumbersByDecadeChart() {
 
   return (
     <div className="pt-4">
-      <ResponsiveContainer width="100%" height={400}>
+      <ResponsiveContainer width="100%" height={800}>
         <BarChart
           data={groupedData}
           layout="vertical"
@@ -114,10 +114,14 @@ export function TopNumbersByDecadeChart() {
           />
           <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(255,255,255,0.03)' }} />
           <Legend wrapperStyle={{ fontSize: 11, paddingTop: '10px' }} />
-          <Bar dataKey="1990s" fill={CHART_COLORS.SLATE} radius={[0, 4, 4, 0]} />
-          <Bar dataKey="2000s" fill={CHART_COLORS.BLUE} radius={[0, 4, 4, 0]} />
-          <Bar dataKey="2010s" fill={CHART_COLORS.EMERALD} radius={[0, 4, 4, 0]} />
-          <Bar dataKey="2020s" fill={CHART_COLORS.AMBER} radius={[0, 4, 4, 0]} />
+          {data.map((decadeEntry, i) => (
+            <Bar
+              key={decadeEntry.decade}
+              dataKey={decadeEntry.decade}
+              fill={Object.values(CHART_COLORS)[i % Object.keys(CHART_COLORS).length] || CHART_COLORS.BLUE}
+              radius={[0, 4, 4, 0]}
+            />
+          ))}
         </BarChart>
       </ResponsiveContainer>
     </div>

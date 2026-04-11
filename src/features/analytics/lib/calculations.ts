@@ -32,8 +32,8 @@ export function calculateParityDistribution(games: Game[]) {
       return {
         label,
         count,
-        odd,
-        even: BALLS_PER_DRAW - odd,
+        odds: odd,
+        evens: BALLS_PER_DRAW - odd,
         percentage: calculatePercentage(count, games.length),
       };
     })
@@ -51,7 +51,8 @@ export function calculateNumberProfile(games: Game[]) {
     clustered = 0,
     validGames = 0;
   const overlapCounts = new Array(BALLS_PER_DRAW + 1).fill(0);
-  let lastGameNumbers: number[] = [];
+  const overlapExamples: { drawId: number; prevDrawId: number; date: string; numbers: number[]; count: number }[] = [];
+  let lastGame: Game | null = null;
   const sorted = sortGamesById(games);
 
   for (const game of sorted) {
@@ -79,11 +80,22 @@ export function calculateNumberProfile(games: Game[]) {
     if (decadesSet.size === ANALYSIS_CONFIG.FULLY_SPREAD_SIZE) fullySpread++;
     if (hasClustered) clustered++;
 
-    if (lastGameNumbers.length === BALLS_PER_DRAW) {
-      const overlap = numbers.filter((num) => lastGameNumbers.includes(num)).length;
+    if (lastGame) {
+      const overlapping = numbers.filter((num) => lastGame!.numbers.includes(num));
+      const overlap = overlapping.length;
       overlapCounts[overlap]++;
+      
+      if (overlap >= 2) {
+        overlapExamples.push({
+          drawId: game.id,
+          prevDrawId: lastGame.id,
+          date: game.date,
+          numbers: overlapping,
+          count: overlap
+        });
+      }
     }
-    lastGameNumbers = numbers;
+    lastGame = game;
   }
 
   const overlapTotal = validGames > 0 ? validGames - 1 : 1;
@@ -109,6 +121,7 @@ export function calculateNumberProfile(games: Game[]) {
         ANALYSIS_CONFIG.PRECISION
       ),
     },
+    overlapExamples: overlapExamples.reverse().slice(0, 10),
   };
 }
 
@@ -173,22 +186,29 @@ export function calculateTopPairs(games: Game[], limit = 10) {
   return Object.entries(pairs)
     .map(([pair, count]) => {
       const [number1, number2] = pair.split('-').map(Number);
-      return { pair, number1, number2, count };
+      return { numbers: [number1, number2], count };
     })
     .sort((a, b) => b.count - a.count)
     .slice(0, limit);
 }
 
 export function calculateHotNumbers(games: Game[]) {
-  const recent = sortGamesById(games).slice(-100);
+  const recent = sortGamesById(games).slice(-10);
   const counts: Record<number, number> = {};
+  for (let i = 1; i <= MAX_LOTTERY_NUMBER; i++) counts[i] = 0;
+
   for (const game of recent) {
-    for (const num of game.numbers) counts[num] = (counts[num] || 0) + 1;
+    for (const num of game.numbers) {
+      if (counts[num] !== undefined) counts[num]++;
+    }
   }
+
   return Object.entries(counts)
-    .map(([num, count]) => ({ number: parseInt(num), count }))
-    .sort((a, b) => b.count - a.count)
-    .slice(0, 10);
+    .map(([num, count]) => ({
+      number: parseInt(num),
+      frequency: count,
+    }))
+    .sort((a, b) => b.frequency - a.frequency || a.number - b.number);
 }
 
 export function calculateGapAnalysis(games: Game[]) {
@@ -211,25 +231,45 @@ export function calculateGapAnalysis(games: Game[]) {
   }));
 }
 
-export function calculateTemporalFrequency(games: Game[], limit = 10) {
-  const byDecade: Record<string, Record<number, number>> = {};
+export function calculateTemporalFrequency(games: Game[]) {
+  const targetNumbers = Array.from({ length: MAX_LOTTERY_NUMBER }, (_, i) => i + 1);
+  const sorted = sortGamesById(games);
+  const latestYear = sorted.length > 0 ? getYear(sorted[sorted.length - 1].date) : new Date().getFullYear();
+
+  const byGroup: Record<string, { counts: Record<number, number>; total: number }> = {};
+  
   for (const game of games) {
+    const year = getYear(game.date);
     const decade = getDecade(game.date);
-    if (!byDecade[decade]) {
-      byDecade[decade] = {};
-      for (let i = 1; i <= MAX_LOTTERY_NUMBER; i++) byDecade[decade][i] = 0;
+    
+    // Group logic: Historical decades (e.g., 1990, 2000, 2010...) 
+    // vs. the Current Year (e.g., 2026)
+    const key = year === latestYear ? String(year) : decade;
+
+    if (!byGroup[key]) {
+      byGroup[key] = { counts: {}, total: 0 };
+      for (const num of targetNumbers) byGroup[key].counts[num] = 0;
     }
+    
+    byGroup[key].total++;
     for (const num of game.numbers) {
-      if (byDecade[decade][num] !== undefined) byDecade[decade][num]++;
+      if (byGroup[key].counts[num] !== undefined) {
+        byGroup[key].counts[num]++;
+      }
     }
   }
-  return Object.entries(byDecade).map(([decade, counts]) => ({
-    decade,
-    data: Object.entries(counts)
-      .map(([num, frequency]) => ({ number: parseInt(num), frequency }))
-      .sort((a, b) => b.frequency - a.frequency)
-      .slice(0, limit),
-  }));
+
+  return Object.entries(byGroup)
+    .map(([label, entry]) => ({
+      decade: label,
+      data: Object.entries(entry.counts)
+        .map(([num, count]) => ({
+          number: parseInt(num),
+          frequency: round((count / entry.total) * 100, 1),
+        }))
+        .sort((a, b) => a.number - b.number),
+    }))
+    .sort((a, b) => a.decade.localeCompare(b.decade));
 }
 
 export function calculateMeta(games: Game[], metadata: LotteryMetadata) {
@@ -350,7 +390,7 @@ export function calculatePrizeTierComparison(games: Game[]) {
   return Object.entries(stats).map(([tier, data]) => ({
     tier,
     label: data.label,
-    avgPrize: mean(data.prizes),
+    avgPrize: round(mean(data.prizes)),
     maxPrize: max(data.prizes),
     totalWinners: data.winners,
   }));
@@ -361,23 +401,38 @@ export function calculateStreakEconomics(games: Game[]) {
   let currentStreak = 0;
   const byStreak: Record<number, { count: number; totalCollection: number; totalPrize: number }> =
     {};
+
   for (const game of sorted) {
-    if (!byStreak[currentStreak])
+    if (!byStreak[currentStreak]) {
       byStreak[currentStreak] = { count: 0, totalCollection: 0, totalPrize: 0 };
+    }
+    
     byStreak[currentStreak].count++;
     byStreak[currentStreak].totalCollection += game.totalRevenue || 0;
-    if (game.jackpotWinners > 0) byStreak[currentStreak].totalPrize += game.jackpotPrize || 0;
-    if (game.accumulated || game.jackpotWinners === 0) currentStreak++;
-    else currentStreak = 0;
+    
+    // In Mega-Sena, if there are winners, the prize is distributed. 
+    // We want the average prize paid out for games with this streak length.
+    if (game.jackpotWinners > 0) {
+      byStreak[currentStreak].totalPrize += game.jackpotPrize || 0;
+    }
+
+    // Logic: if it accumulated, next game has a higher streak.
+    // In Mega-Sena, game.accumulated is true if no one won the jackpot.
+    if (game.accumulated || game.jackpotWinners === 0) {
+      currentStreak++;
+    } else {
+      currentStreak = 0;
+    }
   }
+
   return Object.entries(byStreak)
     .map(([streak, d]) => ({
-      streakLength: parseInt(streak),
-      gamesCount: d.count,
-      avgCollection: d.count > 0 ? round(d.totalCollection / d.count) : 0,
-      avgPrize: d.count > 0 ? round(d.totalPrize / d.count) : 0,
+      streak: parseInt(streak),
+      count: d.count,
+      avgCollection: round(d.totalCollection / d.count),
+      avgPrize: round(d.totalPrize / Math.max(1, d.count - (byStreak[parseInt(streak) + 1]?.count || 0))), // Approximate avg prize when won
     }))
-    .sort((a, b) => a.streakLength - b.streakLength);
+    .sort((a, b) => a.streak - b.streak);
 }
 
 export function calculateTypeComparison(games: Game[]) {
@@ -392,27 +447,59 @@ export function calculateTypeComparison(games: Game[]) {
   return { regular: getStats(regular), special: getStats(special) };
 }
 
+const BRAZIL_STATES = [
+  'AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 
+  'MA', 'MT', 'MS', 'MG', 'PA', 'PB', 'PR', 'PE', 'PI', 
+  'RJ', 'RN', 'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO'
+];
+
+function normalizeStateCode(loc: string): string | null {
+  const text = loc.toUpperCase().trim();
+  
+  // 1. Digital Channel
+  if (text.includes('CANAL ELETR') || text === 'ELECT' || text.includes('INTERNET')) {
+    return 'ELECT';
+  }
+
+  // 2. Standard pattern "CITY (UF)"
+  const parenMatch = text.match(/\(([A-Z]{2})\)$/);
+  if (parenMatch && BRAZIL_STATES.includes(parenMatch[1])) return parenMatch[1];
+
+  // 3. Separators "CITY / UF" or "CITY - UF"
+  const parts = text.split(/[\/\-]/);
+  const lastSegment = parts[parts.length - 1].trim();
+  if (BRAZIL_STATES.includes(lastSegment)) return lastSegment;
+
+  // 4. Exact match
+  if (BRAZIL_STATES.includes(text)) return text;
+
+  return null;
+}
+
 export function calculateGeoWinners(games: Game[]) {
   const geoMap: Record<string, number> = {};
-  let totalWinners = 0;
+  
   for (const game of games) {
-    if (!game.locations) continue;
+    const winners = game.jackpotWinners || 0;
+    if (winners === 0 || !game.locations?.length) continue;
+
+    const weight = winners / game.locations.length;
+    
     for (const loc of game.locations) {
-      const stateMatch = loc.match(/\(([A-Z]{2})\)$/);
-      let state = stateMatch ? stateMatch[1] : loc;
-      if (state.includes('/')) {
-        const parts = state.split('/');
-        state = parts[parts.length - 1] || state;
+      const state = normalizeStateCode(loc);
+      if (state) {
+        geoMap[state] = (geoMap[state] || 0) + weight;
       }
-      geoMap[state] = (geoMap[state] || 0) + game.jackpotWinners / game.locations.length;
     }
-    totalWinners += game.jackpotWinners;
   }
+
+  const grandTotal = Object.values(geoMap).reduce((a, b) => a + b, 0) || 1;
+
   return Object.entries(geoMap)
     .map(([state, total]) => ({
       state,
       total: Math.round(total),
-      percentage: calculatePercentage(total, totalWinners, ANALYSIS_CONFIG.PRECISION),
+      percentage: calculatePercentage(total, grandTotal, 1),
     }))
     .sort((a, b) => b.total - a.total);
 }
@@ -438,7 +525,7 @@ export function calculateAllStats(games: Game[]): LotteryStats {
     topPairs: calculateTopPairs(games, 20),
     accumulationTrend: calculateAccumulationTrend(games),
     prizeTierComparison: calculatePrizeTierComparison(games),
-    temporalFrequency: calculateTemporalFrequency(games, 10),
+    temporalFrequency: calculateTemporalFrequency(games),
     gapAnalysis: calculateGapAnalysis(games),
     hotNumbers: calculateHotNumbers(games),
     numberProfile: calculateNumberProfile(games),
