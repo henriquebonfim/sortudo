@@ -1,17 +1,15 @@
-import { ClusteringChart } from '@/features/analytics/components/charts/informational/ClusteringChart';
-import { ConsecutiveOverlapChart } from '@/features/analytics/components/charts/informational/ConsecutiveOverlapChart';
-import { LowHighChart } from '@/features/analytics/components/charts/informational/LowHighChart';
-import { MathCompositionChart } from '@/features/analytics/components/charts/informational/MathCompositionChart';
-import { PairCooccurrenceChart } from '@/features/analytics/components/charts/informational/PairCooccurrenceChart';
-import { SelectionBiasHeatmap } from '@/features/analytics/components/charts/informational/SelectionBiasHeatmap';
-import { ParityDistributionChart } from '@/features/analytics/components/charts/statistical/ParityDistributionChart';
-import { PoissonSplittingChart } from '@/features/analytics/components/charts/statistical/PoissonSplittingChart';
-import { SumBellCurveChart } from '@/features/analytics/components/charts/statistical/SumBellCurveChart';
+import { ClusteringChart } from '@/features/analytics/components/charts/ClusteringChart';
+import { ConsecutiveOverlapChart } from '@/features/analytics/components/charts/ConsecutiveOverlapChart';
+import { LowHighChart } from '@/features/analytics/components/charts/LowHighChart';
+import { MathCompositionChart } from '@/features/analytics/components/charts/MathCompositionChart';
+import { PairCooccurrenceChart } from '@/features/analytics/components/charts/PairCooccurrenceChart';
+import { ParityDistributionChart } from '@/features/analytics/components/charts/ParityDistributionChart';
+import { PoissonSplittingChart } from '@/features/analytics/components/charts/PoissonSplittingChart';
+import { SelectionBiasHeatmap } from '@/features/analytics/components/charts/SelectionBiasHeatmap';
+import { SumBellCurveChart } from '@/features/analytics/components/charts/SumBellCurveChart';
+import { Chapter } from '@/features/analytics/configs/types';
 import { LotteryStats } from '@/lib/lottery/types';
 import { PieChart } from 'lucide-react';
-import { StreakEconomicsChart } from '../../components/charts/statistical/StreakEconomicsChart';
-import { AccumulationTrendChart } from '../../components/charts/timeline/AccumulationTrendChart';
-import { Chapter } from '../types';
 
 export const getProbabilityChapter = (stats?: LotteryStats | null): Chapter => ({
   id: 'probability',
@@ -88,7 +86,7 @@ export const getProbabilityChapter = (stats?: LotteryStats | null): Chapter => (
       type: 'Estatístico',
       insight:
         'Mais de 52% dos sorteios não repetem nenhum número do concurso imediatamente anterior. A independência entre os eventos é soberana.',
-      note: 'Falácia da Mão Quente.',
+      note: 'Frequência em que números do sorteio anterior se repetem no atual.',
       component: <ConsecutiveOverlapChart />,
     },
 

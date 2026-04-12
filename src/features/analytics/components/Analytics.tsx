@@ -14,14 +14,20 @@ import { downloadAsJson } from '@/shared/utils/download';
 import { useDataSourceStore } from '@/store/data';
 import { useGames, useIsSeeding, useLotteryMeta, useLotteryMetadata } from '@/store/selectors';
 import { AnimatePresence, motion } from 'framer-motion';
-import { Lightbulb, Sparkles } from 'lucide-react';
+import { BarChart3, TrendingUp, Users, Trophy, Loader2, Lightbulb, Sparkles } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
-import { useLotteryFullStats } from '../hooks/use-analytics';
-import { AnalyticsEmpty, AnalyticsLoading } from './AnalyticsStates';
-import { ChapterDivider, TypeBadge } from './DashboardComponents';
-import { DashboardHeader } from './DashboardHeader';
-import { DashboardKpiStrip } from './DashboardKpiStrip';
-import { XlsxUploadModal } from './XlsxUploadModal';
+import { useLotteryFullStats } from '@/features/analytics/hooks/use-analytics';
+import {
+  AnalyticsEmpty,
+  AnalyticsLoading,
+  ChapterDivider,
+  ChapterNav,
+  KpiCard,
+  TypeBadge,
+} from '@/features/analytics/components/DashboardComponents';
+import { DashboardHeader } from '@/features/analytics/components/DashboardHeader';
+import { DashboardKpiStrip } from '@/features/analytics/components/DashboardKpiStrip';
+import { XlsxUploadModal } from '@/features/analytics/components/XlsxUploadModal';
 
 export function Analytics() {
   const stats = useLotteryFullStats();
@@ -82,13 +88,29 @@ export function Analytics() {
     downloadAsJson(games, filename);
   };
 
-  const handleUploadSuccess = (count: number) => {
+  const handleUploadSuccess = (newCount: number) => {
+    const oldCount = metadata?.totalGames || 0;
+    const delta = newCount - oldCount;
+
     useDataSourceStore.getState().markLocalReady(true);
     useDataSourceStore.getState().setSource('local');
-    toast({
-      type: 'success',
-      message: `Dados atualizados com sucesso — ${count.toLocaleString()} sorteios carregados.`,
-    });
+
+    if (delta < 0) {
+      toast({
+        type: 'info',
+        message: `Banco de dados atualizado, mas houve redução: ${oldCount} → ${newCount} sorteios.`,
+      });
+    } else if (delta === 0) {
+      toast({
+        type: 'info',
+        message: `A base de dados já está na mesma versão (${newCount} sorteios). Nada foi alterado.`,
+      });
+    } else {
+      toast({
+        type: 'success',
+        message: `Dados atualizados com sucesso — ${newCount.toLocaleString()} sorteios carregados${delta > 0 ? ` (+${delta} novos)` : ''}.`,
+      });
+    }
   };
 
   const hasData = metadata && metadata.totalGames > 0;

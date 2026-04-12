@@ -175,8 +175,9 @@ export const LotteryStatsSchema = z.object({
         one: z.number(),
         two: z.number(),
         threePlus: z.number(),
+        totalWithOverlap: z.number().optional(),
       }),
-      overlapExamples: z
+      overlapHistory: z
         .array(
           z.object({
             drawId: z.number(),

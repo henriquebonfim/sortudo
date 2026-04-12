@@ -1,6 +1,6 @@
 import { BarChart3, TrendingUp, Users, Trophy, Loader2 } from 'lucide-react';
-import { KpiCard } from './KpiCard';
-import { useAnalyticsStore } from '../store';
+import { KpiCard } from '@/features/analytics/components/DashboardComponents';
+import { useAnalyticsStore } from '@/features/analytics/store';
 import { AnimatePresence, motion } from 'framer-motion';
 
 interface DashboardKpiStripProps {

@@ -1,16 +1,16 @@
-import { NumberProfileChart } from '@/features/analytics/components/charts/informational/NumberProfileChart';
-import { GapAnalysisChart } from '@/features/analytics/components/charts/list/GapAnalysisChart';
-import { FrequencyAnalysisGroup } from '@/features/analytics/components/charts/statistical/FrequencyAnalysisGroup';
-import { HotColdNumbersChart } from '@/features/analytics/components/charts/statistical/HotColdNumbersChart';
+import { NumberProfileChart } from '@/features/analytics/components/charts/NumberProfileChart';
+import { GapAnalysisChart } from '@/features/analytics/components/charts/GapAnalysisChart';
+import { FrequencyAnalysisGroup } from '@/features/analytics/components/charts/FrequencyAnalysisGroup';
+import { HotColdNumbersChart } from '@/features/analytics/components/charts/HotColdNumbersChart';
 import { ANALYSIS_CONFIG, MAX_LOTTERY_NUMBER } from '@/lib/lottery/constants';
 import { LotteryStats } from '@/lib/lottery/types';
 import { Hash } from 'lucide-react';
-import { RegularVsSpecialChart } from '../../components/charts/comparison/RegularVsSpecialChart';
-import { JackpotErosionWaterfall } from '../../components/charts/economics/JackpotErosionWaterfall';
-import { PrizeDistributionChart } from '../../components/charts/hierarchical/PrizeDistributionChart';
-import { AllJackpotWinnersChart } from '../../components/charts/list/AllJackpotWinnersChart';
-import { TopJackpotWinnersChart } from '../../components/charts/list/TopJackpotWinnersChart';
-import { Chapter } from '../types';
+import { RegularVsSpecialChart } from '@/features/analytics/components/charts/RegularVsSpecialChart';
+import { JackpotErosionWaterfall } from '@/features/analytics/components/charts/JackpotErosionWaterfall';
+import { PrizeDistributionChart } from '@/features/analytics/components/charts/PrizeDistributionChart';
+import { AllJackpotWinnersChart } from '@/features/analytics/components/charts/AllJackpotWinnersChart';
+import { TopJackpotWinnersChart } from '@/features/analytics/components/charts/TopJackpotWinnersChart';
+import { Chapter } from '@/features/analytics/configs/types';
 
 export const getNumbersChapter = (stats?: LotteryStats | null): Chapter => ({
   id: 'numeros',

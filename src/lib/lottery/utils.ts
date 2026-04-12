@@ -70,3 +70,36 @@ export function combinations(n: number, k: number): number {
   for (let i = 1; i <= realK; i++) result = Math.round((result * (n - i + 1)) / i);
   return result;
 }
+// --- Geographic Normalization ---
+export const BRAZIL_STATES = [
+  'AC', 'AL', 'AP', 'AM', 'BA', 'CE', 'DF', 'ES', 'GO', 
+  'MA', 'MT', 'MS', 'MG', 'PA', 'PB', 'PR', 'PE', 'PI', 
+  'RJ', 'RN', 'RS', 'RO', 'RR', 'SC', 'SP', 'SE', 'TO'
+];
+
+/**
+ * Normalizes city/state strings into standard Brazil State codes (UF).
+ * Handles formats like 'SÃO PAULO/SP', 'BRASÍLIA/DF (DF)', etc.
+ */
+export function normalizeStateCode(loc: string): string | null {
+  const text = loc.toUpperCase().trim();
+  
+  // Handle electronic channels independently
+  if (text.includes('CANAL ELETR') || text === 'ELECT' || text.includes('INTERNET')) {
+    return 'ELECT';
+  }
+
+  // Check for UF in parentheses: 'CIDADE (UF)'
+  const parenMatch = text.match(/\(([A-Z]{2})\)$/);
+  if (parenMatch && BRAZIL_STATES.includes(parenMatch[1])) return parenMatch[1];
+
+  // Check for common separators: 'CIDADE/UF' or 'CIDADE-UF'
+  const parts = text.split(/[\/\-]/);
+  const lastSegment = parts[parts.length - 1].trim();
+  if (BRAZIL_STATES.includes(lastSegment)) return lastSegment;
+
+  // Direct match if it's just the state code
+  if (BRAZIL_STATES.includes(text)) return text;
+
+  return null;
+}

@@ -2,8 +2,8 @@ import { Button } from '@/shared/components/ui/Button';
 import { AnimatePresence, motion } from 'framer-motion';
 import { BarChart3, Download, Upload } from 'lucide-react';
 import type { ReactNode } from 'react';
-import { ChapterNav } from './ChapterNav';
-import { DataSourceToggle } from './DataSourceToggle';
+import { ChapterNav } from '@/features/analytics/components/DashboardComponents';
+import { DataSourceToggle } from '@/features/analytics/components/DataSourceToggle';
 import { useDataSourceStore } from '@/store/data';
 
 interface DashboardHeaderProps {

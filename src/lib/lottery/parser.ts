@@ -1,4 +1,5 @@
 import { Game } from './types';
+import { normalizeStateCode } from './utils';
 import * as XLSX from 'xlsx';
 
 // ─── Parser Utilities ────────────────────────────────────────────────────────
@@ -10,7 +11,7 @@ const REGEX_WHITESPACE = /\s+/g;
 /**
  * Normalizes header keys to snake_case without accents.
  */
-export const normalizeKey = (str: string): string =>
+const normalizeKey = (str: string): string =>
   str
     .normalize('NFD')
     .replace(REGEX_ACCENTS, '')
@@ -22,7 +23,7 @@ export const normalizeKey = (str: string): string =>
 /**
  * Parses currency strings like "R$ 1.234.567,89" into numbers.
  */
-export const parseCurrency = (val: unknown): number => {
+const parseCurrency = (val: unknown): number => {
   if (typeof val === 'number') return val;
   if (!val || typeof val !== 'string') return 0;
 
@@ -39,35 +40,14 @@ export const parseCurrency = (val: unknown): number => {
 /**
  * Normalizes "City/UF" strings.
  */
-export const normalizeLocation = (str: string): string => {
-  const clean = str.trim();
-  const normalizedLower = clean
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '')
-    .toLowerCase();
-
-  if (normalizedLower === 'canal eletronico') {
-    return 'Canal Eletrônico';
-  }
-
-  const parts = clean.split('/').map((s) => s.trim());
-  if (parts.length === 2) {
-    return `${parts[0] || 'não identificado'}/${parts[1] || 'não identificado'}`;
-  }
-
-  if (parts.length === 1 && parts[0]) {
-    return /^[A-Z]{2}$/.test(parts[0])
-      ? `não identificado/${parts[0]}`
-      : `${parts[0]}/não identificado`;
-  }
-
-  return clean;
+const normalizeLocation = (str: string): string => {
+  return normalizeStateCode(str) || 'não identificado/não identificado';
 };
 
 /**
  * Parses various date formats to ISO YYYY-MM-DD.
  */
-export const parseDate = (v: unknown): string => {
+const parseDate = (v: unknown): string => {
   if (v instanceof Date) return v.toISOString().split('T')[0];
   if (typeof v === 'number') {
     // Excel date (days since 1900-01-01)
@@ -121,7 +101,7 @@ const extractDrawNumbers = (row: unknown[], headers: string[]): number[] => {
 /**
  * Parses Caixa's Mega-Sena Excel data into typed Game objects.
  */
-export function parseCaixaExcel(data: unknown[][]): Game[] {
+function parseCaixaExcel(data: unknown[][]): Game[] {
   const headerIdx = data.findIndex((row) => row.length > 5);
   if (headerIdx === -1) return [];
 
@@ -165,7 +145,7 @@ export function parseCaixaExcel(data: unknown[][]): Game[] {
 
 type ParserType = 'caixa-excel' | 'caixa-json';
 
-export class ParserFactory {
+class ParserFactory {
   static getParser(type: ParserType): (data: unknown[][]) => Game[] {
     switch (type) {
       case 'caixa-excel':

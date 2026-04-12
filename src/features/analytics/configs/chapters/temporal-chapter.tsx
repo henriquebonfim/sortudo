@@ -1,12 +1,12 @@
-import { TopNumbersByDecadeChart } from '@/features/analytics/components/charts/comparison/TopNumbersByDecadeChart';
-import { PrizeEvolutionChart } from '@/features/analytics/components/charts/timeline/PrizeEvolutionChart';
-import { TemporalFrequencyChart } from '@/features/analytics/components/charts/timeline/TemporalFrequencyChart';
+import { TopNumbersByDecadeChart } from '@/features/analytics/components/charts/TopNumbersByDecadeChart';
+import { PrizeEvolutionChart } from '@/features/analytics/components/charts/PrizeEvolutionChart';
+import { TemporalFrequencyChart } from '@/features/analytics/components/charts/TemporalFrequencyChart';
 import { LotteryStats } from '@/lib/lottery/types';
 import { TrendingUp } from 'lucide-react';
-import { GeoWinnersChart } from '../../components/charts/geographic/GeoWinnersChart';
-import { StreakEconomicsChart } from '../../components/charts/statistical/StreakEconomicsChart';
-import { AccumulationTrendChart } from '../../components/charts/timeline/AccumulationTrendChart';
-import { Chapter } from '../types';
+import { GeoWinnersChart } from '@/features/analytics/components/charts/GeoWinnersChart';
+import { StreakEconomicsChart } from '@/features/analytics/components/charts/StreakEconomicsChart';
+import { AccumulationTrendChart } from '@/features/analytics/components/charts/AccumulationTrendChart';
+import { Chapter } from '@/features/analytics/configs/types';
 
 export const getTemporalChapter = (stats?: LotteryStats | null): Chapter => ({
   id: 'time-series',
