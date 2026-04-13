@@ -15,11 +15,23 @@ export default defineConfig({
       provider: 'v8',
       reporter: ['text', 'json', 'html'],
       thresholds: {
-        'src/domain/**': {
-          statements: 95,
-          branches: 90,
-          functions: 95,
-          lines: 95,
+        'src/features/**': {
+          statements: 80,
+          branches: 70,
+          functions: 80,
+          lines: 80,
+        },
+        'src/workers/**': {
+          statements: 90,
+          branches: 85,
+          functions: 90,
+          lines: 90,
+        },
+        'src/shared/**': {
+          statements: 80,
+          branches: 70,
+          functions: 80,
+          lines: 80,
         },
       },
       exclude: [

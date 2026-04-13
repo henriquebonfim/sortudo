@@ -1,24 +1,5 @@
 import type { Game } from '@/workers/core/types';
-import { BRAZIL_STATES, calculatePercentage } from '@/workers/core/utils';
-function normalizeStateCode(loc: string): string | null {
-  const text = loc.toUpperCase().trim();
-
-  if (text.includes('CANAL ELETR') || text === 'ELECT' || text.includes('INTERNET')) {
-    return 'ELECT';
-  }
-  const parenMatch = text.match(/\(([A-Z]{2})\)$/);
-  if (parenMatch && BRAZIL_STATES.includes(parenMatch[1] as any)) return parenMatch[1];
-
-  // Check for common separators: 'CIDADE/UF' or 'CIDADE-UF'
-  const parts = text.split(/[/ -]/);
-  const lastSegment = parts[parts.length - 1].trim();
-  if (BRAZIL_STATES.includes(lastSegment as any)) return lastSegment;
-
-  // Direct match if it's just the state code
-  if (BRAZIL_STATES.includes(text as any)) return text;
-
-  return null;
-}
+import { calculatePercentage, normalizeStateCode } from '@/workers/core/utils';
 
 export function calculateGeoWinners(games: Game[]) {
   const geoMap: Record<string, number> = {};

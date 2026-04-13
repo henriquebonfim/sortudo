@@ -102,40 +102,40 @@ const GithubIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
+const STEPS = [
+  {
+    icon: <FileSpreadsheet className="w-5 h-5" />,
+    title: 'Fonte de Dados',
+    description: 'Leitura do Excel oficial contendo todos os sorteios desde o sorteio #1.',
+    color: 'text-blue-400',
+    bg: 'bg-blue-400/10',
+  },
+  {
+    icon: <Database className="w-5 h-5" />,
+    title: 'Normalização',
+    description: 'Tratamento de duplicatas, formatos de data e limpeza de nomes de cidades.',
+    color: 'text-purple-400',
+    bg: 'bg-purple-400/10',
+  },
+  {
+    icon: <PieChart className="w-5 h-5" />,
+    title: 'Estatísticas',
+    description: 'Cálculo de frequências, desvios, médias e tendências temporais.',
+    color: 'text-amber-400',
+    bg: 'bg-amber-400/10',
+  },
+  {
+    icon: <Lightbulb className="w-5 h-5" />,
+    title: 'Insights',
+    description: 'Geração de padrões e correlações visuais para suporte à decisão.',
+    color: 'text-emerald-400',
+    bg: 'bg-emerald-400/10',
+  },
+];
+
 function DataParsingProcessChart() {
   const [activeStep, setActiveStep] = useState(0);
   const meta = useLotteryMeta();
-
-  const STEPS = [
-    {
-      icon: <FileSpreadsheet className="w-5 h-5" />,
-      title: 'Fonte de Dados',
-      description: 'Leitura do Excel oficial contendo todos os sorteios desde o sorteio #1.',
-      color: 'text-blue-400',
-      bg: 'bg-blue-400/10',
-    },
-    {
-      icon: <Database className="w-5 h-5" />,
-      title: 'Normalização',
-      description: 'Tratamento de duplicatas, formatos de data e limpeza de nomes de cidades.',
-      color: 'text-purple-400',
-      bg: 'bg-purple-400/10',
-    },
-    {
-      icon: <PieChart className="w-5 h-5" />,
-      title: 'Estatísticas',
-      description: 'Cálculo de frequências, desvios, médias e tendências temporais.',
-      color: 'text-amber-400',
-      bg: 'bg-amber-400/10',
-    },
-    {
-      icon: <Lightbulb className="w-5 h-5" />,
-      title: 'Insights',
-      description: 'Geração de padrões e correlações visuais para suporte à decisão.',
-      color: 'text-emerald-400',
-      bg: 'bg-emerald-400/10',
-    },
-  ];
 
   useEffect(() => {
     const interval = setInterval(() => {
