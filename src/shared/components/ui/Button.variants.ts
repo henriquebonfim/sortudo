@@ -1,4 +1,4 @@
-import { cva, type VariantProps } from 'class-variance-authority';
+import { cva } from 'class-variance-authority';
 
 /**
  * Button variants using class-variance-authority.
@@ -35,6 +35,3 @@ export const buttonVariants = cva(
     },
   }
 );
-
-export type ButtonVariant = NonNullable<VariantProps<typeof buttonVariants>['variant']>;
-export type ButtonSize = NonNullable<VariantProps<typeof buttonVariants>['size']>;

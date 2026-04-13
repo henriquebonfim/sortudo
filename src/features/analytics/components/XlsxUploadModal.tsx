@@ -1,4 +1,3 @@
-import { parseExcelToGames } from '@/lib/lottery/parser';
 import { Button } from '@/shared/components/ui/Button';
 import {
   Dialog,
@@ -8,9 +7,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/shared/components/ui/Dialog';
-import { cn } from '@/shared/utils/cn';
-import { useLotteryStore } from '@/store/lottery';
-import { formatDate } from '@/utils/format';
+import { cn, formatDate } from '@/shared/utils';
+import { LotteryParserWorkerClient, useLotteryStore } from '@/store/lottery';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
   AlertCircle,
@@ -21,7 +19,7 @@ import {
   Loader2,
   Upload,
 } from 'lucide-react';
-import * as React from 'react';
+import { ChangeEvent, useEffect, useRef, useState } from 'react';
 
 interface XlsxUploadModalProps {
   open: boolean;
@@ -32,23 +30,23 @@ interface XlsxUploadModalProps {
 type Step = 'idle' | 'validating' | 'preview' | 'applying' | 'error';
 
 export function XlsxUploadModal({ open, onClose, onSuccess }: XlsxUploadModalProps) {
-  const [step, setStep] = React.useState<Step>('idle');
-  const [file, setFile] = React.useState<File | null>(null);
-  const [previewData, setPreviewData] = React.useState<{
+  const [step, setStep] = useState<Step>('idle');
+  const [file, setFile] = useState<File | null>(null);
+  const [previewData, setPreviewData] = useState<{
     total: number;
     first: string;
     last: string;
     delta: number;
   } | null>(null);
-  const [errorMessage, setErrorMessage] = React.useState<string>('');
-  const [isDragging, setIsDragging] = React.useState(false);
+  const [errorMessage, setErrorMessage] = useState<string>('');
+  const [isDragging, setIsDragging] = useState(false);
 
-  const fileInputRef = React.useRef<HTMLInputElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   const loadFromFile = useLotteryStore((state) => state.loadFromFile);
   const currentTotal = useLotteryStore((state) => state.games.length);
 
   // Reset state when modal opens/closes
-  React.useEffect(() => {
+  useEffect(() => {
     if (!open) {
       setStep('idle');
       setFile(null);
@@ -69,7 +67,7 @@ export function XlsxUploadModal({ open, onClose, onSuccess }: XlsxUploadModalPro
 
     try {
       const buffer = await f.arrayBuffer();
-      const games = parseExcelToGames(new Uint8Array(buffer));
+      const games = await LotteryParserWorkerClient.getInstance().parseExcel(buffer);
 
       if (games.length === 0) {
         throw new Error('Nenhum jogo encontrado no arquivo.');
@@ -88,14 +86,14 @@ export function XlsxUploadModal({ open, onClose, onSuccess }: XlsxUploadModalPro
     }
   };
 
-  const onDrop = (e: React.DragEvent) => {
+  const onDrop = (e: DragEvent) => {
     e.preventDefault();
     setIsDragging(false);
     const droppedFile = e.dataTransfer.files[0];
     if (droppedFile) handleFile(droppedFile);
   };
 
-  const onSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const onSelect = (e: ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
     if (selectedFile) handleFile(selectedFile);
   };
@@ -118,7 +116,17 @@ export function XlsxUploadModal({ open, onClose, onSuccess }: XlsxUploadModalPro
       <DialogHeader>
         <DialogTitle>Atualizar Banco de Dados</DialogTitle>
         <DialogDescription>
-          Carregue o <a className='text-primary underline' target='_blank' rel='noopener noreferrer' href="https://loterias.caixa.gov.br/Paginas/Mega-Sena.aspx#:~:text=Resultados%20da%20Mega%2DSena%20por%20ordem%20crescente.">  Arquivo Oficial  </a> da Mega-Sena (.xlsx) para atualizar as estatísticas.
+          Carregue o{' '}
+          <a
+            className="text-primary underline"
+            target="_blank"
+            rel="noopener noreferrer"
+            href="https://loterias.caixa.gov.br/Paginas/Mega-Sena.aspx#:~:text=Resultados%20da%20Mega%2DSena%20por%20ordem%20crescente."
+          >
+            {' '}
+            Arquivo Oficial{' '}
+          </a>{' '}
+          da Mega-Sena (.xlsx) para atualizar as estatísticas.
         </DialogDescription>
       </DialogHeader>
 
@@ -192,26 +200,34 @@ export function XlsxUploadModal({ open, onClose, onSuccess }: XlsxUploadModalPro
               animate={{ opacity: 1, scale: 1 }}
               className="space-y-4"
             >
-              <div className={cn(
-                "rounded-xl border p-4 flex items-start gap-3 transition-colors",
-                previewData.delta > 0 && "border-emerald-500/20 bg-emerald-500/5",
-                previewData.delta < 0 && "border-amber-500/20 bg-amber-500/5",
-                previewData.delta === 0 && "border-blue-500/20 bg-blue-500/5"
-              )}>
-                {previewData.delta > 0 && <FileCheck className="text-emerald-400 mt-0.5" size={18} />}
-                {previewData.delta < 0 && <AlertCircle className="text-amber-400 mt-0.5" size={18} />}
+              <div
+                className={cn(
+                  'rounded-xl border p-4 flex items-start gap-3 transition-colors',
+                  previewData.delta > 0 && 'border-emerald-500/20 bg-emerald-500/5',
+                  previewData.delta < 0 && 'border-amber-500/20 bg-amber-500/5',
+                  previewData.delta === 0 && 'border-blue-500/20 bg-blue-500/5'
+                )}
+              >
+                {previewData.delta > 0 && (
+                  <FileCheck className="text-emerald-400 mt-0.5" size={18} />
+                )}
+                {previewData.delta < 0 && (
+                  <AlertCircle className="text-amber-400 mt-0.5" size={18} />
+                )}
                 {previewData.delta === 0 && <Database className="text-blue-400 mt-0.5" size={18} />}
-                
+
                 <div>
-                  <p className={cn(
-                    "text-sm font-semibold",
-                    previewData.delta > 0 && "text-emerald-400",
-                    previewData.delta < 0 && "text-amber-400",
-                    previewData.delta === 0 && "text-blue-400"
-                  )}>
-                    {previewData.delta > 0 && "Novos Dados Detectados"}
-                    {previewData.delta < 0 && "Atenção: Redução de Dados"}
-                    {previewData.delta === 0 && "Base Já Atualizada"}
+                  <p
+                    className={cn(
+                      'text-sm font-semibold',
+                      previewData.delta > 0 && 'text-emerald-400',
+                      previewData.delta < 0 && 'text-amber-400',
+                      previewData.delta === 0 && 'text-blue-400'
+                    )}
+                  >
+                    {previewData.delta > 0 && 'Novos Dados Detectados'}
+                    {previewData.delta < 0 && 'Atenção: Redução de Dados'}
+                    {previewData.delta === 0 && 'Base Já Atualizada'}
                   </p>
                   <p className="text-xs text-muted-foreground">{file?.name}</p>
                 </div>
@@ -221,11 +237,14 @@ export function XlsxUploadModal({ open, onClose, onSuccess }: XlsxUploadModalPro
                 <div className="rounded-xl border border-blue-500/20 bg-blue-500/5 p-4 flex flex-col gap-2">
                   <div className="flex items-center gap-2 text-blue-400">
                     <Database size={14} />
-                    <p className="text-[10px] font-bold uppercase tracking-wider">Identidade de Dados</p>
+                    <p className="text-[10px] font-bold uppercase tracking-wider">
+                      Identidade de Dados
+                    </p>
                   </div>
                   <p className="text-xs text-muted-foreground leading-relaxed">
-                    O arquivo selecionado possui exatamente o mesmo número de registros (<span className="text-foreground font-bold">{previewData.total}</span>) 
-                    que sua base de dados atual. 
+                    O arquivo selecionado possui exatamente o mesmo número de registros (
+                    <span className="text-foreground font-bold">{previewData.total}</span>) que sua
+                    base de dados atual.
                   </p>
                 </div>
               )}
@@ -234,12 +253,18 @@ export function XlsxUploadModal({ open, onClose, onSuccess }: XlsxUploadModalPro
                 <div className="rounded-xl border border-rose-500/20 bg-rose-500/5 p-4 flex flex-col gap-2">
                   <div className="flex items-center gap-2 text-rose-400">
                     <AlertCircle size={14} />
-                    <p className="text-[10px] font-bold uppercase tracking-wider">Perda de Dados Detectada</p>
+                    <p className="text-[10px] font-bold uppercase tracking-wider">
+                      Perda de Dados Detectada
+                    </p>
                   </div>
                   <p className="text-xs text-muted-foreground leading-relaxed">
-                    Este arquivo contém <span className="text-foreground font-bold">{previewData.total}</span> registros, 
-                    enquanto sua base atual possui <span className="text-foreground font-bold">{currentTotal}</span>. 
-                    Continuar irá remover <span className="text-rose-400 font-bold">{Math.abs(previewData.delta)}</span> sorteios históricos.
+                    Este arquivo contém{' '}
+                    <span className="text-foreground font-bold">{previewData.total}</span>{' '}
+                    registros, enquanto sua base atual possui{' '}
+                    <span className="text-foreground font-bold">{currentTotal}</span>. Continuar irá
+                    remover{' '}
+                    <span className="text-rose-400 font-bold">{Math.abs(previewData.delta)}</span>{' '}
+                    sorteios históricos.
                   </p>
                 </div>
               )}
@@ -276,9 +301,7 @@ export function XlsxUploadModal({ open, onClose, onSuccess }: XlsxUploadModalPro
                       Último Sorteio
                     </span>
                   </div>
-                  <p className="text-lg font-display font-bold">
-                    {formatDate(previewData.last)}
-                  </p>
+                  <p className="text-lg font-display font-bold">{formatDate(previewData.last)}</p>
                 </div>
               </div>
 
@@ -339,10 +362,20 @@ export function XlsxUploadModal({ open, onClose, onSuccess }: XlsxUploadModalPro
         {step === 'preview' && (
           <Button
             onClick={onConfirm}
-            variant={previewData?.delta && previewData.delta < 0 ? "danger" : "default"}
-            leftIcon={previewData?.delta && previewData.delta < 0 ? <AlertCircle size={16} /> : <FileCheck size={16} />}
+            variant={previewData?.delta && previewData.delta < 0 ? 'danger' : 'default'}
+            leftIcon={
+              previewData?.delta && previewData.delta < 0 ? (
+                <AlertCircle size={16} />
+              ) : (
+                <FileCheck size={16} />
+              )
+            }
           >
-            {previewData?.delta === 0 ? "Reimportar Mesmos Dados" : previewData?.delta && previewData.delta < 0 ? "Substituir e Perder Dados" : "Aplicar Dados"}
+            {previewData?.delta === 0
+              ? 'Reimportar Mesmos Dados'
+              : previewData?.delta && previewData.delta < 0
+                ? 'Substituir e Perder Dados'
+                : 'Aplicar Dados'}
           </Button>
         )}
       </DialogFooter>

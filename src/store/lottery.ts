@@ -1,9 +1,10 @@
-import { Game, LotteryMetadata } from '@/lib/lottery/types';
-import { fetchLotteryData } from '@/services/lottery';
+import { lotteryIdb } from '@/lib/core/idb';
+import { Game, LotteryMetadata } from '@/lib/core/types';
 import { createStore } from '@/lib/zustand';
-import { parseExcelToGames } from '@/lib/lottery/parser';
-import { lotteryIdb } from '@/lib/lotteryIdb';
+import { fetchLotteryData } from '@/services/lottery';
+import { LotteryParserWorkerClient } from '@/workers/parser';
 
+export { LotteryParserWorkerClient } from '@/workers/parser';
 export interface LotteryState {
   metadata: LotteryMetadata | null;
   games: Game[];
@@ -49,7 +50,7 @@ export const useLotteryStore = createStore<LotteryState>('lottery', (set, get) =
     set({ isSeeding: true, error: null });
     try {
       const buffer = await file.arrayBuffer();
-      const games = parseExcelToGames(new Uint8Array(buffer));
+      const games = await LotteryParserWorkerClient.getInstance().parseExcel(buffer);
 
       if (games.length === 0) {
         throw new Error('Nenhum jogo encontrado no arquivo.');

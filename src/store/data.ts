@@ -1,5 +1,5 @@
+import { lotteryIdb } from '@/lib/core/idb';
 import { createStore } from '@/lib/zustand';
-import { lotteryIdb } from '@/lib/lotteryIdb';
 
 export type DataSource = 'official' | 'local';
 

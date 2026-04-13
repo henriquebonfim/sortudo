@@ -1,37 +1,69 @@
+
+import { useSimulator } from '@/hooks/use-generator';
 import { MiniBall } from '@/shared/components/MiniBall';
 import { ResultBanner } from '@/shared/components/ResultBanner';
 import { ShareButton } from '@/shared/components/ShareButton';
-import { useSimulator } from '../hooks/use-simulator';
-import { LotteryFrequencies } from '@/lib/lottery/types';
-import { TOTAL_COMBINATIONS } from '@/lib/lottery/constants';
-import { formatNumber } from '@/lib/lottery/utils';
-import { getBallColor } from '@/shared/utils/ballColors';
+import { TOTAL_COMBINATIONS } from '@/shared/constants';
+import { LotteryFrequencies } from '@/shared/types';
+import { formatNumber, formatTime, getBallColor } from '@/shared/utils';
+import { GENERATION_MODE_GROUPS, GenerationMode } from '@/store/generator';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ChevronDown, Clock, Dices, Trash2 } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 
-// ─── Types ───────────────────────────────────────────────────────────────────
 
-export interface GeneratedEntry {
+const MODE_MESSAGES: Partial<Record<GenerationMode, string>> = {
+  dates:
+    'Jogar datas é tão válido quanto qualquer outra combinação. Mas como muita gente faz isso, você dividiria o prêmio com mais pessoas.',
+  primes:
+    'Existem 17 números primos na Mega-Sena. A probabilidade estatística de saírem 6 simultaneamente é pequena.',
+  fibonacci: 'A sequência de Fibonacci gera apenas 9 dezenas compatíveis na Mega-Sena.',
+  '3odds-3evens':
+    'Cerca de 31% dos sorteios da Mega-Sena resultam em 3 ímpares e 3 pares. É o padrão mais comum.',
+};
+
+const SHUFFLE_TRANSITION = {
+  duration: 0.35,
+  repeat: Infinity,
+  ease: 'easeInOut' as const,
+};
+
+const REVEAL_SPRING = {
+  type: 'spring' as const,
+  stiffness: 450,
+  damping: 20,
+};
+
+interface GeneratedEntry {
   id: number;
   numbers: number[];
   timestamp: Date;
 }
 
-// ─── Sub-components ──────────────────────────────────────────────────────────
+interface GeneratorContextMessageProps {
+  mode: GenerationMode;
+  hasNumbers: boolean;
+}
 
-/**
- * Renders the 6 main balls with shuffling animations.
- */
-function BallDisplay({
-  displayNums,
-  shuffling,
-  freq,
-}: {
-  displayNums: (number | null)[];
+interface GeneratorBallDisplayProps {
+  displayNums: number[];
   shuffling: boolean;
   freq: LotteryFrequencies | null;
-}) {
+}
+
+interface GeneratorModeSelectorProps {
+  currentMode: GenerationMode;
+  onModeChange: (mode: GenerationMode) => void;
+  disabled?: boolean;
+}
+
+interface GeneratorHistoryDropdownProps {
+  history: GeneratedEntry[];
+  onClear: () => void;
+  onSelect: (nums: number[]) => void;
+}
+
+function GeneratorBallDisplay({ displayNums, shuffling, freq }: GeneratorBallDisplayProps) {
   return (
     <div className="flex flex-wrap items-center justify-center gap-5">
       {displayNums.map((num, idx) => {
@@ -39,7 +71,7 @@ function BallDisplay({
         const max = freq?.max?.frequency || 100;
 
         const color =
-          freq && num && num > 0
+          freq && num > 0
             ? getBallColor(freq.frequencies[String(num)] || 0, min, max)
             : 'hsl(228 22% 22%)';
 
@@ -52,11 +84,7 @@ function BallDisplay({
                 ? { opacity: 1, y: 0, scale: [1, 1.12, 0.96, 1.05, 1], rotate: [0, -4, 4, -2, 0] }
                 : { opacity: 1, y: 0, scale: 1, rotate: 0 }
             }
-            transition={
-              shuffling
-                ? { duration: 0.35, repeat: Infinity, ease: 'easeInOut' }
-                : { type: 'spring', stiffness: 450, damping: 20, delay: idx * 0.04 }
-            }
+            transition={shuffling ? SHUFFLE_TRANSITION : { ...REVEAL_SPRING, delay: idx * 0.04 }}
             className="lottery-ball w-[72px] h-[72px] sm:w-20 sm:h-20 text-lg sm:text-2xl select-none"
             style={{
               background: color,
@@ -64,7 +92,7 @@ function BallDisplay({
             }}
           >
             <span className="relative z-10 font-mono font-bold tracking-tighter">
-              {num && num > 0 ? String(num).padStart(2, '0') : '—'}
+              {num > 0 ? String(num).padStart(2, '0') : '—'}
             </span>
           </motion.div>
         );
@@ -73,35 +101,49 @@ function BallDisplay({
   );
 }
 
-function HistoryDropdown({
+function GeneratorContextMessage({ mode, hasNumbers }: GeneratorContextMessageProps) {
+  if (!hasNumbers) {
+    return null;
+  }
+
+  const message =
+    MODE_MESSAGES[mode] ||
+    `Esta combinação tem exatamente 1 em ${formatNumber(TOTAL_COMBINATIONS)} de ganhar a sena.`;
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 12 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="mt-8 max-w-2xl mx-auto px-6 py-4 rounded-2xl bg-white/5 border border-white/10 text-center"
+    >
+      <p className="text-sm text-muted-foreground leading-relaxed italic">"{message}"</p>
+    </motion.div>
+  );
+}
+
+function GeneratorHistoryDropdown({
   history,
-  currentNumbers,
   onClear,
   onSelect,
-}: {
-  history: GeneratedEntry[];
-  currentNumbers: number[];
-  onClear: () => void;
-  onSelect: (nums: number[]) => void;
-}) {
+}: GeneratorHistoryDropdownProps) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+      if (ref.current && !ref.current.contains(e.target as Node)) {
+        setOpen(false);
+      }
     };
+
     document.addEventListener('mousedown', handler);
     return () => document.removeEventListener('mousedown', handler);
   }, []);
 
-  const formatTime = (d: Date) =>
-    d.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
-
   return (
     <div ref={ref} className="relative inline-block w-full max-w-[320px]">
       <button
-        onClick={() => setOpen((o) => !o)}
+        onClick={() => setOpen((state) => !state)}
         className="inline-flex items-center justify-between w-full px-4 py-2.5 rounded-xl text-xs font-medium cursor-pointer transition-all duration-200"
         style={{
           background: open ? 'hsl(43 96% 56% / 0.15)' : 'hsl(228 28% 12% / 0.7)',
@@ -140,7 +182,7 @@ function HistoryDropdown({
             </div>
 
             <div className="max-h-72 overflow-y-auto scrollbar-thin">
-              {[...history].reverse().map((entry, i) => (
+              {[...history].reverse().map((entry, index) => (
                 <button
                   key={entry.id}
                   onClick={() => {
@@ -150,11 +192,11 @@ function HistoryDropdown({
                   className="w-full flex items-center gap-3 px-4 py-3 hover:bg-white/5 border-b border-white/5"
                 >
                   <span className="text-[10px] font-mono tabular-nums text-muted-foreground/40 shrink-0">
-                    #{history.length - i}
+                    #{history.length - index}
                   </span>
                   <div className="flex gap-1 flex-1">
-                    {entry.numbers.map((n) => (
-                      <MiniBall key={n} number={n} size="xs" />
+                    {entry.numbers.map((number) => (
+                      <MiniBall key={number} number={number} size="xs" />
                     ))}
                   </div>
                   <span className="text-[10px] font-mono tabular-nums text-muted-foreground/40 shrink-0">
@@ -170,58 +212,30 @@ function HistoryDropdown({
   );
 }
 
-const MODE_GROUPS = [
-  {
-    label: 'Método',
-    modes: [
-      { key: 'random', label: 'Sorte 🍀' },
-      { key: 'hot', label: 'Quentes 🔥' },
-      { key: 'cold', label: 'Frios ❄️' },
-      { key: 'dates', label: 'Datas (1–31) 📅' },
-      { key: 'primes', label: 'Primos 🔢' },
-      { key: 'fibonacci', label: 'Fibonacci ♾️' },
-      { key: 'winners', label: 'Vencedoras 🏆' },
-    ],
-  },
-  {
-    label: 'Distribuição par/ímpar',
-    modes: [
-      { key: '6odds-0evens', label: 'Só Ímpares' },
-      { key: '1odd-5evens', label: '1 Ímpar · 5 Pares' },
-      { key: '2odds-4evens', label: '2 Ímpares · 4 Pares' },
-      { key: '3odds-3evens', label: '3 Ímpares · 3 Pares' },
-      { key: '4odds-2evens', label: '4 Ímpares · 2 Pares' },
-      { key: '5odds-1even', label: '5 Ímpares · 1 Par' },
-      { key: '0odds-6evens', label: 'Só Pares' },
-    ],
-  },
-];
-
-interface ModeSelectorProps {
-  currentMode: string;
-  onModeChange: (mode: string) => void;
-  disabled?: boolean;
-}
-
-function ModeSelector({ currentMode, onModeChange, disabled }: ModeSelectorProps) {
+function GeneratorModeSelector({
+  currentMode,
+  onModeChange,
+  disabled,
+}: GeneratorModeSelectorProps) {
   return (
     <div className="mt-12 space-y-4">
-      {MODE_GROUPS.map((group) => (
+      {GENERATION_MODE_GROUPS.map((group) => (
         <div key={group.label}>
           <p className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold mb-3 text-center">
             {group.label}
           </p>
           <div className="flex flex-wrap justify-center gap-2 px-4">
-            {group.modes.map((m) => {
-              const isActive = currentMode === m.key;
+            {group.modes.map((mode) => {
+              const isActive = currentMode === mode.key;
+
               return (
                 <button
-                  key={m.key}
+                  key={mode.key}
                   disabled={disabled}
-                  onClick={() => onModeChange(m.key)}
+                  onClick={() => onModeChange(mode.key)}
                   className={`mode-pill px-4 py-2 border rounded-full text-xs font-medium cursor-pointer transition-all ${isActive ? 'bg-primary/20 border-primary text-primary shadow-glow-gold/20' : 'bg-white/5 border-white/10 text-muted-foreground hover:bg-white/10'}`}
                 >
-                  {m.label}
+                  {mode.label}
                 </button>
               );
             })}
@@ -229,36 +243,6 @@ function ModeSelector({ currentMode, onModeChange, disabled }: ModeSelectorProps
         </div>
       ))}
     </div>
-  );
-}
-
-interface ContextMessageProps {
-  mode: string;
-  hasNumbers: boolean;
-}
-
-function ContextMessage({ mode, hasNumbers }: ContextMessageProps) {
-  if (!hasNumbers) return null;
-  const messages: Record<string, string> = {
-    dates:
-      'Jogar datas é tão válido quanto qualquer outra combinação. Mas como muita gente faz isso, você dividiria o prêmio com mais pessoas.',
-    primes:
-      'Existem 17 números primos na Mega-Sena. A probabilidade estatística de saírem 6 simultaneamente é pequena.',
-    fibonacci: 'A sequência de Fibonacci gera apenas 9 dezenas compatíveis na Mega-Sena.',
-    '3odds-3evens':
-      'Cerca de 31% dos sorteios da Mega-Sena resultam em 3 ímpares e 3 pares. É o padrão mais comum.',
-  };
-  const msg =
-    messages[mode] ||
-    `Esta combinação tem exatamente 1 em ${formatNumber(TOTAL_COMBINATIONS)} de ganhar a sena.`;
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 12 }}
-      animate={{ opacity: 1, y: 0 }}
-      className="mt-8 max-w-2xl mx-auto px-6 py-4 rounded-2xl bg-white/5 border border-white/10 text-center"
-    >
-      <p className="text-sm text-muted-foreground leading-relaxed italic">"{msg}"</p>
-    </motion.div>
   );
 }
 
@@ -311,7 +295,7 @@ export function Generator() {
         </motion.div>
 
         <div className="flex flex-col gap-12 items-center w-full">
-          <BallDisplay displayNums={displayNums} shuffling={shuffling} freq={freq} />
+          <GeneratorBallDisplay displayNums={displayNums} shuffling={shuffling} freq={freq} />
           <div className="flex flex-col items-center gap-8 w-full">
             <button
               onClick={generate}
@@ -320,17 +304,16 @@ export function Generator() {
             >
               {shuffling ? 'Gerando...' : 'Gerar Combinação'}
             </button>
-            <HistoryDropdown
+            <GeneratorHistoryDropdown
               history={history}
-              currentNumbers={numbers}
               onClear={() => setHistory([])}
               onSelect={loadNumbers}
             />
           </div>
         </div>
 
-        <ModeSelector currentMode={mode} onModeChange={setMode} disabled={shuffling} />
-        <ContextMessage mode={mode} hasNumbers={numbers.length > 0} />
+        <GeneratorModeSelector currentMode={mode} onModeChange={setMode} disabled={shuffling} />
+        <GeneratorContextMessage mode={mode} hasNumbers={numbers.length > 0} />
         <div className="mt-10">
           <ShareButton />
         </div>

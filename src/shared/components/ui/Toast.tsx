@@ -1,22 +1,22 @@
-import * as React from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { CheckCircle2, AlertCircle, Info, X } from 'lucide-react';
-import { cn } from '@/shared/utils/cn';
+import { cn } from '@/shared/utils';
+import { AnimatePresence, motion } from 'framer-motion';
+import { AlertCircle, CheckCircle2, Info, X } from 'lucide-react';
+import { useEffect } from 'react';
 
-export type ToastType = 'success' | 'error' | 'info';
+type ToastType = 'success' | 'error' | 'info';
 
-export interface ToastItem {
+interface ToastItem {
   id: string;
   type: ToastType;
   message: string;
 }
 
-export interface ToastProps extends ToastItem {
+interface ToastProps extends ToastItem {
   onClose: (id: string) => void;
 }
 
-export function Toast({ id, type, message, onClose }: ToastProps) {
-  React.useEffect(() => {
+function Toast({ id, type, message, onClose }: ToastProps) {
+  useEffect(() => {
     const timer = setTimeout(() => onClose(id), 4000);
     return () => clearTimeout(timer);
   }, [id, onClose]);

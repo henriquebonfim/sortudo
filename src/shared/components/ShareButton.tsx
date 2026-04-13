@@ -1,4 +1,4 @@
-import { SearchResult } from '@/lib/lottery/types';
+import { SearchResult } from '@/lib/core/types';
 
 /**
  * WhatsApp share button.

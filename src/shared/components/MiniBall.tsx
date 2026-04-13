@@ -1,8 +1,7 @@
+import { cn, getBallColor } from '@/shared/utils';
 import { useFrequencies } from '@/store/selectors';
-import { getBallColor } from '@/shared/utils/ballColors';
-import { cn } from '@/shared/utils/cn';
 
-export interface MiniBallProps {
+interface MiniBallProps {
   number: number;
   className?: string;
   size?: 'xs' | 'sm' | 'md' | 'lg';

@@ -1,8 +1,8 @@
 /* eslint-disable no-console */
-import * as fs from 'fs';
-import { calculateAllStats } from '../src/features/analytics/lib/calculations';
-import { parseExcelToGames } from '../src/lib/lottery/parser';
-import { Game } from '../src/lib/lottery/types';
+import { existsSync, readFileSync, writeFileSync } from 'fs';
+import { calculateAllStats } from '../src/workers/analytics/engine';
+import type { Game } from '../src/workers/core/types';
+import { parseExcelToGames } from '../src/workers/parser/engine';
 
 const FILE_PATH = './scripts/Mega-Sena.xlsx';
 const OUTPUT_PATH = './public/data.json';
@@ -12,14 +12,14 @@ const OUTPUT_PATH = './public/data.json';
  * This runs during build time to ensure the app has latest records.
  */
 async function sync() {
-  if (!fs.existsSync(FILE_PATH)) {
+  if (!existsSync(FILE_PATH)) {
     console.warn(`⚠️ Warning: ${FILE_PATH} NOT found. Skipping static data sync.`);
     process.exit(0);
   }
 
   try {
     console.info(`📂 Reading ${FILE_PATH}...`);
-    const data = fs.readFileSync(FILE_PATH);
+    const data = readFileSync(FILE_PATH);
 
     console.info('🧪 Parsing Excel contents...');
     const draws: Game[] = parseExcelToGames(data);
@@ -47,7 +47,7 @@ async function sync() {
 
     console.info(`💾 Writing minified JSON to ${OUTPUT_PATH}...`);
     // Minify JSON to save bytes (no spaces)
-    fs.writeFileSync(OUTPUT_PATH, JSON.stringify(output));
+    writeFileSync(OUTPUT_PATH, JSON.stringify(output));
 
     console.info(`✅ Success! Synchronized ${draws.length} records.`);
   } catch (err) {

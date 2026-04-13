@@ -26,10 +26,6 @@ export const duration = {
   xl: 0.8,
 } as const;
 
-export const ease = {
-  out: [0.16, 1, 0.3, 1] as [number, number, number, number], // Snappy ease-out
-} as const;
-
 // ─── Shared Variants ─────────────────────────────────────────────────────────
 
 /** Fade and slide up entrance - universal reveal. */

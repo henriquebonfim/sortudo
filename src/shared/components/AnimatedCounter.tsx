@@ -1,7 +1,7 @@
 import { animate, useMotionValue } from 'framer-motion';
 import { useEffect, useState } from 'react';
 
-export interface AnimatedCounterProps {
+interface AnimatedCounterProps {
   target: number;
   duration?: number;
   decimals?: number;

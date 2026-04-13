@@ -42,7 +42,7 @@ class FeedbackService {
 
       oscillator.start();
       oscillator.stop(this.audioCtx.currentTime + 0.1);
-    } catch (e) {
+    } catch {
       // Silence if audio is blocked by browser policy
     }
   }

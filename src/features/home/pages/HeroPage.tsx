@@ -1,10 +1,10 @@
-import { ChapterProgress } from '../components/ChapterProgress';
-import { ClosingQuote } from '../components/ClosingQuote';
-import { HeroSection } from '../components/HeroSection';
-import { MathSection } from '../components/MathSection';
-import { MoneyFlowTeaser } from '../components/MoneyFlowTeaser';
-import { OddsStorySection } from '../components/OddsStorySection';
-import { RecordsSection } from '../components/RecordsSection';
+import { ChapterProgress } from '@/features/home/components/ChapterProgress';
+import { ClosingQuoteSection } from '@/features/home/components/ClosingQuoteSection';
+import { HeroSection } from '@/features/home/components/HeroSection';
+import { MathSection } from '@/features/home/components/MathSection';
+import { MoneyFlowSection } from '@/features/home/components/MoneyFlowSection';
+import { OddsStorySection } from '@/features/home/components/OddsStorySection';
+import { RecordsSection } from '@/features/home/components/RecordsSection';
 
 export default function HeroPage() {
   return (
@@ -14,8 +14,8 @@ export default function HeroPage() {
       <MathSection id="matematica" />
       <OddsStorySection id="probabilidade" />
       <RecordsSection id="recordes" />
-      <MoneyFlowTeaser id="arrecadacao" />
-      <ClosingQuote id="conclusao" />
+      <MoneyFlowSection id="arrecadacao" />
+      <ClosingQuoteSection id="conclusao" />
     </div>
   );
 }

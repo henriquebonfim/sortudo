@@ -1,18 +1,18 @@
-import { cn } from '@/shared/utils/cn';
+import { cn } from '@/shared/utils';
 import { AnimatePresence, motion } from 'framer-motion';
 import { X } from 'lucide-react';
-import * as React from 'react';
+import { ReactNode, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 
 interface DialogProps {
   open: boolean;
   onClose: () => void;
-  children: React.ReactNode;
+  children: ReactNode;
   className?: string;
 }
 
 export function Dialog({ open, onClose, children, className }: DialogProps) {
-  React.useEffect(() => {
+  useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();
     };
@@ -68,7 +68,7 @@ export function DialogHeader({
   children,
 }: {
   className?: string;
-  children: React.ReactNode;
+  children: ReactNode;
 }) {
   return <div className={cn('px-6 pt-6 pb-4', className)}>{children}</div>;
 }
@@ -78,7 +78,7 @@ export function DialogBody({
   children,
 }: {
   className?: string;
-  children: React.ReactNode;
+  children: ReactNode;
 }) {
   return <div className={cn('px-6 py-4', className)}>{children}</div>;
 }
@@ -88,7 +88,7 @@ export function DialogFooter({
   children,
 }: {
   className?: string;
-  children: React.ReactNode;
+  children: ReactNode;
 }) {
   return (
     <div
@@ -107,7 +107,7 @@ export function DialogTitle({
   children,
 }: {
   className?: string;
-  children: React.ReactNode;
+  children: ReactNode;
 }) {
   return (
     <h2 className={cn('text-xl font-display font-bold tracking-tight text-foreground', className)}>
@@ -121,7 +121,7 @@ export function DialogDescription({
   children,
 }: {
   className?: string;
-  children: React.ReactNode;
+  children: ReactNode;
 }) {
   return <p className={cn('text-sm text-muted-foreground', className)}>{children}</p>;
 }

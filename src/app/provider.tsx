@@ -1,7 +1,4 @@
-import { useAnalyticsStore } from '@/features/analytics/store';
-import { useGeneratorStore } from '@/features/generator/store';
-import { SearchWorkerClient } from '@/features/search/search.client';
-import { lotteryIdb } from '@/lib/lotteryIdb';
+import { lotteryIdb } from '@/lib/core/idb';
 import { useDataSourceStore } from '@/store/data';
 import { useLotteryStore } from '@/store/lottery';
 import { PropsWithChildren, useEffect, useRef } from 'react';
@@ -17,35 +14,35 @@ export function AppProvider({ children }: PropsWithChildren) {
   // ── 1. subscribe: dataset change → auto-recalculate analytics ──
   // Using reference check on (s) => s.games ensures that even same-length files
   // will trigger a recalculation if the array reference changed.
-  useEffect(() => {
-    return useLotteryStore.subscribe(
-      (s) => s.games,
-      (newGames, prevGames) => {
-        if (!newGames || newGames.length === 0) return;
-        // force recalculate if replacing existing data (switching sources or new upload)
-        const force = prevGames && prevGames.length > 0;
-        useAnalyticsStore.getState().calculateStats(force).catch(console.error);
-      }
-    );
-  }, []);
+  // useEffect(() => {
+  //   return useLotteryStore.subscribe(
+  //     (s) => s.games,
+  //     (newGames, prevGames) => {
+  //       if (!newGames || newGames.length === 0) return;
+  //       // force recalculate if replacing existing data (switching sources or new upload)
+  //       const force = prevGames && prevGames.length > 0;
+  //       useAnalyticsStore.getState().calculateStats(force).catch(console.error);
+  //     }
+  //   );
+  // }, []);
 
-  // ── 2. DIP: Service Injection into the Generator feature ──
-  useEffect(() => {
-    useGeneratorStore.getState().setServices({
-      verificationService: (numbers, games) =>
-        SearchWorkerClient.getInstance().searchCombination({ numbers, games }),
-      statsProvider: () => {
-        const stats = useAnalyticsStore.getState().stats;
-        if (!stats) return null;
-        return {
-          hotNumbers: stats.hotNumbers.map((n: { number: number }) => n.number),
-          coldNumbers: stats.frequencies.ranking
-            .slice(-10)
-            .map((n: { number: number }) => n.number),
-        };
-      },
-    });
-  }, []);
+  // // ── 2. DIP: Service Injection into the Generator feature ──
+  // useEffect(() => {
+  //   useGeneratorStore.getState().setServices({
+  //     verificationService: (numbers, games) =>
+  //       SearchWorkerClient.getInstance().searchCombination({ numbers, games }),
+  //     statsProvider: () => {
+  //       const stats = useAnalyticsStore.getState().stats;
+  //       if (!stats) return null;
+  //       return {
+  //         hotNumbers: stats.hotNumbers.map((n: { number: number }) => n.number),
+  //         coldNumbers: stats.frequencies.ranking
+  //           .slice(-10)
+  //           .map((n: { number: number }) => n.number),
+  //       };
+  //     },
+  //   });
+  // }, []);
 
   // ── 3. Boot: System initialization ──
   useEffect(() => {

@@ -1,48 +1,224 @@
-import { DataParsingProcessChart } from '@/features/about/components/DataParsingProcessChart';
+import { SOURCES_LIST } from '@/features/about/constants';
+import { NavigatorExtended } from '@/features/about/types';
+import { useLotteryMeta } from '@/store/selectors';
 import { motion } from 'framer-motion';
-import { Code2, Database, ExternalLink, Info, Shield, ShieldCheck, Terminal } from 'lucide-react';
-import { SuggestedFeaturesPanel } from './SuggestedFeaturesPanel';
+import { CheckCircle2, Code2, Database, ExternalLink, FileSpreadsheet, Globe, Info, LayoutDashboard, Lightbulb, PieChart, Shield, ShieldCheck, Terminal, Zap } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
-interface NavigatorExtended extends Navigator {
-  deviceMemory?: number;
+function SuggestedFeaturesPanel() {
+  const FEATURES = [
+    {
+      icon: <Zap className="w-5 h-5" />,
+      title: 'Previsão por Frequência Adaptativa',
+      description:
+        'Calcule a "tendência" de saída de cada número usando médias móveis ponderadas por período — com visualização de aquecimento e resfriamento temporal.',
+      tag: 'Análise avançada',
+      color: 'from-amber-500/20 to-orange-500/10 border-amber-500/30',
+    },
+    {
+      icon: <Globe className="w-5 h-5" />,
+      title: 'Comparação entre Loterias',
+      description:
+        'Compare probabilidades, EV e ROI histórico da Mega-Sena com Quina, Timemania, Lotofácil e loterias internacionais como Powerball.',
+      tag: 'Comparativo',
+      color: 'from-green-500/20 to-emerald-500/10 border-green-500/30',
+    },
+    {
+      icon: <LayoutDashboard className="w-5 h-5" />,
+      title: 'Dashboard Personalizado',
+      description:
+        'Usuário salva seus números favoritos e acompanha ao longo do tempo: quantas vezes quase ganhou (5, 4 acertos), quanto teria ganhado vs. gasto.',
+      tag: 'Personalização',
+      color: 'from-violet-500/20 to-purple-500/10 border-violet-500/30',
+    },
+  ];
+
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      {FEATURES.map((f, i) => (
+        <motion.div
+          key={f.title}
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: i * 0.07, duration: 0.4 }}
+          className={`rounded-2xl border bg-gradient-to-br p-5 flex flex-col gap-3 ${f.color}`}
+        >
+          <div className="flex items-start justify-between">
+            <div className="p-2 rounded-lg bg-white/5 text-foreground">{f.icon}</div>
+            <span className="text-[10px] font-mono text-muted-foreground uppercase tracking-wider bg-white/5 px-2 py-0.5 rounded-full border border-white/10">
+              {f.tag}
+            </span>
+          </div>
+          <div>
+            <h3 className="font-semibold text-foreground text-sm mb-1">{f.title}</h3>
+            <p className="text-xs text-muted-foreground leading-relaxed">{f.description}</p>
+          </div>
+        </motion.div>
+      ))}
+    </div>
+  );
 }
 
-const nav = navigator as NavigatorExtended;
-
-const sources = [
-  'https://loterias.caixa.gov.br/Paginas/Mega-Sena.aspx',
-  'https://www.caixa.gov.br/Downloads/caixa-loterias/repasses-2025.pdf',
-  'https://www.caixa.gov.br/Downloads/caixa-loterias/repasses-2024.pdf',
-  'https://www.caixa.gov.br/Downloads/caixa-loterias/repasses_sociais_2023.pdf',
-  'https://www.caixa.gov.br/Downloads/caixa-loterias/repasses_sociais_2022.pdf',
-  'https://www.caixa.gov.br/Downloads/caixa-loterias/repasses_sociais_2021.pdf',
-  'https://www.caixa.gov.br/Downloads/caixa-loterias/repasses-sociais-2020.pdf',
-  'https://www.caixa.gov.br/Downloads/caixa-loterias/REPASSES_2019.pdf',
-  'https://www.caixa.gov.br/Downloads/caixa-loterias/Repasses_sociais-loterias-2018.pdf',
-  'https://www.caixa.gov.br/Downloads/caixa-loterias/Repasses_2017.pdf',
-  'https://www.caixa.gov.br/Downloads/caixa-loterias/Repasses_2016.pdf',
-  'https://www.caixa.gov.br/Downloads/caixa-loterias/Repasses_2015.pdf',
-];
-
-// Simple fallback for Github icon if not found in Lucide
-function GithubIcon({ className }: { className?: string }) {
+const ShowDeviceInfo = () => {
+  const nav = navigator as NavigatorExtended;
   return (
-    <svg
-      className={className}
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    >
-      <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" />
-      <path d="M9 18c-4.51 2-5-2-7-2" />
-    </svg>
+    <ul className="text-xs text-muted-foreground leading-relaxed mt-4">
+      <li>User Status: {nav.onLine ? 'Online' : 'Offline'}</li>
+      <li>User CPU: {nav.hardwareConcurrency}</li>
+      <li>User RAM: {nav.deviceMemory}</li>
+      <li>User Language: {nav.language}</li>
+      <li>User Agent: {nav.userAgent}</li>
+    </ul>
+  );
+};
+
+const GithubIcon = ({ className }: { className?: string }) => (
+  <svg
+    className={className}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" />
+    <path d="M9 18c-4.51 2-5-2-7-2" />
+  </svg>
+);
+
+function DataParsingProcessChart() {
+  const [activeStep, setActiveStep] = useState(0);
+  const meta = useLotteryMeta();
+
+  const STEPS = [
+    {
+      icon: <FileSpreadsheet className="w-5 h-5" />,
+      title: 'Fonte de Dados',
+      description: 'Leitura do Excel oficial contendo todos os sorteios desde o sorteio #1.',
+      color: 'text-blue-400',
+      bg: 'bg-blue-400/10',
+    },
+    {
+      icon: <Database className="w-5 h-5" />,
+      title: 'Normalização',
+      description: 'Tratamento de duplicatas, formatos de data e limpeza de nomes de cidades.',
+      color: 'text-purple-400',
+      bg: 'bg-purple-400/10',
+    },
+    {
+      icon: <PieChart className="w-5 h-5" />,
+      title: 'Estatísticas',
+      description: 'Cálculo de frequências, desvios, médias e tendências temporais.',
+      color: 'text-amber-400',
+      bg: 'bg-amber-400/10',
+    },
+    {
+      icon: <Lightbulb className="w-5 h-5" />,
+      title: 'Insights',
+      description: 'Geração de padrões e correlações visuais para suporte à decisão.',
+      color: 'text-emerald-400',
+      bg: 'bg-emerald-400/10',
+    },
+  ];
+
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setActiveStep((prev) => (prev + 1) % (STEPS.length + 1));
+    }, 3000);
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <div className="glass-card p-6 overflow-hidden">
+      <div className="relative space-y-8">
+        {/* Progress Line */}
+        <div className="absolute left-6 top-8 bottom-8 w-0.5 bg-border sm:left-1/2 sm:-translate-x-1/2 sm:w-full sm:h-0.5 sm:top-6 sm:bottom-auto hidden sm:block" />
+
+        <div className="grid grid-cols-1 sm:grid-cols-4 gap-6 relative z-10">
+          {STEPS.map((step, i) => {
+            const isCompleted = activeStep > i;
+            const isActive = activeStep === i;
+
+            return (
+              <motion.div
+                key={step.title}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: i * 0.1 }}
+                className="flex flex-row sm:flex-col items-start sm:items-center text-left sm:text-center gap-4 sm:gap-4 group"
+              >
+                <div
+                  className={`relative flex-shrink-0 w-12 h-12 rounded-xl border flex items-center justify-center transition-all duration-500 ${isCompleted
+                    ? 'bg-primary border-primary text-primary-foreground shadow-lg shadow-primary/20'
+                    : isActive
+                      ? `${step.bg} border-primary glow-sm text-primary`
+                      : 'bg-muted/50 border-border text-muted-foreground'
+                    }`}
+                >
+                  {isCompleted ? <CheckCircle2 className="w-6 h-6" /> : step.icon}
+
+                  {isActive && (
+                    <motion.div
+                      layoutId="active-ring"
+                      className="absolute -inset-1 rounded-[14px] border border-primary/40"
+                      transition={{ type: 'spring', bounce: 0.2, duration: 0.6 }}
+                    />
+                  )}
+                </div>
+
+                <div className="flex-1 space-y-1">
+                  <h3
+                    className={`text-sm font-bold transition-colors duration-300 ${isActive ? 'text-foreground' : 'text-muted-foreground'}`}
+                  >
+                    {step.title}
+                  </h3>
+                  <p className="text-[11px] text-muted-foreground leading-relaxed line-clamp-2 min-h-[32px]">
+                    {step.description}
+                  </p>
+                </div>
+              </motion.div>
+            );
+          })}
+        </div>
+
+        <div className="mt-8 pt-6 border-t border-white/5 flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div className="flex items-center gap-2 px-2 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20">
+            <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+            <span className="text-[10px] text-emerald-400 font-mono uppercase tracking-wider">
+              Processamento Local Ativo
+            </span>
+          </div>
+
+          <p className="text-[10px] text-muted-foreground italic max-w-[200px] text-center sm:text-right">
+            Seu navegador está processando {meta.totalGames.toLocaleString('pt-BR')} registros em
+            tempo real.
+          </p>
+        </div>
+      </div>
+    </div>
   );
 }
 
 export function About() {
+  const METHODOLOGY_ITEMS = [
+    {
+      icon: <Database className="w-6 h-6" />,
+      title: 'Sanitização',
+      desc: 'Normalização de dados brutos e tratamento de inconsistências históricas para garantir integridade total.',
+    },
+    {
+      icon: <Terminal className="w-6 h-6" />,
+      title: 'Processamento',
+      desc: 'Cálculos de probabilidade e frequência realizados instantaneamente no browser com tecnologia Web Worker.',
+    },
+    {
+      icon: <ShieldCheck className="w-6 h-6" />,
+      title: 'Auditoria',
+      desc: 'Validação cruzada entre diferentes fontes para garantir precisão matemática 1:1.',
+    },
+  ];
   return (
     <div className="page-hero">
       <section className="container m-auto flex flex-col pt-20 pb-32 px-4">
@@ -67,23 +243,7 @@ export function About() {
         {/* Methodology Section */}
         <div className="max-w-5xl mx-auto space-y-24">
           <div className="grid md:grid-cols-3 gap-8">
-            {[
-              {
-                icon: <Database className="w-6 h-6" />,
-                title: 'Sanitização',
-                desc: 'Normalização de dados brutos e tratamento de inconsistências históricas para garantir integridade total.',
-              },
-              {
-                icon: <Terminal className="w-6 h-6" />,
-                title: 'Processamento',
-                desc: 'Cálculos de probabilidade e frequência realizados instantaneamente no browser com tecnologia Web Worker.',
-              },
-              {
-                icon: <ShieldCheck className="w-6 h-6" />,
-                title: 'Auditoria',
-                desc: 'Validação cruzada entre diferentes fontes para garantir precisão matemática 1:1.',
-              },
-            ].map((item, i) => (
+            {METHODOLOGY_ITEMS.map((item, i) => (
               <motion.div
                 key={i}
                 initial={{ opacity: 0, y: 16 }}
@@ -113,17 +273,10 @@ export function About() {
               <p className="text-xs text-muted-foreground/50 text-center mt-12 italic">
                 * O processamento ocorre localmente para garantir privacidade e performance.
               </p>
-
             </div>
 
             <code className="text-muted-foreground leading-relaxed text-xs">
-              <ul>
-                <li>User Status: {nav.onLine ? "Online" : "Offline"}</li >
-                <li>User CPU: {nav.hardwareConcurrency}</li >
-                <li>User RAM: {nav.deviceMemory}</li >
-                <li>User Language: {nav.language}</li>
-                <li>User Agent: {nav.userAgent}</li>
-              </ul>
+              <ShowDeviceInfo />
             </code>
           </motion.div>
 
@@ -138,7 +291,7 @@ export function About() {
                 Utilizamos exclusivamente dados públicos fornecidos pela CAIXA Econômica Federal.
               </p>
               <div className="space-y-3 max-h-[160px] overflow-y-auto pr-4 scrollbar-thin">
-                {sources.map((source, i) => (
+                {SOURCES_LIST.map((source, i) => (
                   <a
                     key={i}
                     href={source}
@@ -166,7 +319,8 @@ export function About() {
               </p>
 
               <p className="text-muted-foreground leading-relaxed">
-                Confira as sugestões de melhorias e novas funcionalidades que planejamos para o Sortudo.
+                Confira as sugestões de melhorias e novas funcionalidades que planejamos para o
+                Sortudo.
               </p>
               <SuggestedFeaturesPanel />
               <div className="flex flex-wrap gap-4 pt-2">

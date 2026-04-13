@@ -1,10 +1,10 @@
-import { Game, SearchResult } from '@/lib/lottery/types';
-import { formatCurrency, formatNumber } from '@/lib/lottery/utils';
+import { Game, SearchResult } from '@/lib/core/types';
+import { MiniBall } from '@/shared/components/MiniBall';
+import { ShareButton } from '@/shared/components/ShareButton';
+import { formatCurrency, formatNumber } from '@/shared/utils';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Calendar, ChevronDown, Trophy, Users } from 'lucide-react';
 import { useState } from 'react';
-import { MiniBall } from './MiniBall';
-import { ShareButton } from './ShareButton';
 
 function JackpotDetails({ game }: { game: Game }) {
   return (
@@ -238,17 +238,16 @@ export function ResultBanner({ result, contestId }: { result: SearchResult; cont
       <motion.div
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
-        className={`p-10 rounded-[40px] border text-center transition-all duration-700 shadow-3xl ${
-          hasJackpot
-            ? 'bg-primary/10 border-primary/30 shadow-glow-gold/20'
-            : 'bg-white/5 border-white/10'
-        }`}
+        className={`p-10 rounded-[40px] border text-center transition-all duration-700 shadow-3xl ${hasJackpot
+          ? 'bg-primary/10 border-primary/30 shadow-glow-gold/20'
+          : 'bg-white/5 border-white/10'
+          }`}
       >
         <h2 className="text-2xl md:text-3xl font-display font-bold mb-4 tracking-tight">
           {contestId ? `Concurso #${contestId}` : hasJackpot ? 'Combinação já foi Premiada!' : 'Combinação nunca foi sorteada!'}
         </h2>
         <p className="text-muted-foreground leading-relaxed max-w-2xl mx-auto font-medium">
-          {contestId 
+          {contestId
             ? `Confira o resultado oficial e as estatísticas de premiação para este concurso.`
             : hasJackpot
               ? `Este exato conjunto de dezenas foi sorteado ${result.jackpot.length} ${result.jackpot.length === 1 ? 'vez' : 'vezes'} entre os ${formatNumber(result.totalAnalyzed)} concursos oficiais da Mega-Sena.`

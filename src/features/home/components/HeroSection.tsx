@@ -1,12 +1,10 @@
+import { useAggregatedRevenue } from '@/hooks/use-home';
 import { Button } from '@/shared/components/ui/Button';
-import { spring } from '@/shared/utils/motion';
+import { spring } from '@/shared/utils';
 import { animate, motion, useMotionValue } from 'framer-motion';
 import { ArrowDown, BarChart3, Search } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { useAggregatedRevenue } from '../hooks/use-home';
-
-// ─── Sub-components ──────────────────────────────────────────────────────────
 
 interface AnimatedCounterProps {
   target: number;
@@ -43,8 +41,6 @@ function AnimatedCounter({ target, duration = 2000, decimals = 0 }: AnimatedCoun
     </span>
   );
 }
-
-// ─── Main Component ──────────────────────────────────────────────────────────
 
 export function HeroSection({ id }: { id?: string }) {
   const {
@@ -93,6 +89,7 @@ export function HeroSection({ id }: { id?: string }) {
             {/* CTAs */}
             <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-3">
               <Button
+                id="hero-view-report"
                 asChild
                 size="lg"
                 className="bg-primary text-primary-foreground hover:bg-primary/90 font-display font-bold text-base px-8 py-6 rounded-2xl shadow-lg transition-all border-none w-full sm:w-auto"
@@ -104,6 +101,7 @@ export function HeroSection({ id }: { id?: string }) {
               </Button>
 
               <Button
+                id="hero-lookup-combination"
                 asChild
                 variant="outline"
                 size="lg"

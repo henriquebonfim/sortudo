@@ -1,13 +1,7 @@
-import {
-  Game,
-  GameSchema,
-  LotteryMetadata,
-  LotteryStats,
-  LotteryStatsSchema,
-  MetadataSchema,
-} from '@/lib/lottery/types';
+import { GameSchema, LotteryStatsSchema, MetadataSchema } from "@/lib/core/schemas";
+import { Game, LotteryMetadata, LotteryStats } from "@/lib/core/types";
 
-export interface RawDrawData {
+interface RawDrawData {
   id?: number;
   data?: string;
   date?: string;
@@ -45,7 +39,7 @@ export interface RawDrawData {
   acumulado_sorteio_especial_mega_da_virada?: number;
 }
 
-export function mapToDomain(raw: RawDrawData): Game | null {
+function mapToDomain(raw: RawDrawData): Game | null {
   const mapped = {
     id: raw.id || 0,
     date: raw.data || raw.date || '',
@@ -93,11 +87,11 @@ export async function fetchLotteryData(): Promise<{
     data.metadata ||
     (games.length > 0
       ? {
-          totalGames: games.length,
-          firstGameDate: games[0].date,
-          lastGameDate: games[games.length - 1].date,
-          lastUpdate: data.sync_at || new Date().toISOString(),
-        }
+        totalGames: games.length,
+        firstGameDate: games[0].date,
+        lastGameDate: games[games.length - 1].date,
+        lastUpdate: data.sync_at || new Date().toISOString(),
+      }
       : null);
 
   const statsResult = LotteryStatsSchema.safeParse(data.stats);
