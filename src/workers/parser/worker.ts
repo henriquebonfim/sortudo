@@ -1,4 +1,8 @@
-import { LotteryParserCommand, LotteryParserCommandType, ParseExcelResponse } from '@/workers/parser/commands';
+import {
+  LotteryParserCommand,
+  LotteryParserCommandType,
+  ParseExcelResponse,
+} from '@/workers/parser/commands';
 import { parseExcelToGames } from '@/workers/parser/engine';
 import { createWorkerErrorResponse } from '@/workers/worker-protocol';
 

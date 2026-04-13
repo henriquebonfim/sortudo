@@ -61,7 +61,6 @@ export function Pagination({
 
   return (
     <div className={`flex justify-center flex-row items-baseline  gap-4 ${className}`}>
-
       <div className="flex flex-col items-center gap-2">
         {/* Page Indicator */}
         <p className="hidden sm:block text-[10px] text-muted-foreground font-bold uppercase tracking-[0.2em] opacity-60">

@@ -1,4 +1,3 @@
-
 import { CHART_COLORS } from '@/shared/styles/chart-colors';
 import { useMemo } from 'react';
 import {

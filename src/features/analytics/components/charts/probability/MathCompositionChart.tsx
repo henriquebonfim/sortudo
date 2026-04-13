@@ -14,9 +14,9 @@ export function MathCompositionChart() {
     const outros = Math.max(
       0,
       100 -
-      (profile.primesPercentage +
-        profile.multiplesOf5Percentage +
-        profile.multiplesOf10Percentage)
+        (profile.primesPercentage +
+          profile.multiplesOf5Percentage +
+          profile.multiplesOf10Percentage)
     );
     return [
       { name: 'Primos', value: profile.primesPercentage, color: CHART_COLORS.VIOLET },

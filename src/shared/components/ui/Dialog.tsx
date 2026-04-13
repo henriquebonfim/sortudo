@@ -63,33 +63,15 @@ export function Dialog({ open, onClose, children, className }: DialogProps) {
   );
 }
 
-export function DialogHeader({
-  className,
-  children,
-}: {
-  className?: string;
-  children: ReactNode;
-}) {
+export function DialogHeader({ className, children }: { className?: string; children: ReactNode }) {
   return <div className={cn('px-6 pt-6 pb-4', className)}>{children}</div>;
 }
 
-export function DialogBody({
-  className,
-  children,
-}: {
-  className?: string;
-  children: ReactNode;
-}) {
+export function DialogBody({ className, children }: { className?: string; children: ReactNode }) {
   return <div className={cn('px-6 py-4', className)}>{children}</div>;
 }
 
-export function DialogFooter({
-  className,
-  children,
-}: {
-  className?: string;
-  children: ReactNode;
-}) {
+export function DialogFooter({ className, children }: { className?: string; children: ReactNode }) {
   return (
     <div
       className={cn(
@@ -102,13 +84,7 @@ export function DialogFooter({
   );
 }
 
-export function DialogTitle({
-  className,
-  children,
-}: {
-  className?: string;
-  children: ReactNode;
-}) {
+export function DialogTitle({ className, children }: { className?: string; children: ReactNode }) {
   return (
     <h2 className={cn('text-xl font-display font-bold tracking-tight text-foreground', className)}>
       {children}

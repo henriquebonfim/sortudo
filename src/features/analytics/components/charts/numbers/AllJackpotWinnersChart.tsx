@@ -2,8 +2,7 @@ import { Game } from '@/lib/core/types';
 import { MiniBall } from '@/shared/components/MiniBall';
 import { Pagination } from '@/shared/components/ui/Pagination';
 import { formatCurrency, formatDate } from '@/shared/utils';
-import { useLotteryStore } from '@/store/lottery';
-import { useLotteryMeta } from '@/store/selectors';
+import { useGames, useLotteryMeta } from '@/store/selectors';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ChevronDown, ChevronUp, ListIcon, MapPin, Trophy } from 'lucide-react';
 import { memo, useMemo, useState } from 'react';
@@ -11,14 +10,12 @@ import { memo, useMemo, useState } from 'react';
 type SortField = 'id' | 'prize' | 'winners';
 type SortOrder = 'asc' | 'desc';
 
-
 interface JackpotWinnerRowProps {
   game: Game;
   index: number;
   maxWinners: number;
   maxPrize: number;
 }
-
 
 const JackpotWinnerRow = memo(function JackpotWinnerRow({
   game,
@@ -111,7 +108,7 @@ const JackpotWinnerRow = memo(function JackpotWinnerRow({
 });
 
 export function AllJackpotWinnersChart() {
-  const games = useLotteryStore((s) => s.games);
+  const games = useGames();
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
   const [sortBy, setSortBy] = useState<SortField>('id');
@@ -193,9 +190,10 @@ export function AllJackpotWinnersChart() {
               onClick={() => toggleSort(field.id as SortField)}
               className={`
                 flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[10px] font-bold uppercase tracking-wider transition-all
-                ${sortBy === field.id
-                  ? 'bg-primary text-primary-foreground shadow-glow-gold/20'
-                  : 'bg-white/5 text-muted-foreground hover:bg-white/10 hover:text-foreground border border-white/5'
+                ${
+                  sortBy === field.id
+                    ? 'bg-primary text-primary-foreground shadow-glow-gold/20'
+                    : 'bg-white/5 text-muted-foreground hover:bg-white/10 hover:text-foreground border border-white/5'
                 }
               `}
             >

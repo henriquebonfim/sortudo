@@ -4,8 +4,8 @@ import {
   MAX_LOTTERY_NUMBER,
   REVENUE_ALLOCATION,
   TICKET_PRICE,
-  TOTAL_COMBINATIONS
-} from '@/lib/core/constants';
+  TOTAL_COMBINATIONS,
+} from '@/shared/constants';
 import { useLotteryStore } from '@/store/lottery';
 import { useMemo } from 'react';
 

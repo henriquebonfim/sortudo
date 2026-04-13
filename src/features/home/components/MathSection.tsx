@@ -22,14 +22,12 @@ const COIN_COUNT = 6;
 type Side = 'heads' | 'tails';
 const SIDE_LABEL: Record<Side, string> = { heads: '🤑', tails: '👑' };
 
-
 function calculateCoinOdds(count: number): number {
   return Math.pow(2, count) / 2;
 }
 function calculateHitChance(total: number, multiplier: number): number {
   return Math.round(total / multiplier);
 }
-
 
 function Coin({ side, index, flipping }: { side: Side; index: number; flipping: boolean }) {
   const isHeads = side === 'heads';
@@ -48,21 +46,24 @@ function Coin({ side, index, flipping }: { side: Side; index: number; flipping: 
         className={`
           w-16 h-full rounded-full flex flex-col items-center justify-center m-auto gap-1
           border-2 transition-all duration-300 shadow-md select-none
-          ${isHeads
-            ? 'bg-gradient-to-br from-amber-400/20 to-amber-500/10 border-amber-500/60 shadow-amber-500/10'
-            : 'bg-gradient-to-br from-slate-600/30 to-slate-700/20 border-slate-500/40 shadow-black/20'
+          ${
+            isHeads
+              ? 'bg-gradient-to-br from-amber-400/20 to-amber-500/10 border-amber-500/60 shadow-amber-500/10'
+              : 'bg-gradient-to-br from-slate-600/30 to-slate-700/20 border-slate-500/40 shadow-black/20'
           }
         `}
       >
         <span
-          className={`text-xl font-black font-mono leading-none tabular-nums ${isHeads ? 'text-amber-400' : 'text-slate-400'
-            }`}
+          className={`text-xl font-black font-mono leading-none tabular-nums ${
+            isHeads ? 'text-amber-400' : 'text-slate-400'
+          }`}
         >
           {SIDE_LABEL[side]}
         </span>
         <span
-          className={`text-[0.5rem] uppercase tracking-widest font-bold ${isHeads ? 'text-amber-500/70' : 'text-slate-500/70'
-            }`}
+          className={`text-[0.5rem] uppercase tracking-widest font-bold ${
+            isHeads ? 'text-amber-500/70' : 'text-slate-500/70'
+          }`}
         >
           {isHeads ? 'cara' : 'coroa'}
         </span>
@@ -137,8 +138,9 @@ function CoinAnalogy() {
             {history.map((w, i) => (
               <div
                 key={i}
-                className={`w-1.5 h-1.5 rounded-full transition-colors ${w ? 'bg-amber-400' : 'bg-muted-foreground/30'
-                  }`}
+                className={`w-1.5 h-1.5 rounded-full transition-colors ${
+                  w ? 'bg-amber-400' : 'bg-muted-foreground/30'
+                }`}
                 title={w ? 'Todas iguais' : 'Misto'}
               />
             ))}
@@ -210,14 +212,16 @@ function CoinAnalogy() {
           </div>
         </div>
         <div
-          className={`rounded-xl border px-2 py-3 transition-colors ${allSame && attempts > 0
-            ? 'bg-amber-500/10 border-amber-500/30'
-            : 'bg-muted/40 border-border'
-            }`}
+          className={`rounded-xl border px-2 py-3 transition-colors ${
+            allSame && attempts > 0
+              ? 'bg-amber-500/10 border-amber-500/30'
+              : 'bg-muted/40 border-border'
+          }`}
         >
           <div
-            className={`text-base font-bold font-mono tabular-nums ${allSame && attempts > 0 ? 'text-amber-400' : 'text-muted-foreground'
-              }`}
+            className={`text-base font-bold font-mono tabular-nums ${
+              allSame && attempts > 0 ? 'text-amber-400' : 'text-muted-foreground'
+            }`}
           >
             {allSame && attempts > 0 ? '✓' : '—'}
           </div>

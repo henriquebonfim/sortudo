@@ -1,4 +1,3 @@
-
 export function formatDate(dateStr: string): string {
   try {
     return new Date(dateStr).toLocaleDateString('pt-BR', {

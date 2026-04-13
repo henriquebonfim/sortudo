@@ -1,5 +1,5 @@
-import { GameSchema, LotteryStatsSchema, MetadataSchema } from "@/lib/core/schemas";
-import { Game, LotteryMetadata, LotteryStats } from "@/lib/core/types";
+import { GameSchema, LotteryStatsSchema, MetadataSchema } from '@/lib/core/schemas';
+import { Game, LotteryMetadata, LotteryStats } from '@/lib/core/types';
 
 interface RawDrawData {
   id?: number;
@@ -87,11 +87,11 @@ export async function fetchLotteryData(): Promise<{
     data.metadata ||
     (games.length > 0
       ? {
-        totalGames: games.length,
-        firstGameDate: games[0].date,
-        lastGameDate: games[games.length - 1].date,
-        lastUpdate: data.sync_at || new Date().toISOString(),
-      }
+          totalGames: games.length,
+          firstGameDate: games[0].date,
+          lastGameDate: games[games.length - 1].date,
+          lastUpdate: data.sync_at || new Date().toISOString(),
+        }
       : null);
 
   const statsResult = LotteryStatsSchema.safeParse(data.stats);

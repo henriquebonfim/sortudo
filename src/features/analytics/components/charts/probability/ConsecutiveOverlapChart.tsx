@@ -1,8 +1,7 @@
 import { PieSliceTooltip } from '@/features/analytics/components/charts/chart-tooltips';
-import { useNumberProfile } from '@/hooks/use-analytics';
+import { useAnalyticsActions, useNumberProfile } from '@/hooks/use-analytics';
 import { Pagination } from '@/shared/components/ui/Pagination';
 import { CHART_COLORS } from '@/shared/styles/chart-colors';
-import { useAnalyticsStore } from '@/store/analytics';
 import { useLotteryMeta } from '@/store/selectors';
 import { useEffect, useMemo, useState } from 'react';
 import { Cell, Label, Legend, Pie, PieChart, ResponsiveContainer, Tooltip } from 'recharts';
@@ -10,7 +9,7 @@ import { Cell, Label, Legend, Pie, PieChart, ResponsiveContainer, Tooltip } from
 export function ConsecutiveOverlapChart() {
   const meta = useLotteryMeta();
   const profile = useNumberProfile();
-  const calculateStats = useAnalyticsStore((s) => s.calculateStats);
+  const { calculateStats } = useAnalyticsActions();
 
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);

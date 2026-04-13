@@ -1,5 +1,9 @@
 import type { Game } from '@/workers/core/types';
-import { LotteryParserCommand, LotteryParserCommandType, ParseExcelPayload } from '@/workers/parser/commands';
+import {
+  LotteryParserCommand,
+  LotteryParserCommandType,
+  ParseExcelPayload,
+} from '@/workers/parser/commands';
 import { FeatureWorkerClient } from '@/workers/worker-client';
 
 export class LotteryParserWorkerClient extends FeatureWorkerClient<LotteryParserCommand, Game[]> {

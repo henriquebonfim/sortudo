@@ -36,5 +36,4 @@ export const REVENUE_ALLOCATION = {
 export const TICKET_PRICE = 6.0;
 export const TOTAL_COMBINATIONS = 50_063_860;
 
-
 export const MEGA_DA_VIRADA_START_YEAR = 2009;

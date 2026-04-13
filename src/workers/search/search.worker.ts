@@ -1,4 +1,8 @@
-import { SearchCombinationResponse, SearchCommand, SearchCommandType } from '@/workers/search/commands';
+import {
+  SearchCombinationResponse,
+  SearchCommand,
+  SearchCommandType,
+} from '@/workers/search/commands';
 import { searchCombination } from '@/workers/search/engine';
 import { createWorkerErrorResponse } from '@/workers/worker-protocol';
 

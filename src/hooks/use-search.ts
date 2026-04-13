@@ -1,4 +1,4 @@
-import { BALLS_PER_DRAW, MAX_LOTTERY_NUMBER } from '@/lib/core/constants';
+import { BALLS_PER_DRAW, MAX_LOTTERY_NUMBER } from '@/shared/constants';
 import { useLotteryStore } from '@/store/lottery';
 import { useSearchStore } from '@/store/search';
 
@@ -31,10 +31,11 @@ export function useSearch(isTimeline = false) {
   const isInitializing = useRef(false);
 
   const numbers = inputs.map(Number).filter((n) => n >= 1 && n <= MAX_LOTTERY_NUMBER);
-  const isNumbersValid = numbers.length === BALLS_PER_DRAW && new Set(numbers).size === BALLS_PER_DRAW;
-  const isContestValid = contestId !== '' && !isNaN(Number(contestId)) && Number(contestId) <= gamesCount;
+  const isNumbersValid =
+    numbers.length === BALLS_PER_DRAW && new Set(numbers).size === BALLS_PER_DRAW;
+  const isContestValid =
+    contestId !== '' && !isNaN(Number(contestId)) && Number(contestId) <= gamesCount;
   const isValid = searchType === 'numbers' ? isNumbersValid : isContestValid;
-
 
   // Initialize from URL
   useEffect(() => {

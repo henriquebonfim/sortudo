@@ -1,4 +1,3 @@
-
 import { NumberGenerator } from '@/lib/generator';
 import { feedback } from '@/shared/utils';
 import { useGeneratorStore } from '@/store/generator';
@@ -7,7 +6,6 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 
 const SHUFFLE_TICKS = 15;
 const SHUFFLE_INTERVAL_MS = 80;
-
 
 export function useSimulator() {
   const freq = useFrequencies();

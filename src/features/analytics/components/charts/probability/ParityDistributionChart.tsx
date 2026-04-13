@@ -1,4 +1,3 @@
-
 import { useParityDistributionComparison } from '@/hooks/use-analytics';
 import { CHART_COLORS } from '@/shared/styles/chart-colors';
 import { useLotteryMeta } from '@/store/selectors';
@@ -29,12 +28,7 @@ function barColor(index: number, total: number) {
   return CHART_COLORS.SLATE;
 }
 
-const ParityBar = memo(function ParityBar({
-  data,
-  maxPct,
-  totalItems,
-  index,
-}: ParityBarProps) {
+const ParityBar = memo(function ParityBar({ data, maxPct, totalItems, index }: ParityBarProps) {
   const delta = data.theoretical > 0 ? data.pct - data.theoretical : null;
   const color = barColor(data.originalIndex, totalItems);
 
@@ -45,12 +39,13 @@ const ParityBar = memo(function ParityBar({
         <div className="flex items-center gap-2">
           {delta !== null && (
             <span
-              className={`text-[10px] font-mono ${delta > 0
-                ? 'text-emerald-400'
-                : delta < 0
-                  ? 'text-red-400'
-                  : 'text-muted-foreground'
-                }`}
+              className={`text-[10px] font-mono ${
+                delta > 0
+                  ? 'text-emerald-400'
+                  : delta < 0
+                    ? 'text-red-400'
+                    : 'text-muted-foreground'
+              }`}
             >
               {delta > 0 ? '+' : ''}
               {delta.toFixed(1)}%

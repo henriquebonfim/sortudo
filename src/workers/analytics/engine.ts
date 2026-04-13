@@ -1,9 +1,27 @@
-import { calculatePrizeTierComparison, calculateStreakEconomics, calculateTypeComparison } from '@/workers/analytics/functions/economics.calc';
+import {
+  calculatePrizeTierComparison,
+  calculateStreakEconomics,
+  calculateTypeComparison,
+} from '@/workers/analytics/functions/economics.calc';
 import { calculateGeoWinners } from '@/workers/analytics/functions/geo.calc';
 import { calculateNumberProfile } from '@/workers/analytics/functions/informational.calc';
-import { calculateMeta, calculateTopJackpotWinners } from '@/workers/analytics/functions/metadata.calc';
-import { calculateFrequencies, calculateGapAnalysis, calculateHotNumbers, calculateParityDistribution, calculateSumDistribution, calculateTemporalFrequency, calculateTopPairs } from '@/workers/analytics/functions/statistical.calc';
-import { calculateAccumulationTrend, calculatePrizeEvolution } from '@/workers/analytics/functions/timeline.calc';
+import {
+  calculateMeta,
+  calculateTopJackpotWinners,
+} from '@/workers/analytics/functions/metadata.calc';
+import {
+  calculateFrequencies,
+  calculateGapAnalysis,
+  calculateHotNumbers,
+  calculateParityDistribution,
+  calculateSumDistribution,
+  calculateTemporalFrequency,
+  calculateTopPairs,
+} from '@/workers/analytics/functions/statistical.calc';
+import {
+  calculateAccumulationTrend,
+  calculatePrizeEvolution,
+} from '@/workers/analytics/functions/timeline.calc';
 import type { Game, LotteryMetadata, LotteryStats } from '@/workers/core/types';
 
 /**

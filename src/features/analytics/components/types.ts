@@ -1,6 +1,5 @@
 import React from 'react';
 
-
 export type InfographicType =
   | 'Estatístico'
   | 'Cronológico'
@@ -10,7 +9,6 @@ export type InfographicType =
   | 'Informacional'
   | 'Lista'
   | 'Processo';
-
 
 export interface Section {
   id: string;

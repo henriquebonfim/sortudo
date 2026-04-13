@@ -1,4 +1,3 @@
-
 import { useAccumulationTrend } from '@/hooks/use-analytics';
 import { CHART_COLORS } from '@/shared/styles/chart-colors';
 import { memo, useMemo } from 'react';
@@ -53,7 +52,6 @@ const StreakTooltip = memo(function StreakTooltip({
     </div>
   );
 });
-
 
 function StreakFrequencyChart() {
   const meta = useLotteryMeta();

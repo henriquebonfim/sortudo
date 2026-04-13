@@ -1,10 +1,18 @@
-
 import { useNumberProfile } from '@/hooks/use-analytics';
 import { CHART_COLORS } from '@/shared/styles/chart-colors';
 import { useLotteryMeta } from '@/store/selectors';
 import { motion } from 'framer-motion';
 import { memo, useMemo } from 'react';
-import { Bar, BarChart, Cell, ResponsiveContainer, Tooltip, TooltipContentProps, XAxis, YAxis } from 'recharts';
+import {
+  Bar,
+  BarChart,
+  Cell,
+  ResponsiveContainer,
+  Tooltip,
+  TooltipContentProps,
+  XAxis,
+  YAxis,
+} from 'recharts';
 
 interface StatRingProps {
   value: number;
@@ -22,7 +30,6 @@ interface OverlapEntry {
   label: string;
   value: number;
 }
-
 
 const OverlapBarTooltip = memo(function OverlapBarTooltip({
   active,

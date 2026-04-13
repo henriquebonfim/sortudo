@@ -1,3 +1,5 @@
+export { ChartTooltip } from '@/features/analytics/components/charts/shared/ChartTooltip';
+
 import { memo } from 'react';
 import type { TooltipContentProps } from 'recharts';
 

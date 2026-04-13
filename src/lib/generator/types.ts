@@ -1,0 +1,15 @@
+export type GenerationMode =
+  | 'random'
+  | 'hot'
+  | 'cold'
+  | 'dates'
+  | 'primes'
+  | 'fibonacci'
+  | 'winners'
+  | '0odds-6evens'
+  | '1odd-5evens'
+  | '2odds-4evens'
+  | '3odds-3evens'
+  | '4odds-2evens'
+  | '5odds-1even'
+  | '6odds-0evens';

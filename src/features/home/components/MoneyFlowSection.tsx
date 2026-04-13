@@ -134,7 +134,6 @@ const getRevenueDistributionData = (isOnline: boolean = false) => {
   ];
 };
 
-
 function MoneyFlowChart({ distributionData, expectedStats }: MoneyFlowChartProps) {
   const fmt = formatCurrency;
 
@@ -211,7 +210,6 @@ function MoneyFlowChart({ distributionData, expectedStats }: MoneyFlowChartProps
     </div>
   );
 }
-
 
 export function MoneyFlowList({ data }: { data: DistributionItem[] }) {
   return (

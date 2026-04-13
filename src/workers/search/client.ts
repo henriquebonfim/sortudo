@@ -1,5 +1,9 @@
 import type { SearchResult } from '@/workers/core/types';
-import { SearchCombinationPayload, SearchCommand, SearchCommandType } from '@/workers/search/commands';
+import {
+  SearchCombinationPayload,
+  SearchCommand,
+  SearchCommandType,
+} from '@/workers/search/commands';
 import { FeatureWorkerClient } from '@/workers/worker-client';
 
 /**

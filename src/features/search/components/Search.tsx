@@ -1,7 +1,7 @@
 import { useSearch } from '@/hooks/use-search';
-import { MAX_LOTTERY_NUMBER } from '@/lib/core/constants';
 import { LoadingBalls } from '@/shared/components/LoadingBalls';
 import { ResultBanner } from '@/shared/components/ResultBanner';
+import { MAX_LOTTERY_NUMBER } from '@/shared/constants';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Search as SearchIcon } from 'lucide-react';
 
@@ -27,7 +27,6 @@ function NumberInput({
         const v = e.target.value.replace(/\D/g, '');
         if (v === '' || (Number(v) >= 1 && Number(v) <= MAX_LOTTERY_NUMBER)) onChange(v);
       }}
-
       placeholder="?"
       className={[
         'h-14 w-14 rounded-full border-2 bg-card text-center',
@@ -56,7 +55,6 @@ function SearchForm({
   onSearch,
   drawCount,
 }: {
-
   inputs: string[];
   onChange: (idx: number, val: string) => void;
   contestId: string;
@@ -68,7 +66,6 @@ function SearchForm({
   onSearch: () => void;
   drawCount: number;
 }) {
-
   return (
     <div className="w-full max-w-3xl flex flex-col items-center gap-10">
       <div className="glass-card p-8 md:p-12 w-full rounded-[32px] border-primary/10 shadow-2xl">
@@ -77,7 +74,6 @@ function SearchForm({
             ? `ESCOLHA 6 NÚMEROS (1–${MAX_LOTTERY_NUMBER})`
             : `DIGITE O NÚMERO DO CONCURSO (1–${drawCount})`}
         </p>
-
 
         {searchType === 'numbers' ? (
           <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6">
@@ -104,7 +100,6 @@ function SearchForm({
                   onContestChange(v);
                 }
               }}
-
               placeholder="Ex: 2000"
               className="h-16 w-48 rounded-2xl border-2 bg-card text-center font-mono text-2xl font-bold text-foreground outline-none transition-all border-border focus:border-primary shadow-lg"
             />
@@ -187,20 +182,22 @@ export function Search() {
             <button
               id="search-type-numbers"
               onClick={() => setSearchType('numbers')}
-              className={`px-6 py-2 rounded-xl text-sm font-bold transition-all ${searchType === 'numbers'
-                ? 'bg-primary text-black'
-                : 'text-muted-foreground hover:text-foreground'
-                }`}
+              className={`px-6 py-2 rounded-xl text-sm font-bold transition-all ${
+                searchType === 'numbers'
+                  ? 'bg-primary text-black'
+                  : 'text-muted-foreground hover:text-foreground'
+              }`}
             >
               Por Números
             </button>
             <button
               id="search-type-contest"
               onClick={() => setSearchType('contest')}
-              className={`px-6 py-2 rounded-xl text-sm font-bold transition-all ${searchType === 'contest'
-                ? 'bg-primary text-black'
-                : 'text-muted-foreground hover:text-foreground'
-                }`}
+              className={`px-6 py-2 rounded-xl text-sm font-bold transition-all ${
+                searchType === 'contest'
+                  ? 'bg-primary text-black'
+                  : 'text-muted-foreground hover:text-foreground'
+              }`}
             >
               Por Concurso
             </button>
@@ -224,7 +221,6 @@ export function Search() {
               onSearch={handleSearch}
               drawCount={drawCount}
             />
-
           </motion.div>
 
           {loading && (

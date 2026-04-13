@@ -1,4 +1,8 @@
-import { AnalyticsCommand, AnalyticsCommandType, AnalyticsSuccessResponse } from '@/workers/analytics/commands';
+import {
+  AnalyticsCommand,
+  AnalyticsCommandType,
+  AnalyticsSuccessResponse,
+} from '@/workers/analytics/commands';
 import { calculateAllStats } from '@/workers/analytics/engine';
 import { createWorkerErrorResponse } from '@/workers/worker-protocol';
 

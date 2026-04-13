@@ -1,4 +1,3 @@
-
 import { MEGA_DA_VIRADA_START_YEAR } from '@/shared/constants';
 import { CHART_COLORS } from '@/shared/styles/chart-colors';
 import { formatCompactCurrency } from '@/shared/utils';
@@ -285,10 +284,11 @@ export function PrizeEvolutionChart() {
           <div className="flex flex-wrap items-center justify-center gap-6 text-[10px] sm:text-xs">
             <button
               onClick={() => toggleSeries('maxPrize')}
-              className={`flex items-center gap-2 px-3 py-1.5 rounded-lg border transition-all ${visibleSeries.maxPrize
-                ? 'border-amber-500/30 bg-amber-500/10 text-amber-500 font-bold'
-                : 'border-transparent text-muted-foreground opacity-50'
-                }`}
+              className={`flex items-center gap-2 px-3 py-1.5 rounded-lg border transition-all ${
+                visibleSeries.maxPrize
+                  ? 'border-amber-500/30 bg-amber-500/10 text-amber-500 font-bold'
+                  : 'border-transparent text-muted-foreground opacity-50'
+              }`}
             >
               <div
                 className="w-3 h-1 rounded-full"
@@ -298,10 +298,11 @@ export function PrizeEvolutionChart() {
             </button>
             <button
               onClick={() => toggleSeries('totalDistributed')}
-              className={`flex items-center gap-2 px-3 py-1.5 rounded-lg border transition-all ${visibleSeries.totalDistributed
-                ? 'border-blue-500/30 bg-blue-500/10 text-blue-500 font-bold'
-                : 'border-transparent text-muted-foreground opacity-50'
-                }`}
+              className={`flex items-center gap-2 px-3 py-1.5 rounded-lg border transition-all ${
+                visibleSeries.totalDistributed
+                  ? 'border-blue-500/30 bg-blue-500/10 text-blue-500 font-bold'
+                  : 'border-transparent text-muted-foreground opacity-50'
+              }`}
             >
               <div
                 className="w-3 h-0.5 border-t border-dashed"
@@ -311,10 +312,11 @@ export function PrizeEvolutionChart() {
             </button>
             <button
               onClick={() => toggleSeries('totalRevenue')}
-              className={`flex items-center gap-2 px-3 py-1.5 rounded-lg border transition-all ${visibleSeries.totalRevenue
-                ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-500 font-bold'
-                : 'border-transparent text-muted-foreground opacity-50'
-                }`}
+              className={`flex items-center gap-2 px-3 py-1.5 rounded-lg border transition-all ${
+                visibleSeries.totalRevenue
+                  ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-500 font-bold'
+                  : 'border-transparent text-muted-foreground opacity-50'
+              }`}
             >
               <div className="w-2 h-2 rounded bg-emerald-500/40" />
               Arrecadação

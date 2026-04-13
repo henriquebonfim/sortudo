@@ -1,4 +1,3 @@
-
 import { usePrizeTierComparison } from '@/hooks/use-analytics';
 import { CHART_COLORS } from '@/shared/styles/chart-colors';
 import { formatCompactCurrency } from '@/shared/utils';
@@ -36,7 +35,6 @@ interface TierCardProps {
   index: number;
 }
 
-
 const TIER_CONFIG: Record<string, TierConfig> = {
   sena: {
     label: 'Sena',
@@ -66,7 +64,6 @@ const TIER_CONFIG: Record<string, TierConfig> = {
     rank: 3,
   },
 };
-
 
 function PrizePyramid({ sortedData }: PrizePyramidProps) {
   return (
@@ -178,7 +175,6 @@ const TierCard = memo(function TierCard({ data, config, maxAvg, index }: TierCar
     </motion.div>
   );
 });
-
 
 export function PrizeDistributionChart() {
   const meta = useLotteryMeta();

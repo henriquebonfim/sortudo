@@ -1,3 +1,4 @@
+import { useLotteryActions } from '@/hooks/use-lottery';
 import { Button } from '@/shared/components/ui/Button';
 import {
   Dialog,
@@ -8,7 +9,8 @@ import {
   DialogTitle,
 } from '@/shared/components/ui/Dialog';
 import { cn, formatDate } from '@/shared/utils';
-import { LotteryParserWorkerClient, useLotteryStore } from '@/store/lottery';
+import { useGames } from '@/store/selectors';
+import { LotteryParserWorkerClient } from '@/workers/parser';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
   AlertCircle,
@@ -19,7 +21,7 @@ import {
   Loader2,
   Upload,
 } from 'lucide-react';
-import { ChangeEvent, useEffect, useRef, useState } from 'react';
+import { ChangeEvent, DragEvent, useEffect, useRef, useState } from 'react';
 
 interface XlsxUploadModalProps {
   open: boolean;
@@ -42,8 +44,8 @@ export function XlsxUploadModal({ open, onClose, onSuccess }: XlsxUploadModalPro
   const [isDragging, setIsDragging] = useState(false);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const loadFromFile = useLotteryStore((state) => state.loadFromFile);
-  const currentTotal = useLotteryStore((state) => state.games.length);
+  const { loadFromFile } = useLotteryActions();
+  const currentTotal = useGames().length;
 
   // Reset state when modal opens/closes
   useEffect(() => {
@@ -86,7 +88,7 @@ export function XlsxUploadModal({ open, onClose, onSuccess }: XlsxUploadModalPro
     }
   };
 
-  const onDrop = (e: DragEvent) => {
+  const onDrop = (e: DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     setIsDragging(false);
     const droppedFile = e.dataTransfer.files[0];
@@ -121,7 +123,7 @@ export function XlsxUploadModal({ open, onClose, onSuccess }: XlsxUploadModalPro
             className="text-primary underline"
             target="_blank"
             rel="noopener noreferrer"
-            href="https://loterias.caixa.gov.br/Paginas/Mega-Sena.aspx#:~:text=Resultados%20da%20Mega%2DSena%20por%20ordem%20crescente."
+            href="https://loterias.caixa.gov.br/Paginas/Mega-Sena.aspx#:~:text=Download%20de%20resultados-,Download%20de%20resultados,-Acesse%20todos%20os"
           >
             {' '}
             Arquivo Oficial{' '}

@@ -150,7 +150,6 @@ const RegionSummary = memo(function RegionSummary({ data }: RegionSummaryProps) 
   );
 });
 
-
 const GeoBarChart = memo(function GeoBarChart({ data }: { data: GeoDataPoint[] }) {
   return (
     <ResponsiveContainer width="100%" height={340}>

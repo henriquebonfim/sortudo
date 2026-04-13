@@ -1,6 +1,6 @@
-import { BALLS_PER_DRAW, MAX_LOTTERY_NUMBER, PRIMES } from "@/shared/constants";
-import { Game } from "@/shared/types";
-import { GenerationMode } from "@/store/generator";
+import type { GenerationMode } from '@/lib/generator/types';
+import { BALLS_PER_DRAW, MAX_LOTTERY_NUMBER, PRIMES } from '@/shared/constants';
+import type { Game } from '@/shared/types';
 
 interface GenerationContext {
   hotNumbers: number[];
@@ -13,7 +13,6 @@ const DATES_POOL = Array.from({ length: 31 }, (_, i) => i + 1);
 const FULL_POOL = Array.from({ length: MAX_LOTTERY_NUMBER }, (_, i) => i + 1);
 const ODDS_POOL = Array.from({ length: 30 }, (_, i) => i * 2 + 1);
 const EVENS_POOL = Array.from({ length: 30 }, (_, i) => i * 2 + 2);
-
 
 function pickRandom(
   pool: number[],
@@ -46,8 +45,6 @@ const generateByParitySplit = (oddCount: number, evenCount: number) =>
     ...pickRandom(ODDS_POOL, oddCount, MAX_LOTTERY_NUMBER),
     ...pickRandom(EVENS_POOL, evenCount, MAX_LOTTERY_NUMBER),
   ].sort((a, b) => a - b);
-
-
 
 const STRATEGIES: Record<GenerationMode, GeneratorStrategy> = {
   random: () => pickRandom(FULL_POOL, BALLS_PER_DRAW, MAX_LOTTERY_NUMBER),

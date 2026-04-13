@@ -2,7 +2,22 @@ import { SOURCES_LIST } from '@/features/about/constants';
 import { NavigatorExtended } from '@/features/about/types';
 import { useLotteryMeta } from '@/store/selectors';
 import { motion } from 'framer-motion';
-import { CheckCircle2, Code2, Database, ExternalLink, FileSpreadsheet, Globe, Info, LayoutDashboard, Lightbulb, PieChart, Shield, ShieldCheck, Terminal, Zap } from 'lucide-react';
+import {
+  CheckCircle2,
+  Code2,
+  Database,
+  ExternalLink,
+  FileSpreadsheet,
+  Globe,
+  Info,
+  LayoutDashboard,
+  Lightbulb,
+  PieChart,
+  Shield,
+  ShieldCheck,
+  Terminal,
+  Zap,
+} from 'lucide-react';
 import { useEffect, useState } from 'react';
 
 function SuggestedFeaturesPanel() {
@@ -122,7 +137,6 @@ function DataParsingProcessChart() {
     },
   ];
 
-
   useEffect(() => {
     const interval = setInterval(() => {
       setActiveStep((prev) => (prev + 1) % (STEPS.length + 1));
@@ -150,12 +164,13 @@ function DataParsingProcessChart() {
                 className="flex flex-row sm:flex-col items-start sm:items-center text-left sm:text-center gap-4 sm:gap-4 group"
               >
                 <div
-                  className={`relative flex-shrink-0 w-12 h-12 rounded-xl border flex items-center justify-center transition-all duration-500 ${isCompleted
-                    ? 'bg-primary border-primary text-primary-foreground shadow-lg shadow-primary/20'
-                    : isActive
-                      ? `${step.bg} border-primary glow-sm text-primary`
-                      : 'bg-muted/50 border-border text-muted-foreground'
-                    }`}
+                  className={`relative flex-shrink-0 w-12 h-12 rounded-xl border flex items-center justify-center transition-all duration-500 ${
+                    isCompleted
+                      ? 'bg-primary border-primary text-primary-foreground shadow-lg shadow-primary/20'
+                      : isActive
+                        ? `${step.bg} border-primary glow-sm text-primary`
+                        : 'bg-muted/50 border-border text-muted-foreground'
+                  }`}
                 >
                   {isCompleted ? <CheckCircle2 className="w-6 h-6" /> : step.icon}
 

@@ -238,13 +238,18 @@ export function ResultBanner({ result, contestId }: { result: SearchResult; cont
       <motion.div
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}
-        className={`p-10 rounded-[40px] border text-center transition-all duration-700 shadow-3xl ${hasJackpot
-          ? 'bg-primary/10 border-primary/30 shadow-glow-gold/20'
-          : 'bg-white/5 border-white/10'
-          }`}
+        className={`p-10 rounded-[40px] border text-center transition-all duration-700 shadow-3xl ${
+          hasJackpot
+            ? 'bg-primary/10 border-primary/30 shadow-glow-gold/20'
+            : 'bg-white/5 border-white/10'
+        }`}
       >
         <h2 className="text-2xl md:text-3xl font-display font-bold mb-4 tracking-tight">
-          {contestId ? `Concurso #${contestId}` : hasJackpot ? 'Combinação já foi Premiada!' : 'Combinação nunca foi sorteada!'}
+          {contestId
+            ? `Concurso #${contestId}`
+            : hasJackpot
+              ? 'Combinação já foi Premiada!'
+              : 'Combinação nunca foi sorteada!'}
         </h2>
         <p className="text-muted-foreground leading-relaxed max-w-2xl mx-auto font-medium">
           {contestId

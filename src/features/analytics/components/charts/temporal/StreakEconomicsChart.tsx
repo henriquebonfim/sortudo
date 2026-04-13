@@ -27,7 +27,6 @@ const VIEW_OPTIONS = [
   { id: 'table' as const, label: 'Tabela' },
 ];
 
-
 const ChartLegend = memo(function ChartLegend() {
   return (
     <div className="flex gap-4 text-xs text-muted-foreground">
@@ -42,7 +41,6 @@ const ChartLegend = memo(function ChartLegend() {
     </div>
   );
 });
-
 
 const CustomTooltip = memo(function CustomTooltip({
   active,
@@ -82,7 +80,6 @@ const CustomTooltip = memo(function CustomTooltip({
 
 const StreakChartTab = memo(function StreakChartTab({ data }: { data: StreakEntry[] }) {
   return (
-
     <ResponsiveContainer width="100%" height={700}>
       <ComposedChart data={data} margin={{ left: 8, right: 8, top: 8, bottom: 4 }}>
         <defs>
@@ -141,7 +138,6 @@ const StreakChartTab = memo(function StreakChartTab({ data }: { data: StreakEntr
         />
       </ComposedChart>
     </ResponsiveContainer>
-
   );
 });
 
@@ -179,7 +175,6 @@ const StreakTableTab = memo(function StreakTableTab({ data }: { data: StreakEntr
     </div>
   );
 });
-
 
 export function StreakEconomicsChart() {
   const meta = useLotteryMeta();

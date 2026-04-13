@@ -1,6 +1,9 @@
-import { useTemporalFrequency } from '@/hooks/use-analytics';
+import {
+  useAnalyticsActions,
+  useFrequencyRanking,
+  useTemporalFrequency,
+} from '@/hooks/use-analytics';
 import { CHART_COLORS } from '@/shared/styles/chart-colors';
-import { useAnalyticsStore } from '@/store/analytics';
 import { useLotteryMeta } from '@/store/selectors';
 import { memo, useEffect, useMemo } from 'react';
 import type { TooltipProps } from 'recharts';
@@ -63,8 +66,8 @@ const CustomTooltip = memo(function CustomTooltip({
 export function TemporalFrequencyChart() {
   const rawData = useTemporalFrequency();
   const meta = useLotteryMeta();
-  const calculateStats = useAnalyticsStore((s) => s.calculateStats);
-  const stats = useAnalyticsStore((s) => s.stats);
+  const { calculateStats } = useAnalyticsActions();
+  const ranking = useFrequencyRanking();
 
   // Automatically migrate legacy cached data
   useEffect(() => {
@@ -94,8 +97,6 @@ export function TemporalFrequencyChart() {
 
     return { chartData: mappedData, numbers: allNums };
   }, [rawData]);
-
-  const ranking = useMemo(() => stats?.frequencies?.ranking || [], [stats]);
 
   // Show skeleton while store is not yet seeded (meta is undefined when uninitialized)
   if (meta === undefined) {

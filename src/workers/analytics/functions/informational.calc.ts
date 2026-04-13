@@ -1,4 +1,9 @@
-import { ANALYSIS_CONFIG, BALLS_PER_DRAW, LOW_HIGH_BOUNDARY, PRIMES } from '@/workers/core/constants';
+import {
+  ANALYSIS_CONFIG,
+  BALLS_PER_DRAW,
+  LOW_HIGH_BOUNDARY,
+  PRIMES,
+} from '@/workers/core/constants';
 import type { Game } from '@/workers/core/types';
 import { calculatePercentage, sortGamesById, sum } from '@/workers/core/utils';
 

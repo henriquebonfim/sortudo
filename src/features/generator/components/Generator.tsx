@@ -1,16 +1,15 @@
-
+import { GENERATION_MODE_GROUPS } from '@/features/generator/constants';
 import { useSimulator } from '@/hooks/use-generator';
+import { type GenerationMode } from '@/lib/generator/types';
 import { MiniBall } from '@/shared/components/MiniBall';
 import { ResultBanner } from '@/shared/components/ResultBanner';
 import { ShareButton } from '@/shared/components/ShareButton';
 import { TOTAL_COMBINATIONS } from '@/shared/constants';
 import { LotteryFrequencies } from '@/shared/types';
 import { formatNumber, formatTime, getBallColor } from '@/shared/utils';
-import { GENERATION_MODE_GROUPS, GenerationMode } from '@/store/generator';
 import { AnimatePresence, motion } from 'framer-motion';
 import { ChevronDown, Clock, Dices, Trash2 } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
-
 
 const MODE_MESSAGES: Partial<Record<GenerationMode, string>> = {
   dates:
@@ -121,11 +120,7 @@ function GeneratorContextMessage({ mode, hasNumbers }: GeneratorContextMessagePr
   );
 }
 
-function GeneratorHistoryDropdown({
-  history,
-  onClear,
-  onSelect,
-}: GeneratorHistoryDropdownProps) {
+function GeneratorHistoryDropdown({ history, onClear, onSelect }: GeneratorHistoryDropdownProps) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 

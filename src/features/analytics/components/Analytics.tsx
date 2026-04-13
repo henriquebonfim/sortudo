@@ -1,4 +1,3 @@
-
 import { AllJackpotWinnersChart } from '@/features/analytics/components/charts/numbers/AllJackpotWinnersChart';
 import { FrequencyAnalysisGroup } from '@/features/analytics/components/charts/numbers/FrequencyAnalysisGroup';
 import { GapAnalysisChart } from '@/features/analytics/components/charts/numbers/GapAnalysisChart';
@@ -25,7 +24,12 @@ import { TemporalFrequencyChart } from '@/features/analytics/components/charts/t
 import { TopNumbersByDecadeChart } from '@/features/analytics/components/charts/temporal/TopNumbersByDecadeChart';
 import { Chapter, InfographicType } from '@/features/analytics/components/types';
 import { XlsxUploadModal } from '@/features/analytics/components/XlsxUploadModal';
-import { useAnalyticsMetadata, useLotteryFullStats } from '@/hooks/use-analytics';
+import {
+  useAnalyticsActions,
+  useAnalyticsMetadata,
+  useLotteryFullStats,
+} from '@/hooks/use-analytics';
+import { useDataSourceActions, type DataSource } from '@/hooks/use-data-source';
 import { LoadingBalls } from '@/shared/components/LoadingBalls';
 import { Button } from '@/shared/components/ui/Button';
 import {
@@ -40,13 +44,34 @@ import { ANALYSIS_CONFIG, MAX_LOTTERY_NUMBER } from '@/shared/constants';
 import { useToast } from '@/shared/hooks/useToast';
 import { LotteryStats } from '@/shared/types';
 import { cn } from '@/shared/utils';
-import { useAnalyticsStore } from '@/store/analytics';
-import { DataSource, useDataSourceStore } from '@/store/data';
-import { useGames, useIsSeeding, useLotteryMeta, useLotteryMetadata } from '@/store/selectors';
+import {
+  useDataSource,
+  useGames,
+  useHasLocalData,
+  useIsAnalyticsCalculating,
+  useIsSeeding,
+  useLotteryMeta,
+  useLotteryMetadata,
+} from '@/store/selectors';
 import { AnimatePresence, motion } from 'framer-motion';
-import { AlertCircle, BarChart3, Database, Download, FileText, Hash, Lightbulb, Loader2, PieChart, Sparkles, Trash2, TrendingUp, Trophy, Upload, Users } from 'lucide-react';
+import {
+  AlertCircle,
+  BarChart3,
+  Database,
+  Download,
+  FileText,
+  Hash,
+  Lightbulb,
+  Loader2,
+  PieChart,
+  Sparkles,
+  Trash2,
+  TrendingUp,
+  Trophy,
+  Upload,
+  Users,
+} from 'lucide-react';
 import { useEffect, useMemo, useState, type ReactNode } from 'react';
-
 
 interface ChapterNavProps {
   chapters: Array<{ id: string; title: string; icon: ReactNode }>;
@@ -84,7 +109,6 @@ interface ChapterProps {
   index: number;
 }
 
-
 interface KpiCardProps {
   label: string;
   value: string;
@@ -93,7 +117,6 @@ interface KpiCardProps {
   valueClass: string;
   delay?: number;
 }
-
 
 const getNumbersChapter = (stats?: LotteryStats | null): Chapter => ({
   id: 'numeros',
@@ -377,7 +400,6 @@ const getTemporalChapter = (stats?: LotteryStats | null): Chapter => ({
   ],
 });
 
-
 function downloadAsJson(data: unknown, fileName: string) {
   if (typeof window === 'undefined') return;
   const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
@@ -504,7 +526,6 @@ function AnalyticsEmpty() {
   );
 }
 
-
 function KpiCard({ label, value, icon, accentClass, valueClass, delay = 0 }: KpiCardProps) {
   return (
     <motion.div
@@ -545,7 +566,7 @@ function DashboardKpiStrip({
   totalJackpotWinners,
   highestPrize,
 }: DashboardKpiStripProps) {
-  const isCalculating = useAnalyticsStore((s) => s.isCalculating);
+  const isCalculating = useIsAnalyticsCalculating();
 
   const kpiCards = [
     {
@@ -622,9 +643,10 @@ function ChapterNav({ chapters, currentChapterIndex, onChapterSelect }: ChapterN
           key={ch.id}
           onClick={() => onChapterSelect(idx)}
           className={`flex items-center gap-2 px-4 py-2 rounded-full border transition-all duration-300 cursor-pointer flex-shrink-0 backdrop-blur-md text-xs font-semibold
-            ${idx === currentChapterIndex
-              ? 'bg-primary border-primary text-black shadow-[0_0_12px_rgba(251,197,49,0.3)]'
-              : 'bg-card/30 border-border text-muted-foreground hover:border-primary/40 hover:text-foreground hover:bg-card/60'
+            ${
+              idx === currentChapterIndex
+                ? 'bg-primary border-primary text-black shadow-[0_0_12px_rgba(251,197,49,0.3)]'
+                : 'bg-card/30 border-border text-muted-foreground hover:border-primary/40 hover:text-foreground hover:bg-card/60'
             }`}
         >
           <span
@@ -640,7 +662,9 @@ function ChapterNav({ chapters, currentChapterIndex, onChapterSelect }: ChapterN
 }
 
 function DataSourceToggle() {
-  const { source, switchTo, hasLocalData, clearLocalData } = useDataSourceStore();
+  const source = useDataSource();
+  const hasLocalData = useHasLocalData();
+  const { switchTo, clearLocalData } = useDataSourceActions();
   const isSeeding = useIsSeeding();
   const [isSwitching, setIsSwitching] = useState(false);
   const [isConfirmingClear, setIsConfirmingClear] = useState(false);
@@ -768,7 +792,7 @@ function DashboardHeader({
   currentChapterIndex,
   onChapterSelect,
 }: DashboardHeaderProps) {
-  const { hasLocalData } = useDataSourceStore()
+  const hasLocalData = useHasLocalData();
   return (
     <div className="relative overflow-hidden border-b border-border">
       {/* Background layers */}
@@ -804,10 +828,11 @@ function DashboardHeader({
                   initial={{ opacity: 0, scale: 0.8 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.8 }}
-                  className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full border text-xs font-medium ${isStale
-                    ? 'bg-rose-500/10 border-rose-500/30 text-rose-400'
-                    : 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
-                    }`}
+                  className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full border text-xs font-medium ${
+                    isStale
+                      ? 'bg-rose-500/10 border-rose-500/30 text-rose-400'
+                      : 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400'
+                  }`}
                 >
                   <span
                     className={`w-1.5 h-1.5 rounded-full animate-pulse ${isStale ? 'bg-rose-500' : 'bg-emerald-500'}`}
@@ -867,14 +892,9 @@ function DashboardHeader({
               </Button>
             </div>
 
-            {hasLocalData && (
-              <DataSourceToggle />
-            )}
-
+            {hasLocalData && <DataSourceToggle />}
           </motion.div>
         </div>
-
-
       </div>
     </div>
   );
@@ -886,10 +906,11 @@ export function Analytics() {
   const metadata = useLotteryMetadata();
   const games = useGames();
   const isSeeding = useIsSeeding();
+  const { calculateStats } = useAnalyticsActions();
+  const { markLocalReady, setSource } = useDataSourceActions();
 
   const [currentChapterIndex, setCurrentChapterIndex] = useState(0);
   const [isUploadOpen, setIsUploadOpen] = useState(false);
-  const { calculateStats } = useAnalyticsStore();
 
   const chapters = useMemo(() => (stats ? buildChapters(stats) : []), [stats]);
 
@@ -943,8 +964,8 @@ export function Analytics() {
     const oldCount = metadata?.totalGames || 0;
     const delta = newCount - oldCount;
 
-    useDataSourceStore.getState().markLocalReady(true);
-    useDataSourceStore.getState().setSource('local');
+    markLocalReady(true);
+    setSource('local');
 
     if (delta < 0) {
       toast({

@@ -1,8 +1,18 @@
 import { calculateTheoreticalParity, poissonProbability } from '@/lib/analytics';
-import { TOTAL_COMBINATIONS } from '@/lib/core/constants';
-import { LotteryMetadata } from '@/lib/core/types';
+import type { LotteryMetadata } from '@/lib/core/types';
+import { TOTAL_COMBINATIONS } from '@/shared/constants';
 import { useAnalyticsStore } from '@/store/analytics';
 import { useMemo } from 'react';
+
+export function useAnalyticsActions() {
+  const calculateStats = useAnalyticsStore((s) => s.calculateStats);
+  const clearError = useAnalyticsStore((s) => s.clearError);
+
+  return {
+    calculateStats,
+    clearError,
+  };
+}
 
 export function useLotteryFullStats() {
   return useAnalyticsStore((s) => s.stats);
@@ -30,6 +40,10 @@ export function useAccumulationTrend() {
 
 export function useTemporalFrequency() {
   return useAnalyticsStore((s) => s.stats?.temporalFrequency || []);
+}
+
+export function useFrequencyRanking() {
+  return useAnalyticsStore((s) => s.stats?.frequencies?.ranking || []);
 }
 
 export function useNumberProfile() {

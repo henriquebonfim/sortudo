@@ -1,6 +1,9 @@
 import { lotteryIdb } from '@/lib/core/idb';
+import { useAnalyticsStore } from '@/store/analytics';
 import { useDataSourceStore } from '@/store/data';
 import { useLotteryStore } from '@/store/lottery';
+import { useGeneratorStore } from '@/store/generator';
+import { SearchWorkerClient } from '@/workers/search';
 import { PropsWithChildren, useEffect, useRef } from 'react';
 
 /**
@@ -11,60 +14,46 @@ import { PropsWithChildren, useEffect, useRef } from 'react';
 export function AppProvider({ children }: PropsWithChildren) {
   const isLoaded = useRef(false);
 
-  // ── 1. subscribe: dataset change → auto-recalculate analytics ──
-  // Using reference check on (s) => s.games ensures that even same-length files
-  // will trigger a recalculation if the array reference changed.
-  // useEffect(() => {
-  //   return useLotteryStore.subscribe(
-  //     (s) => s.games,
-  //     (newGames, prevGames) => {
-  //       if (!newGames || newGames.length === 0) return;
-  //       // force recalculate if replacing existing data (switching sources or new upload)
-  //       const force = prevGames && prevGames.length > 0;
-  //       useAnalyticsStore.getState().calculateStats(force).catch(console.error);
-  //     }
-  //   );
-  // }, []);
+  // 1. Sync: Dataset change → auto-recalculate analytics
+  useEffect(
+    () =>
+      useLotteryStore.subscribe(
+        (s) => s.games,
+        (games, prev) => {
+          if (games?.length) {
+            useAnalyticsStore.getState().calculateStats(!!prev?.length).catch(console.error);
+          }
+        }
+      ),
+    []
+  );
+  // 2. DIP: Service Injection into the Generator feature
+  useEffect(() => {
+    useGeneratorStore.getState().setServices({
+      verificationService: (numbers, games) =>
+        SearchWorkerClient.getInstance().searchCombination({ numbers, games }),
+      statsProvider: () => {
+        const stats = useAnalyticsStore.getState().stats;
+        return stats
+          ? {
+              hotNumbers: stats.hotNumbers.map((n) => n.number),
+              coldNumbers: stats.frequencies.ranking.slice(-10).map((n) => n.number),
+            }
+          : null;
+      },
+    });
+  }, []);
 
-  // // ── 2. DIP: Service Injection into the Generator feature ──
-  // useEffect(() => {
-  //   useGeneratorStore.getState().setServices({
-  //     verificationService: (numbers, games) =>
-  //       SearchWorkerClient.getInstance().searchCombination({ numbers, games }),
-  //     statsProvider: () => {
-  //       const stats = useAnalyticsStore.getState().stats;
-  //       if (!stats) return null;
-  //       return {
-  //         hotNumbers: stats.hotNumbers.map((n: { number: number }) => n.number),
-  //         coldNumbers: stats.frequencies.ranking
-  //           .slice(-10)
-  //           .map((n: { number: number }) => n.number),
-  //       };
-  //     },
-  //   });
-  // }, []);
-
-  // ── 3. Boot: System initialization ──
+  // 3. Boot: Initialize baseline and check local storage
   useEffect(() => {
     if (isLoaded.current) return;
     isLoaded.current = true;
 
-    async function boot() {
-      // 1. Always fetch official baseline (fast static file)
+    (async () => {
       await useLotteryStore.getState().initialize();
-
-      // 2. Check if user has a persistent local dataset
-      try {
-        const stored = await lotteryIdb.getLocal();
-        if (stored) {
-          useDataSourceStore.getState().markLocalReady(true);
-          // Note: we don't switch source automatically; official data is preferred on direct load
-        }
-      } catch (e) {
-        console.warn('IDB restoration failed. Restricted environment?', e);
-      }
-    }
-    boot().catch(console.error);
+      const stored = await lotteryIdb.getLocal().catch(() => null);
+      if (stored) useDataSourceStore.getState().markLocalReady(true);
+    })().catch(console.error);
   }, []);
 
   return <>{children}</>;

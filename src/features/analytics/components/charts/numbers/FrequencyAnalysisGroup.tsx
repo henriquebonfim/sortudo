@@ -163,7 +163,6 @@ function applyPhysics(nodes: BubbleNode[], width: number, height: number) {
   }
 }
 
-
 function renderNodes(ctx: CanvasRenderingContext2D, nodes: BubbleNode[]) {
   for (const n of nodes) {
     ctx.beginPath();

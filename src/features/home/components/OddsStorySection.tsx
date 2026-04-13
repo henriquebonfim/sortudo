@@ -91,8 +91,9 @@ function OddsVisualizerCard({
       initial={{ opacity: 0, x: -20 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ delay: index * 0.1 }}
-      className={`p-4 rounded-lg border transition-colors ${isHovered ? 'bg-secondary/50 border-primary/50' : 'bg-card border-border'
-        } ${isMega ? 'border-primary/30 ring-1 ring-primary/20 bg-primary/5' : ''}`}
+      className={`p-4 rounded-lg border transition-colors ${
+        isHovered ? 'bg-secondary/50 border-primary/50' : 'bg-card border-border'
+      } ${isMega ? 'border-primary/30 ring-1 ring-primary/20 bg-primary/5' : ''}`}
       onMouseEnter={() => onHover(item.id)}
       onMouseLeave={() => onHover(null)}
     >
@@ -112,8 +113,9 @@ function OddsVisualizerCard({
         </div>
         <div className="text-left sm:text-right w-full sm:w-auto mt-1 sm:mt-0 ml-[44px] sm:ml-0">
           <span
-            className={`text-sm font-mono block sm:inline ${isMega ? 'text-primary font-bold' : 'text-muted-foreground'
-              }`}
+            className={`text-sm font-mono block sm:inline ${
+              isMega ? 'text-primary font-bold' : 'text-muted-foreground'
+            }`}
           >
             {item.odds}
           </span>
