@@ -31,7 +31,7 @@ function NotFound() {
         <h1 className="mb-4 text-4xl font-bold">404</h1>
         <p className="mb-4 text-xl text-muted-foreground">Oops! Página não encontrada</p>
         <a href="/" className="text-primary underline hover:text-primary/90">
-          Voltar para a página inicial
+          Voltar para a Página Inicial
         </a>
       </div>
     </div>

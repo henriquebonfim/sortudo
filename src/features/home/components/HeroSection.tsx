@@ -46,8 +46,8 @@ export function HeroSection({ id }: { id?: string }) {
             </h1>
 
             <p className="text-base md:text-lg text-muted-foreground leading-relaxed max-w-xl mx-auto lg:mx-0 mb-10">
-              Descubra como a matemática explica a Mega-Sena, quanto os brasileiros já apostaram, e
-              por que o sistema é desenhado para a casa nunca perder.
+              Veja como a matemática revela a Mega-Sena, quanto os brasileiros já investiram e por
+              que a casa sempre ganha.
             </p>
 
             {/* CTAs */}

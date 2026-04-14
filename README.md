@@ -3,7 +3,7 @@
 [![Test E2E](https://github.com/your-repo/odds-are-not-with-you/actions/workflows/staging.yml/badge.svg)](https://github.com/your-repo/odds-are-not-with-you/actions/workflows/staging.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-**Sortudo** é uma aplicação interativa baseada em dados que visualiza a improbabilidade estatística de ganhar na Mega-Sena. Através de análises de dados complexas, busca histórica e um "gerador de sorte", o projeto visa educar os usuários sobre a realidade matemática de jogos de azar com probabilidades remotas.
+**Sortudo** é uma aplicação interativa baseada em dados que visualiza a improbabilidade estatística de ganhar na Mega-Sena. Com análises de dados, histórico de sorteios e um gerador de combinações, o projeto educa sobre a matemática dos jogos de azar e suas baixas probabilidades.
 
 ---
 
@@ -12,15 +12,15 @@
 - **📊 Dashboard de Análise Interativo:** Explore mais de 30 anos de história da loteria com gráficos sobre a erosão do prêmio, distribuição geográfica e tendências de frequência.
 - **🎲 Gerador de Sorte:** Um gerador de combinações baseado em física que simula a "sorte" necessária para vencer, destacando a aleatoriedade do sorteio.
 - **🔍 Busca Histórica:** Verifique qualquer combinação de 6 números para ver se ela já foi sorteada na história da Mega-Sena.
-- **📉 Scrollytelling Matemático:** Uma jornada curada através da "Matemática do Improvável", explicando conceitos como a Lei dos Grandes Números e a distribuição de Poisson em um contexto visual.
+- **📉 Narrativa Matemática Interativa (Scrollytelling):** Uma jornada curada enquanto você rola a página, explicando conceitos como a Lei dos Grandes Números e a distribuição de Poisson em um contexto visual na seção "Matemática do Improvável".
 
 ---
 
-## 🛠️ Stack Tecnológica
+## 🛠️ Pilha Tecnológica
 
 ### Core
 
-- **Runtime:** [Bun](https://bun.sh/) (Runtime JavaScript rápido "tudo-em-um")
+- **Runtime:** [Bun](https://bun.sh/) (Runtime JavaScript rápido, _tudo-em-um_)
 - **Framework:** [React 18](https://reactjs.org/) com [TypeScript](https://www.typescriptlang.org/)
 - **Ferramenta de Build:** [Vite](https://vitejs.dev/)
 - **Roteamento:** [React Router 7](https://reactrouter.com/)
@@ -44,7 +44,7 @@
 
 ## 🏗️ Arquitetura
 
-O projeto utiliza uma organização **baseada em funcionalidades (Feature-Based)**, que separa a lógica por contexto de uso, facilitando a manutenção sem a complexidade de camadas estritas:
+O projeto utiliza uma organização **baseada em funcionalidades**, que separa a lógica por contexto de uso, facilitando a manutenção sem a complexidade de camadas estritas:
 
 1.  **`src/features/`**: O coração da aplicação. Contém os componentes, hooks e lógica específicos para cada grande funcionalidade (Analytics, Generator, Search).
 2.  **`src/lib/`**: Utilitários globais, lógica de cálculo da loteria, gerenciamento de estado (Zustand) e integração com a API.
@@ -87,7 +87,7 @@ bun run test
 # Execute os testes de ponta a ponta (Playwright)
 bun run test:e2e
 
-# Execute a checagem de tipos
+# Execute a verificação de tipos
 bun run typecheck
 ```
 
@@ -108,5 +108,3 @@ Mantemos altos padrões para a saúde do código:
 Este projeto está licenciado sob a Licença MIT - veja o arquivo [LICENSE](./LICENSE) para mais detalhes.
 
 ---
-
-\*“A sorte é um erro de cálculo.”

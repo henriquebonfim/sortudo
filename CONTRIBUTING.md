@@ -1,6 +1,6 @@
 # Guia de Contribuição 🤝
 
-Primeiro, obrigado por se interessar em contribuir para o **Sortudo?**! É o esforço comunitário que torna projetos open-source incríveis.
+Primeiro, obrigado por se interessar em contribuir para o **Sortudo**! É o esforço comunitário que torna projetos open-source incríveis.
 
 ## 🌈 Como posso ajudar?
 
