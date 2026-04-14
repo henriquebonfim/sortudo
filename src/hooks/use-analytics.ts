@@ -62,12 +62,8 @@ export function usePrizeTierComparison() {
   return useAnalyticsStore((s) => s.stats?.prizeTierComparison || []);
 }
 
-export function useParityDistribution() {
-  return useAnalyticsStore((s) => s.stats?.parityDistribution || []);
-}
-
 export function useParityDistributionComparison() {
-  const raw = useParityDistribution();
+  const raw = useAnalyticsStore((s) => s.stats?.parityDistribution || []);
 
   return useMemo(() => {
     const total = raw.reduce((sum, entry) => sum + entry.count, 0) || 1;

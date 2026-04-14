@@ -1,23 +1,13 @@
+import { PrizeTimelineChart } from '@/features/analytics/components/charts/shared/PrizeTimelineChart';
 import { MEGA_DA_VIRADA_START_YEAR } from '@/shared/constants';
+import { usePrizeTimelineInteraction } from '@/shared/hooks/usePrizeTimelineInteraction';
 import { CHART_COLORS } from '@/shared/styles/chart-colors';
 import { formatCompactCurrency } from '@/shared/utils';
 import { useLotteryMeta, usePrizeEvolution } from '@/store/selectors';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Calendar, Info, Landmark, Star, Target, Trophy } from 'lucide-react';
-import { memo, useCallback, useMemo, useState } from 'react';
-import type { TooltipProps } from 'recharts';
-import {
-  Bar,
-  CartesianGrid,
-  Cell,
-  ComposedChart,
-  Line,
-  ReferenceLine,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from 'recharts';
+import { memo, useMemo } from 'react';
+import type { TooltipContentProps } from 'recharts';
 
 interface PrizeDataPoint {
   year: number;
@@ -27,10 +17,6 @@ interface PrizeDataPoint {
   totalGames: number;
   totalWinners: number;
   megaDaVirada: boolean;
-}
-
-interface ChartClickState {
-  activePayload?: Array<{ payload?: PrizeDataPoint }>;
 }
 
 const MILESTONES = [
@@ -58,7 +44,7 @@ const CustomTooltip = memo(function CustomTooltip({
   active,
   payload,
   label,
-}: TooltipProps<number, string>) {
+}: Partial<TooltipContentProps<number, string>>) {
   if (!active || !payload?.length) return null;
   const data = payload[0]?.payload as PrizeDataPoint;
 
@@ -97,18 +83,8 @@ export function PrizeEvolutionChart() {
   const meta = useLotteryMeta();
   const prizeEvolution = usePrizeEvolution();
 
-  const [selectedYear, setSelectedYear] = useState<number | null>(null);
-  const [visibleSeries, setVisibleSeries] = useState({
-    maxPrize: true,
-    totalDistributed: true,
-    totalRevenue: true,
-  });
-
-  const toggleSeries = useCallback((key: keyof typeof visibleSeries) => {
-    setVisibleSeries((prev) => ({ ...prev, [key]: !prev[key] }));
-  }, []);
-
-  const data = useMemo(() => prizeEvolution?.filter((d) => d.maxPrize > 0) ?? [], [prizeEvolution]);
+  const { data, selectedYear, setSelectedYear, visibleSeries, toggleSeries, handleClick } =
+    usePrizeTimelineInteraction(prizeEvolution);
 
   const selectedData = useMemo(
     () => data.find((d) => d.year === selectedYear),
@@ -124,13 +100,6 @@ export function PrizeEvolutionChart() {
 
     return { allTimeMax, totalPrizes, totalRev, efficiency };
   }, [data]);
-
-  const handleClick = useCallback((state: unknown) => {
-    const entries = (state as ChartClickState | undefined)?.activePayload;
-    const year = entries?.[0]?.payload?.year;
-    if (typeof year !== 'number') return;
-    setSelectedYear((prev) => (prev === year ? null : year));
-  }, []);
 
   if (!meta || !data.length) {
     return <div className="h-96 animate-pulse bg-muted/20 rounded-2xl" />;
@@ -187,141 +156,23 @@ export function PrizeEvolutionChart() {
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
         {/* Main Chart Area */}
         <div className="lg:col-span-3 flex flex-col gap-4">
-          <div className="h-[400px] w-full">
-            <ResponsiveContainer width="100%" height="100%">
-              <ComposedChart
-                data={data}
-                margin={{ top: 10, right: 0, bottom: 0, left: -20 }}
-                onClick={handleClick}
-                className="cursor-pointer"
-              >
-                <CartesianGrid
-                  strokeDasharray="3 3"
-                  stroke={CHART_COLORS.GRID_STROKE}
-                  vertical={false}
-                />
-                <XAxis
-                  dataKey="year"
-                  tick={{ fontSize: 11, fill: CHART_COLORS.TICK_LABEL, fontWeight: '600' }}
-                  axisLine={false}
-                  tickLine={false}
-                  tickMargin={12}
-                />
-                <YAxis
-                  domain={['auto', 'auto']}
-                  tickFormatter={formatCompactCurrency}
-                  tick={{ fontSize: 10, fill: CHART_COLORS.TICK_LABEL }}
-                  axisLine={false}
-                  tickLine={false}
-                  width={70}
-                />
-                <Tooltip content={<CustomTooltip />} cursor={{ fill: CHART_COLORS.CURSOR }} />
-
-                {visibleSeries.totalRevenue && (
-                  <Bar
-                    dataKey="totalRevenue"
-                    name="Arrecadação"
-                    fill={CHART_COLORS.EMERALD}
-                    radius={[4, 4, 0, 0]}
-                    maxBarSize={40}
-                  >
-                    {data.map((entry, index) => (
-                      <Cell
-                        key={`cell-${index}`}
-                        fill={CHART_COLORS.EMERALD}
-                        opacity={selectedYear === entry.year ? 0.4 : 0.1}
-                        className="transition-opacity duration-300"
-                      />
-                    ))}
-                  </Bar>
-                )}
-
-                {visibleSeries.totalDistributed && (
-                  <Line
-                    type="monotone"
-                    dataKey="totalDistributed"
-                    name="Distribuído"
-                    stroke={CHART_COLORS.BLUE}
-                    strokeWidth={2}
-                    strokeDasharray="4 4"
-                    dot={false}
-                    activeDot={{ r: 5, strokeWidth: 0, fill: CHART_COLORS.BLUE }}
-                  />
-                )}
-
-                {visibleSeries.maxPrize && (
-                  <Line
-                    type="monotone"
-                    dataKey="maxPrize"
-                    name="Maior Prêmio"
-                    stroke={CHART_COLORS.AMBER}
-                    strokeWidth={3}
-                    dot={false}
-                    activeDot={{ r: 6, strokeWidth: 0, fill: CHART_COLORS.AMBER }}
-                  />
-                )}
-
-                <ReferenceLine
-                  x={MEGA_DA_VIRADA_START_YEAR}
-                  stroke={CHART_COLORS.VIOLET}
-                  strokeDasharray="3 3"
-                  opacity={0.3}
-                />
-
-                {selectedYear && (
-                  <ReferenceLine
-                    x={selectedYear}
-                    stroke="hsl(var(--primary))"
-                    strokeWidth={2}
-                    strokeOpacity={0.6}
-                  />
-                )}
-              </ComposedChart>
-            </ResponsiveContainer>
-          </div>
-
-          {/* Interactive Legend */}
-          <div className="flex flex-wrap items-center justify-center gap-6 text-[10px] sm:text-xs">
-            <button
-              onClick={() => toggleSeries('maxPrize')}
-              className={`flex items-center gap-2 px-3 py-1.5 rounded-lg border transition-all ${
-                visibleSeries.maxPrize
-                  ? 'border-amber-500/30 bg-amber-500/10 text-amber-500 font-bold'
-                  : 'border-transparent text-muted-foreground opacity-50'
-              }`}
-            >
-              <div
-                className="w-3 h-1 rounded-full"
-                style={{ backgroundColor: CHART_COLORS.AMBER }}
-              />
-              Maior Prêmio
-            </button>
-            <button
-              onClick={() => toggleSeries('totalDistributed')}
-              className={`flex items-center gap-2 px-3 py-1.5 rounded-lg border transition-all ${
-                visibleSeries.totalDistributed
-                  ? 'border-blue-500/30 bg-blue-500/10 text-blue-500 font-bold'
-                  : 'border-transparent text-muted-foreground opacity-50'
-              }`}
-            >
-              <div
-                className="w-3 h-0.5 border-t border-dashed"
-                style={{ borderColor: CHART_COLORS.BLUE }}
-              />
-              Distribuído
-            </button>
-            <button
-              onClick={() => toggleSeries('totalRevenue')}
-              className={`flex items-center gap-2 px-3 py-1.5 rounded-lg border transition-all ${
-                visibleSeries.totalRevenue
-                  ? 'border-emerald-500/30 bg-emerald-500/10 text-emerald-500 font-bold'
-                  : 'border-transparent text-muted-foreground opacity-50'
-              }`}
-            >
-              <div className="w-2 h-2 rounded bg-emerald-500/40" />
-              Arrecadação
-            </button>
-          </div>
+          <PrizeTimelineChart
+            data={data}
+            selectedYear={selectedYear}
+            visibleSeries={visibleSeries}
+            onToggleSeries={toggleSeries}
+            onChartClick={handleClick}
+            tooltipContent={<CustomTooltip />}
+            chartClassName="cursor-pointer"
+            yAxisTickFormatter={formatCompactCurrency}
+            maxPrizeSeriesName="Maior Prêmio"
+            distributedSeriesName="Distribuído"
+            distributedLegendLabel="Distribuído"
+            revenueSeriesName="Arrecadação"
+            revenueLegendLabel="Arrecadação"
+            showMegaDaViradaMarker
+            megaDaViradaYear={MEGA_DA_VIRADA_START_YEAR}
+          />
         </div>
 
         {/* Side Panel: Focus & History */}

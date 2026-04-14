@@ -78,8 +78,14 @@ export function countMatches(draw: number[], combination: number[]): number {
 export function normalizeStateCode(loc: string): string | null {
   const text = loc.toUpperCase().trim();
 
-  if (text.includes('CANAL ELETR') || text === 'ELECT' || text.includes('INTERNET')) {
-    return 'ELECT';
+  if (
+    text.includes('CANAL ELETR') ||
+    text.includes('ELECT') ||
+    text.includes('ONLINE') ||
+    text.includes('INTERNET') ||
+    text.includes('CANAL')
+  ) {
+    return 'ONLINE';
   }
 
   const parenMatch = text.match(/\(([A-Z]{2})\)$/);

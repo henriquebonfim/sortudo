@@ -449,7 +449,7 @@ export function MathSection({ id }: { id: string }) {
           <Calculator className="w-8 h-8 text-primary" />
         </div>
         <h2 className="text-5xl md:text-6xl font-display font-bold text-foreground mb-6 tracking-tight">
-          A Matemática <span className="text-gradient-gold">do Improvável</span>
+          A <span className="text-gradient-gold">Matemática</span> do Improvável
         </h2>
         <p className="text-xl text-muted-foreground leading-relaxed max-w-2xl mx-auto">
           Para vencer, você precisa desafiar as leis da probabilidade. Entenda o que acontece nos

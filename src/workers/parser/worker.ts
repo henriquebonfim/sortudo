@@ -1,30 +1,26 @@
 import {
   LotteryParserCommand,
   LotteryParserCommandType,
+  LotteryParserWorkerRequestSchema,
   ParseExcelResponse,
 } from '@/workers/parser/commands';
 import { parseExcelToGames } from '@/workers/parser/engine';
-import { createWorkerErrorResponse } from '@/workers/worker-protocol';
+import { registerValidatedWorkerHandler } from '@/workers/worker-runtime';
 
-self.onmessage = async (event: MessageEvent<LotteryParserCommand>) => {
-  const { id, type, payload } = event.data;
-
-  try {
+registerValidatedWorkerHandler<LotteryParserCommand, ParseExcelResponse>({
+  requestSchema: LotteryParserWorkerRequestSchema,
+  invalidPayloadMessage: 'Invalid parser command payload',
+  unknownErrorMessage: 'Unknown parser error',
+  handleCommand: ({ id, type, payload }) => {
     switch (type) {
-      case LotteryParserCommandType.PARSE_EXCEL: {
-        const games = parseExcelToGames(payload.data);
-        const response: ParseExcelResponse = {
+      case LotteryParserCommandType.PARSE_EXCEL:
+        return {
           id,
           type: LotteryParserCommandType.PARSE_EXCEL,
-          payload: games,
+          payload: parseExcelToGames(payload.data),
         };
-        self.postMessage(response);
-        break;
-      }
       default:
         throw new Error(`Unknown parser command type: ${type}`);
     }
-  } catch (error) {
-    self.postMessage(createWorkerErrorResponse(id, error, 'Unknown parser error'));
-  }
-};
+  },
+});

@@ -1,5 +1,12 @@
+import { GameSchema, LotteryStatsSchema } from '@/lib/core/schemas';
 import type { Game, LotteryStats } from '@/workers/core/types';
-import type { WorkerRequest, WorkerSuccessResponse } from '@/workers/worker-protocol';
+import {
+  createWorkerCommandSchema,
+  createWorkerRequestSchema,
+  type WorkerRequest,
+  type WorkerSuccessResponse,
+} from '@/workers/worker-protocol';
+import { z } from 'zod';
 
 export enum AnalyticsCommandType {
   CALCULATE_STATS = 'CALCULATE_STATS',
@@ -8,6 +15,22 @@ export enum AnalyticsCommandType {
 export interface CalculateStatsPayload {
   games: Game[];
 }
+
+const CalculateStatsPayloadSchema = z.object({
+  games: z.array(GameSchema),
+});
+
+export const AnalyticsCommandSchema = createWorkerCommandSchema(
+  z.literal(AnalyticsCommandType.CALCULATE_STATS),
+  CalculateStatsPayloadSchema
+);
+
+export const AnalyticsWorkerRequestSchema = createWorkerRequestSchema(
+  z.literal(AnalyticsCommandType.CALCULATE_STATS),
+  CalculateStatsPayloadSchema
+);
+
+export const AnalyticsResponseSchema = LotteryStatsSchema;
 
 export type AnalyticsCommand = WorkerRequest<
   AnalyticsCommandType.CALCULATE_STATS,

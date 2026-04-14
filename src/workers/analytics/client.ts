@@ -1,6 +1,12 @@
-import { AnalyticsCommand, AnalyticsCommandType } from '@/workers/analytics/commands';
+import {
+  AnalyticsCommand,
+  AnalyticsCommandSchema,
+  AnalyticsCommandType,
+  AnalyticsResponseSchema,
+} from '@/workers/analytics/commands';
 import type { Game, LotteryStats } from '@/workers/core/types';
 import { FeatureWorkerClient } from '@/workers/worker-client';
+import { createModuleWorker } from '@/workers/worker-runtime';
 
 /**
  * Feature-specific worker client for the Analytics domain.
@@ -11,10 +17,11 @@ export class AnalyticsWorkerClient extends FeatureWorkerClient<AnalyticsCommand,
 
   // Uses Vite's worker import syntax
   private constructor() {
-    const worker = new Worker(new URL('./worker.ts', import.meta.url), {
-      type: 'module',
+    const worker = createModuleWorker(new URL('./worker.ts', import.meta.url));
+    super(worker, 45000, {
+      commandSchema: AnalyticsCommandSchema,
+      responseSchema: AnalyticsResponseSchema,
     });
-    super(worker);
   }
 
   static getInstance(): AnalyticsWorkerClient {

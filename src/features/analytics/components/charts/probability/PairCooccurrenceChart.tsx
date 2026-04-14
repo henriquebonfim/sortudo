@@ -1,18 +1,10 @@
+import { VerticalBarChartShell } from '@/features/analytics/components/charts/shared/VerticalBarChartShell';
 import { useTopPairs } from '@/hooks/use-analytics';
 import { CHART_COLORS } from '@/shared/styles/chart-colors';
 import { useLotteryMetadata } from '@/store/selectors';
 import { memo, useMemo } from 'react';
 import type { TooltipContentProps } from 'recharts';
-import {
-  Bar,
-  BarChart,
-  CartesianGrid,
-  Cell,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from 'recharts';
+import { Bar, Cell } from 'recharts';
 
 interface ExtendedPairData {
   pair: string;
@@ -96,42 +88,28 @@ export function PairCooccurrenceChart() {
   return (
     <div className="space-y-4">
       <div className="p-4">
-        <ResponsiveContainer width="100%" height={300}>
-          <BarChart
-            data={data}
-            layout="vertical"
-            margin={{ left: 12, right: 48, top: 4, bottom: 4 }}
-          >
-            <CartesianGrid
-              strokeDasharray="3 3"
-              stroke={CHART_COLORS.GRID_STROKE}
-              horizontal={false}
-            />
-            <XAxis
-              type="number"
-              tick={{ fontSize: 11, fill: CHART_COLORS.TICK_LABEL }}
-              domain={[0, maxCount + 5]}
-            />
-            <YAxis
-              dataKey="pair"
-              type="category"
-              tick={{ fontSize: 11, fill: '#CBD5E1', fontFamily: 'monospace' }}
-              width={40}
-            />
-            <Tooltip
-              content={(props) => <CustomTooltip {...props} />}
-              cursor={{ fill: CHART_COLORS.CURSOR }}
-            />
-            <Bar dataKey="count" radius={[0, 6, 6, 0]} maxBarSize={22}>
-              {data.map((d) => (
-                <Cell
-                  key={d.pair}
-                  fill={`hsla(${271 - data.indexOf(d) * 10}, 80%, ${60 - data.indexOf(d) * 1.5}%, 0.85)`}
-                />
-              ))}
-            </Bar>
-          </BarChart>
-        </ResponsiveContainer>
+        <VerticalBarChartShell
+          data={data}
+          height={300}
+          margin={{ left: 12, right: 48, top: 4, bottom: 4 }}
+          xAxisTick={{ fontSize: 11, fill: CHART_COLORS.TICK_LABEL }}
+          xAxisDomain={[0, maxCount + 5]}
+          yAxisDataKey="pair"
+          yAxisTick={{ fontSize: 11, fill: '#CBD5E1', fontFamily: 'monospace' }}
+          yAxisWidth={40}
+          gridHorizontal={false}
+          tooltipContent={(props) => <CustomTooltip {...props} />}
+          tooltipCursor={{ fill: CHART_COLORS.CURSOR }}
+        >
+          <Bar dataKey="count" radius={[0, 6, 6, 0]} maxBarSize={22}>
+            {data.map((d) => (
+              <Cell
+                key={d.pair}
+                fill={`hsla(${271 - data.indexOf(d) * 10}, 80%, ${60 - data.indexOf(d) * 1.5}%, 0.85)`}
+              />
+            ))}
+          </Bar>
+        </VerticalBarChartShell>
       </div>
 
       <div className="grid grid-cols-3 sm:grid-cols-5 gap-2">

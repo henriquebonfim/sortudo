@@ -1,10 +1,9 @@
-import { PieSliceTooltip } from '@/features/analytics/components/charts/chart-tooltips';
+import { PieSummaryChart } from '@/features/analytics/components/charts/shared/PieSummaryChart';
 import { useAnalyticsActions, useNumberProfile } from '@/hooks/use-analytics';
 import { Pagination } from '@/shared/components/ui/Pagination';
 import { CHART_COLORS } from '@/shared/styles/chart-colors';
 import { useLotteryMeta } from '@/store/selectors';
 import { useEffect, useMemo, useState } from 'react';
-import { Cell, Label, Legend, Pie, PieChart, ResponsiveContainer, Tooltip } from 'recharts';
 
 export function ConsecutiveOverlapChart() {
   const meta = useLotteryMeta();
@@ -46,55 +45,20 @@ export function ConsecutiveOverlapChart() {
   }
 
   return (
-    <div className="p-4 flex flex-col items-center">
-      <div className="w-full h-48">
-        <ResponsiveContainer width="100%" height="100%">
-          <PieChart>
-            <Pie
-              data={chartData}
-              cx="50%"
-              cy="50%"
-              innerRadius="58%"
-              outerRadius="80%"
-              paddingAngle={2}
-              dataKey="value"
-              stroke="none"
-            >
-              {chartData.map((entry, index) => (
-                <Cell key={`cell-${index}`} fill={entry.color} />
-              ))}
-              <Label
-                value={profile.gameOverlaps.totalWithOverlap}
-                position="center"
-                className="fill-foreground font-display font-bold text-xl"
-                content={({ viewBox }) => {
-                  const { cx, cy } = (viewBox as { cx: number; cy: number }) || { cx: 0, cy: 0 };
-                  return (
-                    <text x={cx} y={cy} textAnchor="middle" dominantBaseline="central">
-                      <tspan
-                        x={cx}
-                        y={cy - 4}
-                        className="fill-foreground font-display font-bold text-2xl"
-                      >
-                        {profile.gameOverlaps.totalWithOverlap}
-                      </tspan>
-                      <tspan
-                        x={cx}
-                        y={cy + 16}
-                        className="fill-muted-foreground text-[10px] font-mono uppercase tracking-widest"
-                      >
-                        Jogos
-                      </tspan>
-                    </text>
-                  );
-                }}
-              />
-            </Pie>
-            <Tooltip content={(props) => <PieSliceTooltip {...props} />} />
-            <Legend wrapperStyle={{ fontSize: '10px', bottom: '-10px' }} />
-          </PieChart>
-        </ResponsiveContainer>
-      </div>
+    <div className="flex flex-col items-center w-full">
+      <PieSummaryChart
+        chartData={chartData}
+        centerContent={
+          <>
+            <span className="text-foreground font-display font-bold text-2xl">
+              {profile.gameOverlaps.totalWithOverlap}
+            </span>
+            <span className="text-muted-foreground text-[10px] font-mono uppercase tracking-widest">
+              Jogos
+            </span>
+          </>
+        }
+      />
 
       {profile?.overlapHistory && profile.overlapHistory.length > 0 && (
         <div className="w-full mt-8">

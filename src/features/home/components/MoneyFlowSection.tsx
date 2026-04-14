@@ -211,7 +211,7 @@ function MoneyFlowChart({ distributionData, expectedStats }: MoneyFlowChartProps
   );
 }
 
-export function MoneyFlowList({ data }: { data: DistributionItem[] }) {
+function MoneyFlowList({ data }: { data: DistributionItem[] }) {
   return (
     <div className="glass-card p-6 h-full">
       <dl className="space-y-4 pr-2">

@@ -42,7 +42,6 @@ import {
 import { ToastContainer } from '@/shared/components/ui/Toast';
 import { ANALYSIS_CONFIG, MAX_LOTTERY_NUMBER } from '@/shared/constants';
 import { useToast } from '@/shared/hooks/useToast';
-import { LotteryStats } from '@/shared/types';
 import { cn } from '@/shared/utils';
 import {
   useDataSource,
@@ -118,7 +117,9 @@ interface KpiCardProps {
   delay?: number;
 }
 
-const getNumbersChapter = (stats?: LotteryStats | null): Chapter => ({
+type AnalyticsStats = NonNullable<ReturnType<typeof useLotteryFullStats>>;
+
+const getNumbersChapter = (stats?: AnalyticsStats | null): Chapter => ({
   id: 'numeros',
   icon: <Hash className="w-4 h-4" />,
   title: 'Números',
@@ -136,7 +137,25 @@ const getNumbersChapter = (stats?: LotteryStats | null): Chapter => ({
       className: 'md:col-span-2 lg:col-span-3',
       component: <FrequencyAnalysisGroup />,
     },
-
+    {
+      id: 'winner-records',
+      title: 'Recordes de Ganhadores',
+      subtitle: 'Top sorteios com mais acertos simultâneos',
+      type: 'Lista',
+      insight: `O recorde histórico é de ${stats?.topJackpotWinners?.[0]?.winners || 0} ganhadores simultâneos na Sena — o que diluiu drasticamente o prêmio individual naquele sorteio.`,
+      note: 'Ocorre em bolões, números muito populares, aleatórios ou visuais, que são os mais sorteados.',
+      component: <TopJackpotWinnersChart />,
+    },
+    {
+      id: 'all-winner-list',
+      title: 'Lista de Ganhadores',
+      subtitle: 'Todos os sorteios com mais de 1 ganhador',
+      type: 'Lista',
+      insight: `O histórico de ganhadores é de ${stats?.topJackpotWinners?.length || 0} sorteios com mais de 1 ganhador.`,
+      note: 'Ocorre quando números muito populares, sequenciados ou visuais são sorteados.',
+      className: 'md:col-span-2 lg:col-span-2',
+      component: <AllJackpotWinnersChart />,
+    },
     {
       id: 'gap-analysis',
       title: 'Números Atrasados',
@@ -169,25 +188,7 @@ const getNumbersChapter = (stats?: LotteryStats | null): Chapter => ({
       className: 'md:col-span-2 lg:col-span-1',
       component: <NumberProfileChart />,
     },
-    {
-      id: 'winner-records',
-      title: 'Recordes de Ganhadores',
-      subtitle: 'Top sorteios com mais acertos simultâneos',
-      type: 'Lista',
-      insight: `O recorde histórico é de ${stats?.topJackpotWinners?.[0]?.winners || 0} ganhadores simultâneos na Sena — o que diluiu drasticamente o prêmio individual naquele sorteio.`,
-      note: 'Ocorre em bolões, números muito populares, aleatórios ou visuais, que são os mais sorteados.',
-      component: <TopJackpotWinnersChart />,
-    },
-    {
-      id: 'all-winner-list',
-      title: 'Lista de Ganhadores',
-      subtitle: 'Todos os sorteios com mais de 1 ganhador',
-      type: 'Lista',
-      insight: `O histórico de ganhadores é de ${stats?.topJackpotWinners?.length || 0} sorteios com mais de 1 ganhador.`,
-      note: 'Ocorre quando números muito populares, sequenciados ou visuais são sorteados.',
-      className: 'md:col-span-2 lg:col-span-2',
-      component: <AllJackpotWinnersChart />,
-    },
+
     {
       id: 'prize-tiers',
       title: 'Distribuição por Faixa',
@@ -223,7 +224,7 @@ const getNumbersChapter = (stats?: LotteryStats | null): Chapter => ({
   ],
 });
 
-const getProbabilityChapter = (_stats?: LotteryStats | null): Chapter => ({
+const getProbabilityChapter = (): Chapter => ({
   id: 'probability',
   icon: <PieChart className="w-4 h-4" />,
   title: 'Probabilidade',
@@ -325,7 +326,7 @@ const getProbabilityChapter = (_stats?: LotteryStats | null): Chapter => ({
   ],
 });
 
-const getTemporalChapter = (stats?: LotteryStats | null): Chapter => ({
+const getTemporalChapter = (stats?: AnalyticsStats | null): Chapter => ({
   id: 'time-series',
   icon: <TrendingUp className="w-4 h-4" />,
   title: 'Temporalidade',
@@ -413,7 +414,7 @@ function downloadAsJson(data: unknown, fileName: string) {
   URL.revokeObjectURL(url);
 }
 
-function buildChapters(stats?: LotteryStats | null): Chapter[] {
+function buildChapters(stats?: AnalyticsStats | null): Chapter[] {
   return CHAPTER_FACTORIES.map((factory) => factory(stats));
 }
 

@@ -1,6 +1,5 @@
 import { SOURCES_LIST } from '@/features/about/constants';
 import { NavigatorExtended } from '@/features/about/types';
-import { useLotteryMeta } from '@/store/selectors';
 import { motion } from 'framer-motion';
 import {
   CheckCircle2,
@@ -34,7 +33,7 @@ function SuggestedFeaturesPanel() {
       icon: <Globe className="w-5 h-5" />,
       title: 'Comparação entre Loterias',
       description:
-        'Compare probabilidades, EV e ROI histórico da Mega-Sena com Quina, Timemania, Lotofácil e loterias internacionais como Powerball.',
+        'Compare probabilidades, EV e ROI histórico da Mega-Sena com Quina, Timemania, Lotofácil e outras loterias.',
       tag: 'Comparativo',
       color: 'from-green-500/20 to-emerald-500/10 border-green-500/30',
     },
@@ -73,19 +72,6 @@ function SuggestedFeaturesPanel() {
     </div>
   );
 }
-
-const ShowDeviceInfo = () => {
-  const nav = navigator as NavigatorExtended;
-  return (
-    <ul className="text-xs text-muted-foreground leading-relaxed mt-4">
-      <li>User Status: {nav.onLine ? 'Online' : 'Offline'}</li>
-      <li>User CPU: {nav.hardwareConcurrency}</li>
-      <li>User RAM: {nav.deviceMemory}</li>
-      <li>User Language: {nav.language}</li>
-      <li>User Agent: {nav.userAgent}</li>
-    </ul>
-  );
-};
 
 const GithubIcon = ({ className }: { className?: string }) => (
   <svg
@@ -135,7 +121,7 @@ const STEPS = [
 
 function DataParsingProcessChart() {
   const [activeStep, setActiveStep] = useState(0);
-  const meta = useLotteryMeta();
+  const nav = navigator as NavigatorExtended;
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -146,6 +132,9 @@ function DataParsingProcessChart() {
 
   return (
     <div className="glass-card p-6 overflow-hidden">
+      <h3 className="text-xl font-mono text-muted-foreground mb-12 text-center uppercase tracking-[0.3em] font-bold">
+        Fluxo de Processamento de Dados
+      </h3>
       <div className="relative space-y-8">
         {/* Progress Line */}
         <div className="absolute left-6 top-8 bottom-8 w-0.5 bg-border sm:left-1/2 sm:-translate-x-1/2 sm:w-full sm:h-0.5 sm:top-6 sm:bottom-auto hidden sm:block" />
@@ -202,13 +191,12 @@ function DataParsingProcessChart() {
           <div className="flex items-center gap-2 px-2 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20">
             <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
             <span className="text-[10px] text-emerald-400 font-mono uppercase tracking-wider">
-              Processamento Local Ativo
+              CPU: {nav.hardwareConcurrency} núcleos - RAM: {nav.deviceMemory} GB
             </span>
           </div>
-
           <p className="text-[10px] text-muted-foreground italic max-w-[200px] text-center sm:text-right">
-            Seu navegador está processando {meta.totalGames.toLocaleString('pt-BR')} registros em
-            tempo real.
+            * O processamento ocorre localmente para garantir privacidade e performance. Nenhum dado
+            é coletado ou enviado para servidores.
           </p>
         </div>
       </div>
@@ -217,6 +205,19 @@ function DataParsingProcessChart() {
 }
 
 export function About() {
+  const PIX_KEY = '220aeae9-2f05-4d7e-b7c2-217971479d5a';
+  const [isPixCopied, setIsPixCopied] = useState(false);
+
+  const handleCopyPixKey = async () => {
+    try {
+      await navigator.clipboard.writeText(PIX_KEY);
+      setIsPixCopied(true);
+      setTimeout(() => setIsPixCopied(false), 1600);
+    } catch {
+      setIsPixCopied(false);
+    }
+  };
+
   const METHODOLOGY_ITEMS = [
     {
       icon: <Database className="w-6 h-6" />,
@@ -251,7 +252,7 @@ export function About() {
           </h1>
           <p className="text-xl text-muted-foreground leading-relaxed">
             O Sortudo é uma ferramenta de auditoria cidadã que processa décadas de dados oficiais
-            para revelar a realidade matemática por trás dos sonhos.
+            para revelar a realidade matemática dos números premiados.
           </p>
         </motion.div>
 
@@ -278,78 +279,165 @@ export function About() {
             initial={{ opacity: 0, scale: 0.98 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
-            className="bg-[#0a0a0c] border border-white/10 rounded-[40px] p-8 md:p-12 shadow-3xl"
+            className="bg-[#0a0a0c] border border-white/10 rounded-[40px] p-12 shadow-3xl"
           >
-            <h3 className="text-sm font-mono text-muted-foreground mb-12 text-center uppercase tracking-[0.3em] font-bold">
-              Fluxo de Processamento de Dados
-            </h3>
-            <div className="h-[400px] w-full">
-              <DataParsingProcessChart />
-              <p className="text-xs text-muted-foreground/50 text-center mt-12 italic">
-                * O processamento ocorre localmente para garantir privacidade e performance.
-              </p>
-            </div>
-
-            <code className="text-muted-foreground leading-relaxed text-xs">
-              <ShowDeviceInfo />
-            </code>
-          </motion.div>
-
-          {/* Open Source & Sources */}
-          <div className="grid gap-8">
-            <div className="glass-card p-10 rounded-[32px] space-y-6">
-              <div className="flex items-center gap-3 mb-2">
-                <Shield className="w-6 h-6 text-success" />
-                <h2 className="text-2xl font-display font-bold">Fontes Oficiais</h2>
+            <div className="grid gap-8 ">
+              <div className=" w-full">
+                <DataParsingProcessChart />
               </div>
-              <p className="text-muted-foreground leading-relaxed">
-                Utilizamos exclusivamente dados públicos fornecidos pela CAIXA Econômica Federal.
-              </p>
-              <div className="space-y-3 max-h-[160px] overflow-y-auto pr-4 scrollbar-thin">
-                {SOURCES_LIST.map((source, i) => (
+              {/* Open Source & Sources */}
+              <div className="glass-card p-10 rounded-[32px] space-y-6">
+                <div className="flex items-center gap-3 mb-2">
+                  <Shield className="w-6 h-6 text-success" />
+                  <h2 className="text-2xl font-display font-bold">Fontes Oficiais</h2>
+                </div>
+                <p className="text-muted-foreground leading-relaxed">
+                  Utilizamos exclusivamente dados públicos fornecidos pela CAIXA Econômica Federal.
+                </p>
+                <div className="space-y-3 max-h-[160px] overflow-y-auto pr-4 scrollbar-thin">
+                  {SOURCES_LIST.map((source, i) => (
+                    <a
+                      key={i}
+                      href={source}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center justify-between p-3 rounded-xl bg-white/5 border border-white/5 hover:border-white/20 hover:bg-white/10 transition-all group"
+                    >
+                      <span className="text-xs font-mono text-muted-foreground group-hover:text-foreground transition-colors truncate">
+                        {source.split('/').pop()}
+                      </span>
+                      <ExternalLink className="w-3 h-3 text-muted-foreground group-hover:text-primary transition-all" />
+                    </a>
+                  ))}
+                </div>
+              </div>
+
+              <div className="glass-card p-10 rounded-[32px] space-y-6">
+                <div className="flex items-center gap-3 mb-2">
+                  <Code2 className="w-6 h-6 text-primary" />
+                  <h2 className="text-2xl font-display font-bold">Código Aberto</h2>
+                </div>
+                <p className="text-muted-foreground leading-relaxed">
+                  Acreditamos que algoritmos de loteria devem ser auditáveis. Por isso, 100% do
+                  nosso código está disponível no GitHub sob licença MIT.
+                </p>
+
+                <p className="text-muted-foreground leading-relaxed">
+                  Confira as sugestões de melhorias e novas funcionalidades que planejamos para o
+                  Sortudo.
+                </p>
+                <SuggestedFeaturesPanel />
+                <div className="flex flex-wrap gap-4 pt-2">
                   <a
-                    key={i}
-                    href={source}
+                    href="https://github.com/henriquebonfim/sortudo"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="flex items-center justify-between p-3 rounded-xl bg-white/5 border border-white/5 hover:border-white/20 hover:bg-white/10 transition-all group"
+                    className="flex items-center gap-2 px-6 py-3 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all font-bold text-sm"
                   >
-                    <span className="text-xs font-mono text-muted-foreground group-hover:text-foreground transition-colors truncate">
-                      {source.split('/').pop()}
-                    </span>
-                    <ExternalLink className="w-3 h-3 text-muted-foreground group-hover:text-primary transition-all" />
+                    <GithubIcon className="w-4 h-4" /> Ver no GitHub
                   </a>
-                ))}
+                </div>
+              </div>
+
+              <div className="glass-card p-10 rounded-[32px] space-y-6">
+                <div className="flex items-center gap-3 mb-2">
+                  <Shield className="w-6 h-6 text-amber-400" />
+                  <h2 className="text-2xl font-display font-bold">Apoie Este Projeto</h2>
+                </div>
+                <p className="text-muted-foreground leading-relaxed">
+                  Se o Sortudo te ajuda de alguma forma, você pode apoiar a manutenção do projeto
+                  com uma contribuição via Buy Me a Coffee ou PIX.
+                </p>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <details
+                      name="support-option"
+                      className="group rounded-2xl border border-white/10 bg-white/5"
+                    >
+                      <summary className="flex list-none cursor-pointer items-center justify-between gap-3 p-4 [&::-webkit-details-marker]:hidden">
+                        <h3 className="text-sm font-semibold text-foreground">Buy Me a Coffee</h3>
+                        <div className="flex items-center gap-3">
+                          <span className="text-[10px] font-mono uppercase tracking-wider text-amber-300 bg-amber-500/10 border border-amber-500/20 px-2 py-0.5 rounded-full">
+                            Débito/Crédito
+                          </span>
+                          <span className="text-xs text-muted-foreground transition-transform group-open:rotate-180">
+                            ▾
+                          </span>
+                        </div>
+                      </summary>
+                      <div className="space-y-3 border-t border-white/10 px-4 pb-4 pt-2">
+                        <div className="rounded-xl overflow-hidden border border-white/10 bg-white p-2">
+                          <img
+                            src="/assets/qrcode_bmc.png"
+                            alt="QR Code para apoiar no Buy Me a Coffee"
+                            className="w-full h-auto"
+                            loading="lazy"
+                          />
+                        </div>
+                        <p className="text-xs text-muted-foreground leading-relaxed text-center">
+                          Escaneie com a câmera do celular para abrir o link.
+                        </p>
+                      </div>
+                    </details>
+                  </div>
+                  <div>
+                    <details
+                      name="support-option"
+                      className="group rounded-2xl border border-white/10 bg-white/5"
+                    >
+                      <summary className="flex list-none cursor-pointer items-center justify-between gap-3 p-4 [&::-webkit-details-marker]:hidden">
+                        <h3 className="text-sm font-semibold text-foreground">
+                          Transferência via PIX
+                        </h3>
+                        <div className="flex items-center gap-3">
+                          <span className="text-[10px] font-mono uppercase tracking-wider text-emerald-300 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-full">
+                            PIX
+                          </span>
+                          <span className="text-xs text-muted-foreground transition-transform group-open:rotate-180">
+                            ▾
+                          </span>
+                        </div>
+                      </summary>
+                      <div className="space-y-3 border-t border-white/10 px-4 pb-4 pt-2">
+                        <div className="rounded-xl overflow-hidden border border-white/10 bg-white p-2">
+                          <img
+                            src="/assets/qrcode_pix.png"
+                            alt="QR Code para apoiar via PIX"
+                            className="w-full h-auto"
+                            loading="lazy"
+                          />
+                        </div>
+                        <p className="text-xs text-center text-muted-foreground leading-relaxed">
+                          Escaneie com o app do seu banco para fazer uma doação via PIX ou copie a
+                          chave abaixo.
+                        </p>
+                        <button
+                          type="button"
+                          onClick={handleCopyPixKey}
+                          className="w-full text-xs text-muted-foreground bg-muted/50 border border-muted/20 p-2 rounded monospace block text-center transition-colors hover:bg-muted/70"
+                          aria-label="Copiar chave PIX"
+                          title="Clique para copiar a chave PIX"
+                        >
+                          {PIX_KEY}
+                        </button>
+                        <p
+                          className={`text-[10px] text-center transition-opacity ${
+                            isPixCopied
+                              ? 'text-emerald-400 opacity-100'
+                              : 'text-muted-foreground/60 opacity-70'
+                          }`}
+                          aria-live="polite"
+                        >
+                          {isPixCopied ? 'Chave PIX copiada!' : 'Clique na chave para copiar'}
+                        </p>
+                      </div>
+                    </details>
+                  </div>
+                </div>
               </div>
             </div>
-
-            <div className="glass-card p-10 rounded-[32px] space-y-6">
-              <div className="flex items-center gap-3 mb-2">
-                <Code2 className="w-6 h-6 text-primary" />
-                <h2 className="text-2xl font-display font-bold">Código Aberto</h2>
-              </div>
-              <p className="text-muted-foreground leading-relaxed">
-                Acreditamos que algoritmos de loteria devem ser auditáveis. Por isso, 100% do nosso
-                código está disponível no GitHub sob licença MIT.
-              </p>
-
-              <p className="text-muted-foreground leading-relaxed">
-                Confira as sugestões de melhorias e novas funcionalidades que planejamos para o
-                Sortudo.
-              </p>
-              <SuggestedFeaturesPanel />
-              <div className="flex flex-wrap gap-4 pt-2">
-                <a
-                  href="https://github.com/henriquebonfim/sortudo"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-2 px-6 py-3 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all font-bold text-sm"
-                >
-                  <GithubIcon className="w-4 h-4" /> Ver no GitHub
-                </a>
-              </div>
-            </div>
-          </div>
+          </motion.div>
         </div>
       </section>
     </div>

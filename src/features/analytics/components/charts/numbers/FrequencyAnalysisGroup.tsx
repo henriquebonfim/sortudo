@@ -1,20 +1,11 @@
 import { ChartTooltip } from '@/features/analytics/components/charts/shared/ChartTooltip';
+import { VerticalBarChartShell } from '@/features/analytics/components/charts/shared/VerticalBarChartShell';
 import { LoadingBalls } from '@/shared/components/LoadingBalls';
 import { Button } from '@/shared/components/ui/Button';
 import { CHART_COLORS } from '@/shared/styles/chart-colors';
 import { useFrequencies, useLotteryMeta, useLotteryMetadata } from '@/store/selectors';
 import { MouseEvent, useEffect, useMemo, useRef, useState } from 'react';
-import {
-  Bar,
-  BarChart,
-  CartesianGrid,
-  Cell,
-  LabelList,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from 'recharts';
+import { Bar, Cell, LabelList } from 'recharts';
 
 interface BubbleChartProps {
   filter: FilterMode;
@@ -33,6 +24,22 @@ interface BubbleNode {
 interface FrequencyBarChartProps {
   filter: FilterMode;
 }
+
+interface FrequencyRankingEntry {
+  number: number;
+  frequency: number;
+  percentage: number;
+  position: number;
+}
+
+interface FrequencyChartRow extends Record<string, unknown> {
+  number: number;
+  ball: string;
+  frequencyValue: number;
+  percentageValue: number;
+  position: number;
+}
+
 type FilterMode = 'top30' | 'bottom30' | 'all';
 
 const FILTER_OPTIONS: { id: FilterMode; label: string }[] = [
@@ -47,81 +54,13 @@ const LEGEND_ITEMS = [
   { color: CHART_COLORS.BLUE, label: 'Menos sorteados' },
 ];
 
-function FrequencyBarChart({ filter }: FrequencyBarChartProps) {
-  const data = useFrequencies();
-
-  const chartData = useMemo(() => {
-    if (!data?.ranking) return [];
-    const ranking = [...data.ranking];
-    if (filter === 'top30') return ranking.slice(0, 30);
-    if (filter === 'bottom30') return ranking.slice(-30).reverse();
-    return ranking;
-  }, [data, filter]);
-
-  if (!data?.ranking) {
-    return <div className="h-64 animate-pulse bg-muted/20 rounded-xl" />;
-  }
-
-  return (
-    <div className=" ">
-      <div className="p-4">
-        <ResponsiveContainer width="100%" height={500}>
-          <BarChart
-            data={chartData}
-            layout="vertical"
-            margin={{ left: 8, right: 48, top: 4, bottom: 4 }}
-          >
-            <CartesianGrid
-              strokeDasharray="3 3"
-              stroke={CHART_COLORS.GRID_STROKE}
-              horizontal={false}
-            />
-            <XAxis
-              type="number"
-              tick={{ fontSize: 11, fill: CHART_COLORS.TICK_LABEL }}
-              domain={['dataMin - 10', 'dataMax + 10']}
-            />
-            <YAxis
-              dataKey="number"
-              type="category"
-              tick={{ fontSize: 12, fill: CHART_COLORS.TICK_LABEL, fontFamily: 'monospace' }}
-              width={32}
-            />
-            <Tooltip
-              content={(props) => <ChartTooltip {...props} />}
-              cursor={{ fill: CHART_COLORS.CURSOR }}
-            />
-            <Bar dataKey="frequency" radius={[0, 6, 6, 0]} maxBarSize={28}>
-              {chartData.map((entry) => (
-                <Cell
-                  key={entry.number}
-                  fill={freqToColor(entry.frequency, data.min.frequency, data.max.frequency)}
-                />
-              ))}
-              <LabelList
-                dataKey="percentage"
-                position="right"
-                formatter={(v: number) => `${v}%`}
-                style={{
-                  fontSize: 10,
-                  fill: CHART_COLORS.TICK_LABEL,
-                  fontFamily: 'monospace',
-                }}
-              />
-            </Bar>
-          </BarChart>
-        </ResponsiveContainer>
-      </div>
-    </div>
-  );
-}
-
 function freqToColor(freq: number, min: number, max: number): string {
-  const t = (freq - min) / (max - min || 1);
-  if (t < 0.25) return CHART_COLORS.BLUE;
-  if (t < 0.5) return CHART_COLORS.EMERALD;
-  if (t < 0.75) return CHART_COLORS.AMBER;
-  return CHART_COLORS.RED;
+  const palette = [CHART_COLORS.BLUE, CHART_COLORS.EMERALD, CHART_COLORS.AMBER, CHART_COLORS.RED];
+  const ratio = (freq - min) / (max - min || 1);
+  const clamped = Math.max(0, Math.min(0.9999, ratio));
+  const index = Math.floor(clamped * palette.length);
+
+  return palette[index];
 }
 
 function applyPhysics(nodes: BubbleNode[], width: number, height: number) {
@@ -185,6 +124,92 @@ function renderNodes(ctx: CanvasRenderingContext2D, nodes: BubbleNode[]) {
       ctx.fillText(String(n.frequency), n.x, n.y + 10);
     }
   }
+}
+
+function FrequencyBarChart({ filter }: FrequencyBarChartProps) {
+  const data = useFrequencies();
+
+  const chartData = useMemo(() => {
+    if (!data?.ranking) return [];
+
+    const normalizedRanking = (data.ranking as FrequencyRankingEntry[])
+      .map((entry, index): FrequencyChartRow => {
+        const parsedNumber = Number(entry.number);
+        const parsedFrequency = Number(entry.frequency);
+        const parsedPercentage = Number(entry.percentage);
+
+        return {
+          number: Number.isFinite(parsedNumber) ? parsedNumber : index + 1,
+          ball: String(Number.isFinite(parsedNumber) ? parsedNumber : index + 1).padStart(2, '0'),
+          frequencyValue: Number.isFinite(parsedFrequency) ? parsedFrequency : 0,
+          percentageValue: Number.isFinite(parsedPercentage) ? parsedPercentage : 0,
+          position: Number.isFinite(Number(entry.position)) ? Number(entry.position) : index + 1,
+        };
+      })
+      .sort((a, b) => b.frequencyValue - a.frequencyValue || a.number - b.number);
+
+    if (filter === 'top30') return normalizedRanking.slice(0, 30);
+    if (filter === 'bottom30') return normalizedRanking.slice(-30).reverse();
+    return normalizedRanking;
+  }, [data, filter]);
+
+  const [minFrequency, maxFrequency] = useMemo(() => {
+    if (!chartData.length) return [0, 1] as const;
+    const values = chartData.map((entry) => entry.frequencyValue);
+    return [Math.min(...values), Math.max(...values)] as const;
+  }, [chartData]);
+
+  if (!data?.ranking) {
+    return <div className="h-64 animate-pulse bg-muted/20 rounded-xl" />;
+  }
+
+  return (
+    <div className="p-4">
+      <VerticalBarChartShell
+        data={chartData}
+        height={500}
+        margin={{ left: 8, right: 48, top: 4, bottom: 4 }}
+        xAxisTick={{ fontSize: 11, fill: CHART_COLORS.TICK_LABEL }}
+        xAxisDomain={[Math.max(0, minFrequency - 10), maxFrequency + 10]}
+        yAxisDataKey="ball"
+        yAxisTick={{ fontSize: 12, fill: CHART_COLORS.TICK_LABEL, fontFamily: 'monospace' }}
+        yAxisWidth={32}
+        gridHorizontal={false}
+        tooltipContent={({ active, payload, label }) => (
+          <ChartTooltip
+            active={active}
+            payload={payload?.map((entry) => ({
+              payload: entry.payload as Record<string, unknown> | undefined,
+              name: entry.name,
+              value: entry.value,
+              color: typeof entry.color === 'string' ? entry.color : undefined,
+            }))}
+            label={label}
+          />
+        )}
+        tooltipCursor={{ fill: CHART_COLORS.CURSOR }}
+      >
+        <Bar dataKey="frequencyValue" radius={[0, 6, 6, 0]} maxBarSize={28}>
+          {chartData.map((entry) => (
+            <Cell
+              key={`${entry.number}-${entry.position}`}
+              fill={freqToColor(entry.frequencyValue, minFrequency, maxFrequency)}
+            />
+          ))}
+          <LabelList
+            dataKey="percentageValue"
+            position="right"
+            formatter={(v: number) => `${Number(v).toFixed(1)}%`}
+            style={{
+              fontSize: 10,
+              fill: CHART_COLORS.TICK_LABEL,
+              fontFamily: 'monospace',
+            }}
+          />
+        </Bar>
+      </VerticalBarChartShell>
+    </div>
+  );
 }
 
 function BubbleChart({ filter }: BubbleChartProps) {

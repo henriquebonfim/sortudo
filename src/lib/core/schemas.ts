@@ -25,7 +25,7 @@ export const MetadataSchema = z.object({
   lastGameDate: z.string(),
 });
 
-export const FrequenciesSchema = z.object({
+const FrequenciesSchema = z.object({
   frequencies: z.record(z.string(), z.number()),
   ranking: z.array(
     z.object({
@@ -213,4 +213,13 @@ export const LotteryStatsSchema = z.object({
       }),
     })
     .optional(),
+});
+
+export const SearchResultSchema = z.object({
+  combination: z.array(z.number().min(1).max(60)).length(6),
+  jackpot: z.array(GameSchema),
+  fiveHits: z.array(GameSchema),
+  fourHits: z.array(GameSchema),
+  threeHits: z.array(GameSchema),
+  totalAnalyzed: z.number().int().nonnegative(),
 });

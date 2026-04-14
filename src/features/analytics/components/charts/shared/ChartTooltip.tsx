@@ -16,8 +16,8 @@ interface ChartTooltipProps {
 
 interface PayloadEntry {
   payload?: Record<string, unknown>;
-  name?: string | number;
-  value?: string | number;
+  name?: unknown;
+  value?: unknown;
   color?: string;
 }
 

@@ -1,5 +1,7 @@
+import { PrizeTimelineChart } from '@/features/analytics/components/charts/shared/PrizeTimelineChart';
 import { useNotableGame } from '@/hooks/use-home';
 import { REVENUE_ALLOCATION } from '@/shared/constants';
+import { usePrizeTimelineInteraction } from '@/shared/hooks/usePrizeTimelineInteraction';
 import { CHART_COLORS } from '@/shared/styles/chart-colors';
 import { useLotteryMeta, usePrizeEvolution } from '@/store/selectors';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -14,11 +16,12 @@ import {
   TrendingUp,
   Trophy,
 } from 'lucide-react';
-import { memo, useCallback, useMemo, useState } from 'react';
+import { memo, useState } from 'react';
 import { Link } from 'react-router-dom';
-import type { TooltipProps } from 'recharts';
+import type { TooltipContentProps } from 'recharts';
 import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from 'recharts';
 
+import { AllJackpotWinnersChart } from '@/features/analytics/components/charts/numbers/AllJackpotWinnersChart';
 import {
   duration,
   formatCompactCurrency,
@@ -26,7 +29,6 @@ import {
   spring,
   tooltipStyle,
 } from '@/shared/utils';
-import { Bar, CartesianGrid, ComposedChart, Line, ReferenceLine, XAxis, YAxis } from 'recharts';
 
 const VISIBLE_COUNT = 5;
 const breakdownData = [
@@ -119,10 +121,6 @@ interface PrizeDataPoint {
   megaDaVirada: boolean;
 }
 
-interface ChartClickState {
-  activePayload?: Array<{ payload?: PrizeDataPoint }>;
-}
-
 interface Milestone {
   year: number;
   title: string;
@@ -172,7 +170,7 @@ const CustomTooltip = memo(function CustomTooltip({
   active,
   payload,
   label,
-}: TooltipProps<number, string>) {
+}: Partial<TooltipContentProps<number, string>>) {
   if (!active || !payload?.length) return null;
 
   const isMilestone = MILESTONE_YEARS.has(Number(label));
@@ -245,29 +243,12 @@ function TimelineSkeleton() {
   );
 }
 
-export function LotteryHistoryTimeline() {
+function LotteryHistoryTimeline() {
   const meta = useLotteryMeta();
   const prizeEvolution = usePrizeEvolution();
 
-  const [selectedYear, setSelectedYear] = useState<number | null>(null);
-  const [visibleSeries, setVisibleSeries] = useState({
-    maxPrize: true,
-    totalDistributed: true,
-    totalRevenue: true,
-  });
-
-  const toggleSeries = useCallback((key: keyof typeof visibleSeries) => {
-    setVisibleSeries((prev) => ({ ...prev, [key]: !prev[key] }));
-  }, []);
-
-  const data = useMemo(() => prizeEvolution?.filter((d) => d.maxPrize > 0) ?? [], [prizeEvolution]);
-
-  const handleClick = useCallback((state: unknown) => {
-    const entries = (state as ChartClickState | undefined)?.activePayload;
-    const year = entries?.[0]?.payload?.year;
-    if (typeof year !== 'number') return;
-    setSelectedYear((prev) => (prev === year ? null : year));
-  }, []);
+  const { data, selectedYear, setSelectedYear, visibleSeries, toggleSeries, handleClick } =
+    usePrizeTimelineInteraction(prizeEvolution);
 
   if (!meta || !prizeEvolution || data.length === 0) {
     return <TimelineSkeleton />;
@@ -328,139 +309,31 @@ export function LotteryHistoryTimeline() {
 
       {/* Right: Dual Axis Composed Chart */}
       <div className="lg:w-2/3 flex flex-col min-h-[400px]">
-        <div className="flex-1 w-full min-h-[400px]">
-          <ResponsiveContainer width="100%" height="100%" style={{ outline: 'none' }}>
-            <ComposedChart
-              data={data}
-              margin={{ top: 10, right: 0, bottom: 0, left: -20 }}
-              onClick={handleClick}
-              style={{ cursor: 'pointer', outline: 'none' }}
-            >
-              <CartesianGrid
-                strokeDasharray="3 3"
-                stroke={CHART_COLORS.GRID_STROKE}
-                vertical={false}
-              />
-              <XAxis
-                dataKey="year"
-                tick={{ fontSize: 11, fill: CHART_COLORS.TICK_LABEL, fontWeight: '600' }}
-                axisLine={false}
-                tickLine={false}
-                tickMargin={12}
-                interval="preserveStartEnd"
-              />
-              {/* Revenue Axis replacing Prizes Axis */}
-              <YAxis
-                domain={['auto', 'auto']}
-                tickFormatter={formatCompactCurrency}
-                tick={{ fontSize: 11, fill: CHART_COLORS.TICK_LABEL, fontStretch: 'condensed' }}
-                axisLine={false}
-                tickLine={false}
-                tickMargin={8}
-                width={80}
-              />
-
-              <Tooltip content={<CustomTooltip />} cursor={{ fill: CHART_COLORS.CURSOR }} />
-
-              {/* Revenue mapped to default axis */}
-              {visibleSeries.totalRevenue && (
-                <Bar
-                  dataKey="totalRevenue"
-                  name="Arrecadação"
-                  fill={CHART_COLORS.EMERALD}
-                  radius={[4, 4, 0, 0]}
-                  maxBarSize={40}
-                >
-                  {data.map((entry, index) => (
-                    <Cell
-                      key={`cell-${index}`}
-                      fill={CHART_COLORS.EMERALD}
-                      opacity={selectedYear === entry.year ? 0.35 : 0.12}
-                      className="transition-opacity duration-300"
-                    />
-                  ))}
-                </Bar>
-              )}
-
-              {visibleSeries.totalDistributed && (
-                <Line
-                  type="monotone"
-                  dataKey="totalDistributed"
-                  name="Total distribuídos"
-                  stroke={CHART_COLORS.BLUE}
-                  strokeWidth={2}
-                  strokeDasharray="4 4"
-                  dot={false}
-                  activeDot={{ r: 5, strokeWidth: 0, fill: CHART_COLORS.BLUE }}
-                />
-              )}
-              {visibleSeries.maxPrize && (
-                <Line
-                  type="monotone"
-                  dataKey="maxPrize"
-                  name="Maior Prêmio"
-                  stroke={CHART_COLORS.AMBER}
-                  strokeWidth={3}
-                  dot={false}
-                  activeDot={{ r: 6, strokeWidth: 0, fill: CHART_COLORS.AMBER }}
-                />
-              )}
-
-              {/* Selection Highlight */}
-              {selectedYear != null && (
-                <ReferenceLine
-                  x={selectedYear}
-                  stroke="hsl(var(--primary))"
-                  strokeWidth={2}
-                  strokeOpacity={0.5}
-                />
-              )}
-            </ComposedChart>
-          </ResponsiveContainer>
-        </div>
-
-        {/* Legend */}
-        <div className="flex flex-wrap items-center justify-center gap-6 mt-6 text-xs text-muted-foreground select-none">
-          <button
-            onClick={() => toggleSeries('maxPrize')}
-            className={`flex items-center gap-2 transition-opacity duration-200 outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded ${
-              visibleSeries.maxPrize
-                ? 'opacity-100 hover:opacity-80'
-                : 'opacity-40 hover:opacity-60'
-            }`}
-          >
-            <div className="w-4 h-1 rounded-full" style={{ backgroundColor: CHART_COLORS.AMBER }} />
-            <span>Maior Prêmio</span>
-          </button>
-          <button
-            onClick={() => toggleSeries('totalDistributed')}
-            className={`flex items-center gap-2 transition-opacity duration-200 outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded ${
-              visibleSeries.totalDistributed
-                ? 'opacity-100 hover:opacity-80'
-                : 'opacity-40 hover:opacity-60'
-            }`}
-          >
-            <div
-              className="w-4 h-0.5 border-t-2 border-dashed"
-              style={{ borderColor: CHART_COLORS.BLUE }}
-            />
-            <span>Total distribuídos</span>
-          </button>
-          <button
-            onClick={() => toggleSeries('totalRevenue')}
-            className={`flex items-center gap-2 transition-opacity duration-200 outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded ${
-              visibleSeries.totalRevenue
-                ? 'opacity-100 hover:opacity-80'
-                : 'opacity-40 hover:opacity-60'
-            }`}
-          >
-            <div
-              className="w-3 h-3 rounded"
-              style={{ backgroundColor: CHART_COLORS.EMERALD, opacity: 0.4 }}
-            />
-            <span>Arrecadação Total</span>
-          </button>
-        </div>
+        <PrizeTimelineChart
+          data={data}
+          selectedYear={selectedYear}
+          visibleSeries={visibleSeries}
+          onToggleSeries={toggleSeries}
+          onChartClick={handleClick}
+          tooltipContent={<CustomTooltip />}
+          chartContainerClassName="flex-1 w-full min-h-[400px] h-[400px]"
+          chartStyle={{ cursor: 'pointer', outline: 'none' }}
+          responsiveStyle={{ outline: 'none' }}
+          xAxisInterval="preserveStartEnd"
+          yAxisTick={{ fontSize: 11, fill: CHART_COLORS.TICK_LABEL, fontStretch: 'condensed' }}
+          yAxisTickFormatter={formatCompactCurrency}
+          yAxisTickMargin={8}
+          yAxisWidth={80}
+          barSelectedOpacity={0.35}
+          barUnselectedOpacity={0.12}
+          maxPrizeSeriesName="Maior Prêmio"
+          distributedSeriesName="Total distribuídos"
+          distributedLegendLabel="Total distribuídos"
+          revenueSeriesName="Arrecadação"
+          revenueLegendLabel="Arrecadação Total"
+          legendVariant="minimal"
+          selectionStrokeOpacity={0.5}
+        />
       </div>
     </motion.div>
   );
@@ -712,8 +585,12 @@ export function RecordsSection({ id }: { id: string }) {
       </motion.div>
 
       <div className="space-y-12">
-        <LotteryHistoryTimeline />
         <CaseStudy title="Mega Sena da Virada: 2025" />
+        <LotteryHistoryTimeline />
+        <div className="glass-card p-4">
+          <AllJackpotWinnersChart />
+        </div>
+
         <div className="flex justify-center pt-8">
           <Link
             to="/dados"

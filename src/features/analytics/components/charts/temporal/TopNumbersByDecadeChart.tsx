@@ -1,16 +1,8 @@
+import { VerticalBarChartShell } from '@/features/analytics/components/charts/shared/VerticalBarChartShell';
 import { useTemporalFrequency } from '@/hooks/use-analytics';
 import { useLotteryMeta } from '@/store/selectors';
 import { memo, useMemo } from 'react';
-import {
-  Bar,
-  BarChart,
-  CartesianGrid,
-  Legend,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from 'recharts';
+import { Bar, Legend } from 'recharts';
 
 import { CHART_COLORS } from '@/shared/styles/chart-colors';
 
@@ -86,47 +78,35 @@ export function TopNumbersByDecadeChart() {
 
   return (
     <div className="pt-4">
-      <ResponsiveContainer width="100%" height={800}>
-        <BarChart
-          data={groupedData}
-          layout="vertical"
-          margin={{ left: -10, top: 0, bottom: 0, right: 10 }}
-        >
-          <CartesianGrid
-            strokeDasharray="3 3"
-            stroke={CHART_COLORS.GRID_STROKE}
-            horizontal={true}
-            vertical={false}
+      <VerticalBarChartShell
+        data={groupedData}
+        height={800}
+        margin={{ left: -10, top: 0, bottom: 0, right: 10 }}
+        xAxisTick={{ fill: CHART_COLORS.TICK_LABEL, fontSize: 11 }}
+        xAxisAxisLine={false}
+        xAxisTickLine={false}
+        yAxisDataKey="number"
+        yAxisTick={{ fill: '#F8FAFC', fontSize: 11, fontWeight: 600 }}
+        yAxisWidth={45}
+        yAxisAxisLine={false}
+        yAxisTickLine={false}
+        gridHorizontal={true}
+        gridVertical={false}
+        tooltipContent={<CustomTooltip />}
+        tooltipCursor={{ fill: 'rgba(255,255,255,0.03)' }}
+      >
+        <Legend wrapperStyle={{ fontSize: 11, paddingTop: '10px' }} />
+        {data.map((decadeEntry, i) => (
+          <Bar
+            key={decadeEntry.decade}
+            dataKey={decadeEntry.decade}
+            fill={
+              Object.values(CHART_COLORS)[i % Object.keys(CHART_COLORS).length] || CHART_COLORS.BLUE
+            }
+            radius={[0, 4, 4, 0]}
           />
-          <XAxis
-            type="number"
-            tick={{ fill: CHART_COLORS.TICK_LABEL, fontSize: 11 }}
-            axisLine={false}
-            tickLine={false}
-          />
-          <YAxis
-            dataKey="number"
-            type="category"
-            tick={{ fill: '#F8FAFC', fontSize: 11, fontWeight: 600 }}
-            width={45}
-            axisLine={false}
-            tickLine={false}
-          />
-          <Tooltip content={<CustomTooltip />} cursor={{ fill: 'rgba(255,255,255,0.03)' }} />
-          <Legend wrapperStyle={{ fontSize: 11, paddingTop: '10px' }} />
-          {data.map((decadeEntry, i) => (
-            <Bar
-              key={decadeEntry.decade}
-              dataKey={decadeEntry.decade}
-              fill={
-                Object.values(CHART_COLORS)[i % Object.keys(CHART_COLORS).length] ||
-                CHART_COLORS.BLUE
-              }
-              radius={[0, 4, 4, 0]}
-            />
-          ))}
-        </BarChart>
-      </ResponsiveContainer>
+        ))}
+      </VerticalBarChartShell>
     </div>
   );
 }

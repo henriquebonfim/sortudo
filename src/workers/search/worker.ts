@@ -2,29 +2,25 @@ import {
   SearchCombinationResponse,
   SearchCommand,
   SearchCommandType,
+  SearchWorkerRequestSchema,
 } from '@/workers/search/commands';
 import { searchCombination } from '@/workers/search/engine';
-import { createWorkerErrorResponse } from '@/workers/worker-protocol';
+import { registerValidatedWorkerHandler } from '@/workers/worker-runtime';
 
-self.onmessage = async (event: MessageEvent<SearchCommand>) => {
-  try {
-    const { id, type, payload } = event.data;
-
+registerValidatedWorkerHandler<SearchCommand, SearchCombinationResponse>({
+  requestSchema: SearchWorkerRequestSchema,
+  invalidPayloadMessage: 'Invalid search command payload',
+  unknownErrorMessage: 'Unknown search error',
+  handleCommand: async ({ id, type, payload }) => {
     switch (type) {
-      case SearchCommandType.SEARCH_COMBINATION: {
-        const result = await searchCombination(payload.numbers, payload.games);
-        const response: SearchCombinationResponse = {
+      case SearchCommandType.SEARCH_COMBINATION:
+        return {
           id,
           type: SearchCommandType.SEARCH_COMBINATION,
-          payload: result,
+          payload: await searchCombination(payload.numbers, payload.games),
         };
-        self.postMessage(response);
-        break;
-      }
       default:
         throw new Error(`Unknown search command type: ${type}`);
     }
-  } catch (error) {
-    self.postMessage(createWorkerErrorResponse(event.data.id, error, 'Unknown search error'));
-  }
-};
+  },
+});

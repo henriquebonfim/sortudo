@@ -58,7 +58,7 @@ export function MiniBall({ number, className, size = 'md', dimmed = false }: Min
     >
       <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-black/20 via-transparent to-white/30 pointer-events-none" />
 
-      <span className="relative drop-shadow-md pointer-events-none">
+      <span className="relative drop-shadow-md   text-black   text-xs pointer-events-none">
         {String(number).padStart(2, '0')}
       </span>
 

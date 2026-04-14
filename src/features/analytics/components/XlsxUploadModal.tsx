@@ -9,8 +9,8 @@ import {
   DialogTitle,
 } from '@/shared/components/ui/Dialog';
 import { cn, formatDate } from '@/shared/utils';
+import { LotteryParserWorkerClient } from '@/store/lottery';
 import { useGames } from '@/store/selectors';
-import { LotteryParserWorkerClient } from '@/workers/parser';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
   AlertCircle,

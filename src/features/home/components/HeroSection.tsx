@@ -1,46 +1,10 @@
 import { useAggregatedRevenue } from '@/hooks/use-home';
+import { AnimatedCounter } from '@/shared/components/AnimatedCounter';
 import { Button } from '@/shared/components/ui/Button';
 import { spring } from '@/shared/utils';
-import { animate, motion, useMotionValue } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { ArrowDown, BarChart3, Search } from 'lucide-react';
-import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-
-interface AnimatedCounterProps {
-  target: number;
-  duration?: number;
-  decimals?: number;
-}
-
-function AnimatedCounter({ target, duration = 2000, decimals = 0 }: AnimatedCounterProps) {
-  const count = useMotionValue(0);
-  const [displayValue, setDisplayValue] = useState(0);
-
-  useEffect(() => {
-    const controls = animate(count, target, {
-      duration: duration / 1000,
-      ease: 'easeOut',
-    });
-
-    const unsubscribe = count.on('change', (latest) => {
-      setDisplayValue(Number(latest.toFixed(decimals)));
-    });
-
-    return () => {
-      controls.stop();
-      unsubscribe();
-    };
-  }, [target, duration, count, decimals]);
-
-  return (
-    <span className="font-mono tabular-nums">
-      {displayValue.toLocaleString('pt-BR', {
-        minimumFractionDigits: decimals,
-        maximumFractionDigits: decimals,
-      })}
-    </span>
-  );
-}
 
 export function HeroSection({ id }: { id?: string }) {
   const {

@@ -2,9 +2,12 @@ import type { SearchResult } from '@/workers/core/types';
 import {
   SearchCombinationPayload,
   SearchCommand,
+  SearchCommandSchema,
   SearchCommandType,
+  SearchResponseSchema,
 } from '@/workers/search/commands';
 import { FeatureWorkerClient } from '@/workers/worker-client';
+import { createModuleWorker } from '@/workers/worker-runtime';
 
 /**
  * Feature-specific worker client for the Search domain.
@@ -15,8 +18,11 @@ export class SearchWorkerClient extends FeatureWorkerClient<SearchCommand, Searc
 
   // Uses Vite's worker import syntax
   private constructor() {
-    const worker = new Worker(new URL('./worker.ts', import.meta.url), { type: 'module' });
-    super(worker);
+    const worker = createModuleWorker(new URL('./worker.ts', import.meta.url));
+    super(worker, 45000, {
+      commandSchema: SearchCommandSchema,
+      responseSchema: SearchResponseSchema,
+    });
   }
 
   static getInstance(): SearchWorkerClient {

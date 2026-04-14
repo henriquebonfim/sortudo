@@ -1,11 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import { normalizeStateCode, BRAZIL_STATES } from './utils';
+import { BRAZIL_STATES, normalizeStateCode } from '../../../src/workers/core/utils';
 
 describe('normalizeStateCode', () => {
   it('should normalize electronic channel correctly', () => {
-    expect(normalizeStateCode('CANAL ELETRÔNICO')).toBe('ELECT');
-    expect(normalizeStateCode('ELECT')).toBe('ELECT');
-    expect(normalizeStateCode('INTERNET')).toBe('ELECT');
+    expect(normalizeStateCode('CANAL ELETRÔNICO')).toBe('ONLINE');
+    expect(normalizeStateCode('ELECT')).toBe('ONLINE');
+    expect(normalizeStateCode('INTERNET')).toBe('ONLINE');
   });
 
   it('should extract state code from parentheses', () => {

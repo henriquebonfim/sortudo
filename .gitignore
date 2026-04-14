@@ -28,3 +28,9 @@ dist-ssr
 scripts/*.json
 .geminiignore
 tests/coverage
+.agent/tmp/
+
+
+#Ignore vscode AI rules
+.github/instructions/codacy.instructions.md
+.codacy

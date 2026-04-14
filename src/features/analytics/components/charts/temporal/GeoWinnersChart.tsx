@@ -1,21 +1,12 @@
 import { ChartTooltip } from '@/features/analytics/components/charts/shared/ChartTooltip';
+import { VerticalBarChartShell } from '@/features/analytics/components/charts/shared/VerticalBarChartShell';
 import { useGeoWinners } from '@/hooks/use-analytics';
 import { CHART_COLORS } from '@/shared/styles/chart-colors';
 import { useLotteryMeta } from '@/store/selectors';
 import { motion } from 'framer-motion';
 import { BarChart3Icon, MapIcon } from 'lucide-react';
 import { memo, useMemo, useState } from 'react';
-import {
-  Bar,
-  BarChart,
-  CartesianGrid,
-  Cell,
-  LabelList,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from 'recharts';
+import { Bar, Cell, LabelList } from 'recharts';
 
 interface BrazilMapProps {
   data: GeoDataPoint[];
@@ -55,11 +46,11 @@ const STATE_COLORS: Record<string, string> = {
   PB: 'hsl(var(--hot))',
   PE: 'hsl(var(--info) / 0.8)',
   CE: 'hsl(var(--violet))',
-  ELECT: 'hsl(var(--muted-foreground))',
+  ONLINE: 'hsl(var(--muted-foreground))',
 };
 
 const STATE_NAMES: Record<string, string> = {
-  ELECT: 'Canal Eletrônico',
+  ONLINE: 'Canal Eletrônico',
 };
 
 const BRAZIL_STATES_PATH_DATA: Record<string, string> = {
@@ -116,13 +107,13 @@ const RegionSummary = memo(function RegionSummary({ data }: RegionSummaryProps) 
     });
 
     const digitalTotal = data
-      .filter((d) => d.state === 'ELECT')
+      .filter((d) => d.state === 'ONLINE')
       .reduce((sum, d) => sum + d.total, 0);
 
     if (digitalTotal > 0) {
       regions.push({
         name: 'Digital',
-        states: ['ELECT'],
+        states: ['ONLINE'],
         color: CHART_COLORS.SLATE,
         total: digitalTotal,
         percentage: Math.round((digitalTotal / grandTotal) * 1000) / 10,
@@ -152,54 +143,51 @@ const RegionSummary = memo(function RegionSummary({ data }: RegionSummaryProps) 
 
 const GeoBarChart = memo(function GeoBarChart({ data }: { data: GeoDataPoint[] }) {
   return (
-    <ResponsiveContainer width="100%" height={340}>
-      <BarChart data={data} layout="vertical" margin={{ left: 8, right: 48, top: 4, bottom: 4 }}>
-        <CartesianGrid strokeDasharray="3 3" stroke={CHART_COLORS.GRID_STROKE} horizontal={false} />
-        <XAxis type="number" tick={{ fontSize: 11, fill: CHART_COLORS.TICK_LABEL }} />
-        <YAxis
-          dataKey="state"
-          type="category"
-          tick={{ fontSize: 12, fill: CHART_COLORS.TICK_LABEL, fontFamily: 'monospace' }}
-          width={32}
-          tickFormatter={tickFormatter}
-        />
-        <Tooltip
-          content={(props) => {
-            const { formatter: _f, ...rest } = props;
-            return (
-              <ChartTooltip
-                {...rest}
-                items={[
-                  { label: 'Ganhadores', value: 'total' },
-                  {
-                    label: 'Percentual',
-                    value: 'percentage',
-                    suffix: '%',
-                    color: 'text-primary',
-                  },
-                ]}
-              />
-            );
-          }}
-          cursor={{ fill: CHART_COLORS.CURSOR }}
-        />
-        <Bar dataKey="total" radius={[0, 6, 6, 0]} maxBarSize={24}>
-          {data.map((d) => (
-            <Cell key={d.state} fill={STATE_COLORS[d.state] ?? '#6366F1'} />
-          ))}
-          <LabelList
-            dataKey="percentage"
-            position="right"
-            formatter={percentageFormatter}
-            style={{
-              fontSize: 10,
-              fill: CHART_COLORS.TICK_LABEL,
-              fontFamily: 'monospace',
-            }}
+    <VerticalBarChartShell
+      data={data}
+      height={340}
+      margin={{ left: 8, right: 48, top: 4, bottom: 4 }}
+      xAxisTick={{ fontSize: 11, fill: CHART_COLORS.TICK_LABEL }}
+      yAxisDataKey="state"
+      yAxisTick={{ fontSize: 12, fill: CHART_COLORS.TICK_LABEL, fontFamily: 'monospace' }}
+      yAxisWidth={32}
+      yAxisTickFormatter={tickFormatter}
+      gridHorizontal={false}
+      tooltipContent={(props) => {
+        const { formatter: _f, ...rest } = props;
+        return (
+          <ChartTooltip
+            {...rest}
+            items={[
+              { label: 'Ganhadores', value: 'total' },
+              {
+                label: 'Percentual',
+                value: 'percentage',
+                suffix: '%',
+                color: 'text-primary',
+              },
+            ]}
           />
-        </Bar>
-      </BarChart>
-    </ResponsiveContainer>
+        );
+      }}
+      tooltipCursor={{ fill: CHART_COLORS.CURSOR }}
+    >
+      <Bar dataKey="total" radius={[0, 6, 6, 0]} maxBarSize={24}>
+        {data.map((d) => (
+          <Cell key={d.state} fill={STATE_COLORS[d.state] ?? '#6366F1'} />
+        ))}
+        <LabelList
+          dataKey="percentage"
+          position="right"
+          formatter={percentageFormatter}
+          style={{
+            fontSize: 10,
+            fill: CHART_COLORS.TICK_LABEL,
+            fontFamily: 'monospace',
+          }}
+        />
+      </Bar>
+    </VerticalBarChartShell>
   );
 });
 
