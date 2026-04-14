@@ -14,26 +14,61 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
-      - uses: oven-sh/setup-bun@v2
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2
         with:
           bun-version: latest
+      - name: Cache Bun dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.bun/install/cache
+          key: ${{ runner.os }}-bun-${{ hashFiles('bun.lock', 'bun.lockb', 'package.json') }}
+          restore-keys: |
+            ${{ runner.os }}-bun-
+      - name: Cache Playwright browsers
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: ${{ runner.os }}-playwright-${{ hashFiles('bun.lock', 'bun.lockb', 'package.json') }}
+          restore-keys: |
+            ${{ runner.os }}-playwright-
       - name: Install dependencies
         run: bun install
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
       - name: Sync lottery dataset
         run: bun run process_excel
       - name: Check lint, formatting, types, and code smells
         run: bun run codebase:smells
-      - name: Run unit and e2e tests
-        run: bun run codebase:tests
+      - name: Run unit tests
+        run: bun run test:unit
+      - name: Run Playwright tests
+        run: npx playwright test --project=chromium --reporter=list,html
+      - name: Upload Playwright report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report-prod-${{ github.run_id }}
+          path: |
+            playwright-report
+            tests/e2e/test-results
+          if-no-files-found: ignore
+          retention-days: 7
 
   build_and_deploy:
     needs: preflight_checks
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v6
-      - uses: oven-sh/setup-bun@v2
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2
         with:
           bun-version: latest
+      - name: Cache Bun dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.bun/install/cache
+          key: ${{ runner.os }}-bun-${{ hashFiles('bun.lock', 'bun.lockb', 'package.json') }}
+          restore-keys: |
+            ${{ runner.os }}-bun-
       - run: bun install
       - run: bun run process_excel
       - run: bun run build
@@ -45,7 +80,7 @@ jobs:
           VITE_FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.FIREBASE_MESSAGING_SENDER_ID }}
           VITE_FIREBASE_APP_ID: ${{ secrets.FIREBASE_APP_ID }}
           VITE_FIREBASE_MEASUREMENT_ID: ${{ secrets.VITE_FIREBASE_MEASUREMENT_ID }}
-      - uses: FirebaseExtended/action-hosting-deploy@v0
+      - uses: FirebaseExtended/action-hosting-deploy@e2eda2e106cfa35cdbcf4ac9ddaf6c4756df2c8c # v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_SORTUDO }}'
