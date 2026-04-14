@@ -6,6 +6,7 @@ interface MiniBallProps {
   className?: string;
   size?: 'xs' | 'sm' | 'md' | 'lg';
   dimmed?: boolean;
+  textColor?: 'light' | 'dark';
 }
 
 const sizes = {
@@ -15,10 +16,20 @@ const sizes = {
   lg: 'w-14 h-14 text-base sm:w-18 sm:h-18 sm:text-xl',
 };
 
+const textColors = {
+  light: '#ffffff',
+  dark: '#000000',
+};
 /**
  * MiniBall Molecule — Domain-specific lottery ball visualization.
  */
-export function MiniBall({ number, className, size = 'md', dimmed = false }: MiniBallProps) {
+export function MiniBall({
+  number,
+  className,
+  size = 'md',
+  dimmed = false,
+  textColor = 'dark',
+}: MiniBallProps) {
   const stats = useFrequencies();
 
   // Default style (loading or neutral)
@@ -58,7 +69,10 @@ export function MiniBall({ number, className, size = 'md', dimmed = false }: Min
     >
       <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-black/20 via-transparent to-white/30 pointer-events-none" />
 
-      <span className="relative drop-shadow-md   text-black   text-xs pointer-events-none">
+      <span
+        className="relative drop-shadow-md pointer-events-none"
+        style={{ color: textColors[textColor] }}
+      >
         {String(number).padStart(2, '0')}
       </span>
 

@@ -22,25 +22,34 @@ export function ConsecutiveOverlapChart() {
 
   const overlaps = profile?.gameOverlaps;
 
+  const asFiniteNumber = (value: unknown, decimals = 2) => {
+    const numeric = typeof value === 'number' ? value : Number(value);
+    if (!Number.isFinite(numeric)) return 0;
+    return Number(numeric.toFixed(decimals));
+  };
+
   const chartData = useMemo(() => {
     if (!overlaps) return [];
+
+    const zero = asFiniteNumber(overlaps.zero, 2);
+    const one = asFiniteNumber(overlaps.one, 2);
+    const two = asFiniteNumber(overlaps.two, 2);
+    const threePlus = asFiniteNumber(overlaps.threePlus, 2);
+
     return [
-      { name: 'Sem Repetições', value: overlaps.zero, color: CHART_COLORS.EMERALD },
-      { name: '1 Repetido', value: overlaps.one, color: CHART_COLORS.BLUE },
-      {
-        name: '2 Repetidos',
-        value: Number(overlaps.two.toFixed(2)),
-        color: CHART_COLORS.AMBER,
-      },
-      {
-        name: '3+ Repetidos',
-        value: Number(overlaps.threePlus.toFixed(2)),
-        color: CHART_COLORS.RED,
-      },
+      { name: 'Sem Repetições', value: zero, color: CHART_COLORS.EMERALD },
+      { name: '1 Repetido', value: one, color: CHART_COLORS.BLUE },
+      { name: '2 Repetidos', value: two, color: CHART_COLORS.AMBER },
+      { name: '3+ Repetidos', value: threePlus, color: CHART_COLORS.RED },
     ];
   }, [overlaps]);
 
-  if (!meta || !overlaps || chartData.length === 0) {
+  const chartTotal = useMemo(
+    () => chartData.reduce((sum, item) => sum + item.value, 0),
+    [chartData]
+  );
+
+  if (!meta || !overlaps || chartData.length === 0 || chartTotal <= 0) {
     return <div className="h-48 animate-pulse bg-muted/20 rounded-xl" />;
   }
 
@@ -48,15 +57,16 @@ export function ConsecutiveOverlapChart() {
     <div className="flex flex-col items-center w-full">
       <PieSummaryChart
         chartData={chartData}
+        showLegend={false}
         centerContent={
-          <>
+          <div className="flex flex-col items-center justify-center leading-none -translate-y-0.5">
             <span className="text-foreground font-display font-bold text-2xl">
-              {profile.gameOverlaps.totalWithOverlap}
+              {profile.gameOverlaps.totalWithOverlap ?? 0}
             </span>
-            <span className="text-muted-foreground text-[10px] font-mono uppercase tracking-widest">
+            <span className="text-muted-foreground text-[10px] font-mono uppercase tracking-widest mt-1">
               Jogos
             </span>
-          </>
+          </div>
         }
       />
 

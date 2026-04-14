@@ -17,6 +17,7 @@ interface PieSummaryChartProps {
   innerRadius?: number | string;
   outerRadius?: number | string;
   legendWrapperStyle?: CSSProperties;
+  showLegend?: boolean;
 }
 
 const DEFAULT_LEGEND_STYLE: CSSProperties = { fontSize: '10px', bottom: '-10px' };
@@ -31,18 +32,19 @@ export const PieSummaryChart = (props: PieSummaryChartProps) => {
     innerRadius = '58%',
     outerRadius = '80%',
     legendWrapperStyle = DEFAULT_LEGEND_STYLE,
+    showLegend = true,
   } = props;
 
   return (
-    <div className="p-4 flex flex-col items-center">
+    <div className="w-full min-w-0 p-4 flex flex-col items-center">
       {title ? <h4 className={titleClassName}>{title}</h4> : null}
 
       {subtitle ? (
         <p className="text-[10px] text-muted-foreground mb-4 text-center">{subtitle}</p>
       ) : null}
 
-      <div className="relative w-full h-48">
-        <ResponsiveContainer width="100%" height="100%">
+      <div className="relative w-full min-w-0 h-48">
+        <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={1}>
           <PieChart>
             <Pie
               data={chartData}
@@ -59,7 +61,7 @@ export const PieSummaryChart = (props: PieSummaryChartProps) => {
               ))}
             </Pie>
             <Tooltip content={(props) => <PieSliceTooltip {...props} />} />
-            <Legend wrapperStyle={legendWrapperStyle} />
+            {showLegend ? <Legend wrapperStyle={legendWrapperStyle} /> : null}
           </PieChart>
         </ResponsiveContainer>
 

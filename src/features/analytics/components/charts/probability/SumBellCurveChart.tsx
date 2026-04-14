@@ -39,12 +39,7 @@ export function SumBellCurveChart() {
 
   return (
     <div className="space-y-3">
-      <div className="flex items-center gap-2 text-sm text-muted-foreground">
-        <div className="h-3 w-3 rounded-sm bg-amber-500/60" />
-        <span>Zona de maior concentração (150–200)</span>
-      </div>
-
-      <ResponsiveContainer width="100%" height={280}>
+      <ResponsiveContainer width="100%" height={850}>
         <BarChart data={data} margin={{ left: 0, right: 12, top: 8, bottom: 4 }}>
           <CartesianGrid strokeDasharray="3 3" stroke={CHART_COLORS.GRID_STROKE} vertical={false} />
           <XAxis
@@ -58,6 +53,7 @@ export function SumBellCurveChart() {
           <Tooltip
             content={
               <ChartTooltip
+                title="Soma"
                 items={[
                   { label: 'Sorteios', value: 'count' },
                   { label: 'Percentual', value: 'pct', suffix: '%', color: 'text-primary' },
@@ -93,11 +89,10 @@ export function SumBellCurveChart() {
           </Bar>
         </BarChart>
       </ResponsiveContainer>
-
-      <p className="text-xs text-muted-foreground/60">
-        Total de {total.toLocaleString('pt-BR')} sorteios analisados. Soma mínima teórica: 21
-        (1+2+3+4+5+6) · Máxima: 345 (55+56+57+58+59+60).
-      </p>
+      <div className="flex items-center gap-2 text-sm text-muted-foreground">
+        <div className="h-3 w-3 rounded-sm bg-amber-500/60" />
+        <span>Zona de maior concentração (150–200)</span>
+      </div>
     </div>
   );
 }

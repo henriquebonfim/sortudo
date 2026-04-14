@@ -30,7 +30,14 @@ export function PoissonSplittingChart() {
 
   return (
     <div className="space-y-4">
-      <ResponsiveContainer width="100%" height={400}>
+      <div className="  p-6 border-t-4 border-t-info/50">
+        <p className="text-sm text-muted-foreground mb-6 max-w-2xl leading-relaxed">
+          À medida que as vendas de bilhetes (Eixo X) superam as combinações totais (
+          {TOTAL_COMBINATIONS.toLocaleString()}), a probabilidade de você ser forçado a dividir o
+          prêmio (área em <span className="text-primary font-bold">Laranja</span>) dispara.
+        </p>
+      </div>
+      <ResponsiveContainer width="100%" height={700}>
         <ComposedChart data={chartData} margin={{ left: -20, right: 30, top: 20, bottom: 40 }}>
           <CartesianGrid strokeDasharray="3 3" stroke={CHART_COLORS.GRID_STROKE} vertical={false} />
           <XAxis
@@ -92,17 +99,6 @@ export function PoissonSplittingChart() {
           />
         </ComposedChart>
       </ResponsiveContainer>
-      <div className="  p-6 border-t-4 border-t-info/50">
-        <p className="text-sm text-muted-foreground mb-6 max-w-2xl leading-relaxed">
-          À medida que as vendas de bilhetes (Eixo X) superam as combinações totais (
-          {TOTAL_COMBINATIONS.toLocaleString()}), a probabilidade de você ser forçado a dividir o
-          prêmio (área em <span className="text-primary font-bold">Laranja</span>) dispara.
-          <br />
-          <br />
-          Em sorteios como a <strong>Mega da Virada</strong>, onde as vendas frequentemente
-          ultrapassam 150 milhões de bilhetes, ganhar sozinho é matematicamente quase impossível.
-        </p>
-      </div>
     </div>
   );
 }

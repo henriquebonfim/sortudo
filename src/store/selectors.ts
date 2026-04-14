@@ -1,6 +1,7 @@
 import { useAnalyticsStore } from '@/store/analytics';
 import { useDataSourceStore } from '@/store/data';
 import { useLotteryStore } from '@/store/lottery';
+import { useShallow } from 'zustand/react/shallow';
 
 /** Returns true if the lottery data is still being loaded/initialized. */
 export function useIsSeeding() {
@@ -35,7 +36,8 @@ export function useIsAnalyticsCalculating() {
  * This is exposed here to provide a stable path for non-analytics features.
  */
 export function usePrizeEvolution() {
-  return useAnalyticsStore((s) => s.stats?.prizeEvolution || []);
+  // Keep snapshot reference stable while analytics data is not available yet.
+  return useAnalyticsStore(useShallow((s) => s.stats?.prizeEvolution ?? []));
 }
 
 /**

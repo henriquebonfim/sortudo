@@ -90,8 +90,14 @@ export const PrizeTimelineChart = (props: PrizeTimelineChartProps) => {
 
   return (
     <>
-      <div className={chartContainerClassName}>
-        <ResponsiveContainer width="100%" height="100%" style={responsiveStyle}>
+      <div className={`min-w-0 ${chartContainerClassName}`}>
+        <ResponsiveContainer
+          width="100%"
+          height="100%"
+          minWidth={0}
+          minHeight={1}
+          style={responsiveStyle}
+        >
           <ComposedChart
             data={data}
             margin={{ top: 10, right: 0, bottom: 0, left: -20 }}

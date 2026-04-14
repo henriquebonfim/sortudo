@@ -308,7 +308,7 @@ function LotteryHistoryTimeline() {
       </div>
 
       {/* Right: Dual Axis Composed Chart */}
-      <div className="lg:w-2/3 flex flex-col min-h-[400px]">
+      <div className="lg:w-2/3 min-w-0 flex flex-col min-h-[400px]">
         <PrizeTimelineChart
           data={data}
           selectedYear={selectedYear}

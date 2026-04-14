@@ -126,7 +126,7 @@ export function ParityDistributionChart() {
       )}
 
       {/* Ranked horizontal bars */}
-      <div className="space-y-2">
+      <div className="space-y-6">
         {data.map((d, i) => (
           <ParityBar key={d.label} data={d} maxPct={maxPct} totalItems={data.length} index={i} />
         ))}

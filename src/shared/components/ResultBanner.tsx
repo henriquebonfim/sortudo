@@ -16,7 +16,9 @@ function JackpotDetails({ game }: { game: Game }) {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2 text-primary">
           <Trophy className="w-5 h-5" />
-          <span className="text-sm font-bold uppercase tracking-wider">Sorteado!</span>
+          <span className="text-sm font-bold uppercase tracking-wider">
+            {game.accumulated ? 'Acumulado!' : 'Sorteado!'}
+          </span>
         </div>
         <span className="text-[10px] font-mono font-bold text-primary/80 uppercase">
           Sorteio #{game.id}
@@ -24,20 +26,17 @@ function JackpotDetails({ game }: { game: Game }) {
       </div>
 
       <div className="flex flex-col gap-1">
-        <span className="text-3xl font-display font-bold text-foreground">
-          {formatCurrency(game.jackpotPrize)}
-        </span>
+        {!game.accumulated && (
+          <span className="text-3xl font-display font-bold text-foreground">
+            {formatCurrency(game.jackpotPrize)}
+          </span>
+        )}
         <div className="flex items-center gap-4 text-xs text-muted-foreground font-medium">
           <div className="flex items-center gap-1.5">
             <Calendar className="w-3.5 h-3.5 opacity-70" />
             {new Date(game.date).toLocaleDateString('pt-BR')}
           </div>
-          {game.jackpotWinners === 0 ? (
-            <div className="flex items-center gap-1.5 text-yellow-500">
-              <Users className="w-3.5 h-3.5 opacity-70" />
-              Acumulado
-            </div>
-          ) : (
+          {game.jackpotWinners > 0 && (
             <div className="flex items-center gap-1.5 text-green-500">
               <Users className="w-3.5 h-3.5 opacity-70" />
               {game.jackpotWinners} {game.jackpotWinners === 1 ? 'ganhador' : 'ganhadores'}
@@ -262,7 +261,7 @@ export function ResultBanner({ result, contestId }: { result: SearchResult; cont
         <div className="flex flex-col items-center gap-8 mt-8">
           <div className="flex flex-wrap justify-center gap-4">
             {result.combination.map((n) => (
-              <MiniBall key={n} number={n} />
+              <MiniBall key={n} number={n} size="md" />
             ))}
           </div>
           <ShareButton result={result} />

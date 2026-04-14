@@ -253,14 +253,14 @@ const getProbabilityChapter = (): Chapter => ({
       component: <PairCooccurrenceChart />,
     },
     {
-      id: 'sum',
-      title: 'Soma Gaussiana',
-      subtitle: 'Curva de Bell dos resultados',
+      id: 'human-bias-heatmap',
+      title: 'Viés de Seleção Humano',
+      subtitle: 'O perigo dos números de calendário (1-31)',
       type: 'Estatístico',
       insight:
-        'A média histórica da soma das 6 dezenas é 183.15, variando entre 66 e 331. A distribuição segue perfeita curva normal.',
-      note: 'Extremos (somas perto de 21 ou de 345) são os eventos mais raros.',
-      component: <SumBellCurveChart />,
+        'Enquanto as bolas caem aleatoriamente, os humanos não escolhem aleatoriamente. Apostar em datas de nascimento não altera suas chances de ganhar, mas MAXIMIZA a chance de dividir o prêmio.',
+      note: 'Se você ganhar com esses números, terá que dividir o prêmio com dezenas de outros apostadores, o que reduz drasticamente o lucro real por bilhete.',
+      component: <SelectionBiasHeatmap />,
     },
     {
       id: 'low-high',
@@ -310,18 +310,18 @@ const getProbabilityChapter = (): Chapter => ({
       type: 'Estatístico',
       insight:
         'Comprar ingressos quando o prêmio chega a 1 Bilhão aumenta exponencialmente a probabilidade matemática de que, se você ganhar, terá que dividir o prêmio com muito mais pessoas.',
-      note: 'Matemática de grandes números de apostas.',
+      note: 'Em sorteios como a Mega da Virada, onde as vendas frequentemente ultrapassam 150 milhões de bilhetes, ganhar sozinho é matematicamente quase impossível.',
       component: <PoissonSplittingChart />,
     },
     {
-      id: 'human-bias-heatmap',
-      title: 'Viés de Seleção Humano',
-      subtitle: 'O perigo dos números de calendário (1-31)',
+      id: 'sum',
+      title: 'Soma Gaussiana',
+      subtitle: 'Curva de Bell dos resultados',
       type: 'Estatístico',
       insight:
-        'Enquanto as bolas caem aleatoriamente, os humanos não escolhem aleatoriamente. Apostar em datas de nascimento não altera suas chances de ganhar, mas MAXIMIZA a chance de dividir o prêmio.',
-      note: 'Preferências Cognitivas Humanas.',
-      component: <SelectionBiasHeatmap />,
+        'A média histórica da soma das 6 dezenas é 183.15, variando entre 66 e 331. A distribuição segue perfeita curva normal. Extremos (somas perto de 21 ou de 345) são os eventos mais raros, enquanto a maioria dos sorteios se concentra entre 150 e 200.',
+      note: 'Total de 2.994 sorteios analisados. Soma mínima teórica: 21 (1+2+3+4+5+6) · Máxima: 345 (55+56+57+58+59+60).',
+      component: <SumBellCurveChart />,
     },
   ],
 });
@@ -578,13 +578,6 @@ function DashboardKpiStrip({
       valueClass: 'text-[hsl(var(--info))]',
     },
     {
-      label: 'Sem ganhador (seca)',
-      value: `${pctWithoutWinner ?? '--'}%`,
-      icon: <TrendingUp className="w-4 h-4" />,
-      accentClass: 'bg-gradient-to-r from-orange-500 to-amber-400',
-      valueClass: 'text-hot',
-    },
-    {
       label: 'Total de ganhadores',
       value: totalJackpotWinners.toLocaleString('pt-BR') || '0',
       icon: <Users className="w-4 h-4" />,
@@ -592,7 +585,14 @@ function DashboardKpiStrip({
       valueClass: 'text-primary',
     },
     {
-      label: 'Maior prêmio',
+      label: 'Porcentagem de sorteios acumulados',
+      value: `${pctWithoutWinner ?? '--'}%`,
+      icon: <TrendingUp className="w-4 h-4" />,
+      accentClass: 'bg-gradient-to-r from-orange-500 to-amber-400',
+      valueClass: 'text-hot',
+    },
+    {
+      label: 'Maior prêmio já distribuido',
       value: `R$${((highestPrize || 0) / 1_000_000).toLocaleString('pt-BR', {
         maximumFractionDigits: 0,
       })}M`,

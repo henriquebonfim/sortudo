@@ -7,22 +7,11 @@ import {
   Cell,
   LabelList,
   ResponsiveContainer,
-  Tooltip,
   XAxis,
   YAxis,
 } from 'recharts';
 /** Light foreground for recharts LabelList and cell labels. */
 const RECHARTS_LABEL_FOREGROUND = CHART_COLORS.FOREGROUND;
-const RECHARTS_TOOLTIP_STYLE = {
-  backgroundColor: CHART_COLORS.TOOLTIP_BG,
-  borderColor: CHART_COLORS.TOOLTIP_BORDER,
-  borderRadius: '12px',
-  border: 'none',
-  boxShadow: '0 20px 25px -5px rgb(0 0 0 / 0.5)',
-} as const;
-
-/** Cursor overlay for bar charts. */
-const RECHARTS_CURSOR_BAR = { fill: CHART_COLORS.CURSOR } as const;
 
 export function JackpotErosionWaterfall() {
   const chartData = useMemo(() => {
@@ -43,31 +32,31 @@ export function JackpotErosionWaterfall() {
       {
         name: 'Prêmio Anunciado',
         value: advertisedJackpot,
-        displayValue: '$1.0B',
+        displayValue: 'R$ 1.0B',
         baseColor: CHART_COLORS.EMERALD,
       },
       {
         name: 'Opção em Dinheiro (Valor Único)',
         value: cashValue,
-        displayValue: `$${(cashValue / 1_000_000).toFixed(0)}M`,
+        displayValue: `R$ ${(cashValue / 1_000_000).toFixed(0)}M`,
         baseColor: '#059669', // darker emerald — no primitive yet
       },
       {
         name: 'Impostos Federais (37%)',
         value: federalTax,
-        displayValue: `-$${(federalTax / 1_000_000).toFixed(0)}M`,
+        displayValue: `R$ -${(federalTax / 1_000_000).toFixed(0)}M`,
         baseColor: CHART_COLORS.RED,
       },
       {
         name: 'Impostos Estaduais (Média 6,5%)',
         value: stateTax,
-        displayValue: `-$${(stateTax / 1_000_000).toFixed(0)}M`,
+        displayValue: `-R$ ${(stateTax / 1_000_000).toFixed(0)}M`,
         baseColor: '#F87171', // light red — no primitive yet
       },
       {
         name: 'Valor Real Recebido (líquido)',
         value: trueTakeHome,
-        displayValue: `$${(trueTakeHome / 1_000_000).toFixed(0)}M`,
+        displayValue: `R$ ${(trueTakeHome / 1_000_000).toFixed(0)}M`,
         baseColor: CHART_COLORS.AMBER,
       },
     ];
@@ -79,7 +68,7 @@ export function JackpotErosionWaterfall() {
         <BarChart
           data={chartData}
           layout="vertical"
-          margin={{ top: 20, right: 60, left: 40, bottom: 20 }}
+          margin={{ top: 0, right: 80, left: 0, bottom: 0 }}
         >
           <CartesianGrid
             strokeDasharray="3 3"
@@ -89,7 +78,7 @@ export function JackpotErosionWaterfall() {
           />
           <XAxis
             type="number"
-            tickFormatter={(val) => `$${(val / 1_000_000).toFixed(0)}M`}
+            tickFormatter={(val) => `R$${(val / 1_000_000).toFixed(0)}M`}
             tick={{ fontSize: 11, fill: CHART_COLORS.TICK_LABEL, fontFamily: 'monospace' }}
             domain={[0, 1_000_000_000]}
           />
@@ -99,12 +88,7 @@ export function JackpotErosionWaterfall() {
             tick={{ fontSize: 12, fill: '#CBD5E1', fontWeight: 'bold' }}
             width={160}
           />
-          <Tooltip
-            cursor={RECHARTS_CURSOR_BAR}
-            contentStyle={RECHARTS_TOOLTIP_STYLE}
-            itemStyle={{ color: RECHARTS_LABEL_FOREGROUND, fontWeight: 'bold' }}
-            formatter={(value: number) => [`$${(value / 1_000_000).toFixed(0)} Milhões`, 'Quantia']}
-          />
+
           <Bar dataKey="value" radius={[0, 6, 6, 0]} maxBarSize={40}>
             {chartData.map((entry, index) => (
               <Cell key={`cell-${index}`} fill={entry.baseColor} fillOpacity={0.8} />

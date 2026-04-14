@@ -90,6 +90,14 @@ export function SelectionBiasHeatmap() {
 
   return (
     <div className="space-y-6 flex flex-col content-between items-center justify-between">
+      <div className=" p-6  border-t-4 border-t-primary/50">
+        <p className="text-sm text-muted-foreground mb-6 max-w-2xl leading-relaxed">
+          Embora o sorteio seja matemático e uniforme, as escolhas humanas são profundamente
+          enviesadas. Os pontos em <span className="text-hot font-bold">Vermelho</span> e{' '}
+          <span className="text-primary font-bold">Laranja</span> representam números baseados em
+          calendários (aniversários), escolhidos por milhões de pessoas.
+        </p>
+      </div>
       <div className="glass-card p-3  overflow-hidden bg-black/20 border border-white/5">
         <div className="grid grid-cols-10 gap-1 sm:gap-1.5 w-max mx-auto lg:w-full lg:grid-cols-10 lg:place-items-center">
           {Array.from({ length: 60 }, (_, i) => i + 1).map((num) => (
@@ -111,21 +119,6 @@ export function SelectionBiasHeatmap() {
           <div className="w-2.5 h-2.5 rounded-full bg-muted-foreground/30" />
           Baixa Popularidade (32-60)
         </div>
-      </div>
-
-      <div className=" p-6  border-t-4 border-t-primary/50">
-        <p className="text-sm text-muted-foreground mb-6 max-w-2xl leading-relaxed">
-          Embora o sorteio seja matemático e uniforme, as escolhas humanas são profundamente
-          enviesadas. Os pontos em <span className="text-hot font-bold">Vermelho</span> e{' '}
-          <span className="text-primary font-bold">Laranja</span> representam números baseados em
-          calendários (aniversários), escolhidos por milhões de pessoas.
-          <br />
-          <br />
-          <span className="text-white/90">
-            <strong>O Risco:</strong> Se você ganhar com esses números, terá que dividir o prêmio
-            com dezenas de outros apostadores, o que reduz drasticamente o lucro real por bilhete.
-          </span>
-        </p>
       </div>
     </div>
   );
