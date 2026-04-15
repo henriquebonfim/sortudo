@@ -41,7 +41,7 @@ const sampleResult: SearchResult = {
 };
 
 // 20% layer: verify cross-module orchestration (store + worker + dependent store).
-describe('search store integration', () => {
+describe.sequential('search store integration', () => {
   beforeEach(() => {
     searchCombinationMock.mockReset();
 

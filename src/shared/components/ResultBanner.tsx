@@ -4,7 +4,7 @@ import { ShareButton } from '@/shared/components/ShareButton';
 import { formatCurrency, formatNumber } from '@/shared/utils';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Calendar, ChevronDown, Trophy, Users } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 function JackpotDetails({ game }: { game: Game }) {
   return (
@@ -231,9 +231,33 @@ function MatchGroup({
 
 export function ResultBanner({ result, contestId }: { result: SearchResult; contestId?: string }) {
   const hasJackpot = result.jackpot.length > 0;
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container || typeof window === 'undefined') return;
+
+    const prefersReducedMotion =
+      typeof window.matchMedia === 'function' &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    const scrollIntoView = () => {
+      container.scrollIntoView({
+        behavior: prefersReducedMotion ? 'auto' : 'smooth',
+        block: 'start',
+      });
+    };
+
+    if (typeof window.requestAnimationFrame === 'function') {
+      const frameId = window.requestAnimationFrame(scrollIntoView);
+      return () => window.cancelAnimationFrame(frameId);
+    }
+
+    scrollIntoView();
+  }, []);
 
   return (
-    <div className="space-y-8">
+    <div ref={containerRef} className="space-y-8 scroll-mt-24">
       <motion.div
         initial={{ opacity: 0, y: 16 }}
         animate={{ opacity: 1, y: 0 }}

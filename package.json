@@ -17,6 +17,7 @@
     "test:unit": "vitest run --passWithNoTests",
     "test:e2e": "playwright test --project=chromium",
     "test:e2e:ui": "playwright test --ui",
+    "test:coverage": "vitest run --coverage",
     "codebase:devkit": "husky prepare && lint-staged",
     "codebase:smells": "bun run lint && bun run typecheck && bun run prettier && bun run knip",
     "codebase:tests": "bun run test:unit && bun run test:e2e",

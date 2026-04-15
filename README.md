@@ -46,11 +46,15 @@
 
 O projeto utiliza uma organização **baseada em funcionalidades**, que separa a lógica por contexto de uso, facilitando a manutenção sem a complexidade de camadas estritas:
 
-1.  **`src/features/`**: O coração da aplicação. Contém os componentes, hooks e lógica específicos para cada grande funcionalidade (Analytics, Generator, Search).
-2.  **`src/lib/`**: Utilitários globais, lógica de cálculo da loteria, gerenciamento de estado (Zustand) e integração com a API.
-3.  **`src/components/`**: Componentes de UI genéricos e compartilhados (Shared UI).
-4.  **`src/pages/`**: Componentes de alto nível que representam as rotas da aplicação.
-5.  **`src/hooks/`**: Hooks React reutilizáveis que não pertencem a uma funcionalidade específica.
+1.  **`src/features/`**: Domínios de produto (Analytics, Generator, Search, Home, About), com páginas e componentes por feature.
+2.  **`src/app/`**: Roteamento, bootstrap e orquestração global via `AppProvider`.
+3.  **`src/store/`**: Estado global e coordenação entre domínio de dados, analytics, busca e geração.
+4.  **`src/workers/`**: Processamento pesado fora da thread principal (analytics, parser e search).
+5.  **`src/shared/` e `src/lib/`**: UI reutilizável, utilitários, schemas e helpers transversais.
+
+Documentação técnica completa:
+
+- [docs/architecture.md](./docs/architecture.md) — visão de arquitetura, system design, práticas de código, runbook e roadmap técnico.
 
 ---
 
@@ -81,14 +85,11 @@ bun run dev
 ### Testes
 
 ```bash
-# Execute os testes unitários e de integração
-bun run test
+# Executa eslint, knip, prettier e verificação de types
+bun run codebase:smells
 
-# Execute os testes de ponta a ponta (Playwright)
-bun run test:e2e
-
-# Execute a verificação de tipos
-bun run typecheck
+# Execute os testes unitários, integração, e os testes de ponta a ponta (Playwright)
+bun run codebase:tests
 ```
 
 ---

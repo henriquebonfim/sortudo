@@ -8,30 +8,13 @@ type PingCommand = {
   payload: { value: number };
 };
 
-describe('worker runtime helpers', () => {
-  it('creates module workers with URL and module type', () => {
-    const workerCtorSpy = vi.fn();
-    class WorkerMock {
-      constructor(url: URL, options: WorkerOptions) {
-        workerCtorSpy(url, options);
-      }
-    }
-    vi.stubGlobal('Worker', WorkerMock as unknown as typeof Worker);
-
-    const url = new URL('file:///tmp/worker.ts');
-
-    new Worker(url, { type: 'module' });
-    expect(workerCtorSpy).toHaveBeenCalledWith(url, { type: 'module' });
-
-    vi.unstubAllGlobals();
-  });
-
+describe.sequential('worker runtime helpers', () => {
   it('posts validation errors when incoming command payload is invalid', async () => {
     const postMessage = vi.fn();
     vi.stubGlobal('self', {
       onmessage: null,
       postMessage,
-    } as unknown as WorkerGlobalScope & typeof globalThis);
+    } as unknown as typeof globalThis);
 
     const handleCommand = vi.fn();
 
@@ -66,7 +49,7 @@ describe('worker runtime helpers', () => {
     vi.stubGlobal('self', {
       onmessage: null,
       postMessage,
-    } as unknown as WorkerGlobalScope & typeof globalThis);
+    } as unknown as typeof globalThis);
 
     registerValidatedWorkerHandler<PingCommand, { id: string; type: string; payload: unknown }>({
       requestSchema: z.object({
@@ -99,7 +82,7 @@ describe('worker runtime helpers', () => {
     vi.stubGlobal('self', {
       onmessage: null,
       postMessage,
-    } as unknown as WorkerGlobalScope & typeof globalThis);
+    } as unknown as typeof globalThis);
 
     registerValidatedWorkerHandler<PingCommand, { id: string; type: string; payload: unknown }>({
       requestSchema: z.object({

@@ -5,7 +5,7 @@ public/data.json
 node_modules/
 dist/
 build/
-coverage/
+tests/coverage/
 *.lock
 .codacy/
 *.last-run.json

@@ -19,8 +19,8 @@ export interface LotteryState {
 
 const buildMetadata = (games: Game[]): LotteryMetadata => ({
   totalGames: games.length,
-  firstGameDate: games[0]?.date || '',
-  lastGameDate: games[games.length - 1]?.date || '',
+  firstGameDate: games[0].date,
+  lastGameDate: games[games.length - 1].date,
   lastUpdate: new Date().toISOString(),
 });
 

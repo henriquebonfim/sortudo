@@ -155,4 +155,89 @@ describe('FeatureWorkerClient', () => {
       consoleErrorSpy.mockRestore();
     }
   });
+
+  it('falls back to Math.random ids when crypto.randomUUID is unavailable', async () => {
+    const worker = new FakeWorker();
+    const client = new FeatureWorkerClient<TestCommand, TestResponse>(
+      worker as unknown as Worker,
+      0
+    );
+
+    vi.stubGlobal('crypto', { getRandomValues: vi.fn() } as unknown as Crypto);
+
+    try {
+      const request = client.send({ type: 'PING', payload: { value: 1 } });
+
+      const [[message]] = worker.postMessage.mock.calls;
+      expect(message.id).toEqual(expect.any(String));
+
+      worker.emitMessage({ id: message.id, type: 'PING', payload: { ok: true } });
+
+      await expect(request).resolves.toEqual({ ok: true });
+    } finally {
+      vi.unstubAllGlobals();
+    }
+  });
+
+  it('logs and ignores malformed envelopes without request ids', async () => {
+    vi.useFakeTimers();
+    const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => undefined);
+
+    try {
+      const worker = new FakeWorker();
+      const client = new FeatureWorkerClient<TestCommand, TestResponse>(
+        worker as unknown as Worker,
+        100
+      );
+
+      const request = client.send({ type: 'PING', payload: { value: 1 } });
+      const rejection = request.catch((err) => err);
+
+      const [[message]] = worker.postMessage.mock.calls;
+      worker.emitMessage({ type: 'PING', payload: { ok: true } });
+
+      expect(consoleErrorSpy).toHaveBeenCalledWith(
+        'Invalid worker response envelope',
+        expect.any(Error),
+        { type: 'PING', payload: { ok: true } }
+      );
+
+      await vi.advanceTimersByTimeAsync(100);
+
+      const error = (await rejection) as Error;
+      expect(error.message).toContain('Worker request timed out after 100ms');
+      expect(message.id).toBeDefined();
+    } finally {
+      consoleErrorSpy.mockRestore();
+      vi.useRealTimers();
+    }
+  });
+
+  it('rejects when worker postMessage throws during send', async () => {
+    const worker = new FakeWorker();
+    worker.postMessage.mockImplementation(() => {
+      throw new Error('post failed');
+    });
+
+    const client = new FeatureWorkerClient<TestCommand, TestResponse>(worker as unknown as Worker);
+
+    await expect(client.send({ type: 'PING', payload: { value: 1 } })).rejects.toThrow(
+      'post failed'
+    );
+    expect(worker.postMessage).toHaveBeenCalled();
+  });
+
+  it('terminates pending requests cleanly when no timeout is configured', async () => {
+    const worker = new FakeWorker();
+    const client = new FeatureWorkerClient<TestCommand, TestResponse>(
+      worker as unknown as Worker,
+      0
+    );
+
+    client.send({ type: 'PING', payload: { value: 1 } }).catch(() => undefined);
+
+    client.terminate();
+
+    expect(worker.terminate).toHaveBeenCalledTimes(1);
+  });
 });

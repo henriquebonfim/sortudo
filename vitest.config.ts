@@ -1,6 +1,6 @@
-import { defineConfig } from 'vitest/config';
 import react from '@vitejs/plugin-react';
 import path from 'path';
+import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
   plugins: [react()],
@@ -10,10 +10,13 @@ export default defineConfig({
     globals: true,
     exclude: ['node_modules', 'dist', '.idea', '.git', '.cache', 'tests/e2e/**'],
     include: ['**/*.{test,spec}.{ts,tsx}'],
-    concurrent: true,
+    sequence: {
+      concurrent: true,
+    },
     coverage: {
       provider: 'v8',
       reporter: ['text', 'json', 'html'],
+      reportsDirectory: path.resolve(__dirname, 'tests/coverage'),
       thresholds: {
         'src/features/**': {
           statements: 80,
