@@ -1,11 +1,7 @@
-import {
-  useAnalyticsActions,
-  useFrequencyRanking,
-  useTemporalFrequency,
-} from '@/hooks/use-analytics';
+import { useFrequencyRanking, useTemporalFrequency } from '@/hooks/use-analytics';
 import { CHART_COLORS } from '@/shared/styles/chart-colors';
 import { useLotteryMeta } from '@/store/selectors';
-import { memo, useEffect, useMemo } from 'react';
+import { memo, useMemo } from 'react';
 import type { TooltipProps } from 'recharts';
 import {
   CartesianGrid,
@@ -66,18 +62,7 @@ const CustomTooltip = memo(function CustomTooltip({
 export function TemporalFrequencyChart() {
   const rawData = useTemporalFrequency();
   const meta = useLotteryMeta();
-  const { calculateStats } = useAnalyticsActions();
   const ranking = useFrequencyRanking();
-
-  // Automatically migrate legacy cached data
-  useEffect(() => {
-    if (rawData && rawData.length > 0) {
-      const isLegacyFormat = rawData[0].decade.startsWith('Década') || rawData[0].data.length <= 15;
-      if (isLegacyFormat) {
-        calculateStats(true);
-      }
-    }
-  }, [rawData, calculateStats]);
 
   const { chartData, numbers } = useMemo(() => {
     if (!rawData || !rawData.length) {

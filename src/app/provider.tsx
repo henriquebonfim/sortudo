@@ -1,8 +1,8 @@
 import { lotteryIdb } from '@/lib/core/idb';
 import { useAnalyticsStore } from '@/store/analytics';
 import { useDataSourceStore } from '@/store/data';
-import { useLotteryStore } from '@/store/lottery';
 import { useGeneratorStore } from '@/store/generator';
+import { useLotteryStore } from '@/store/lottery';
 import { SearchWorkerClient } from '@/workers/search';
 import { PropsWithChildren, useEffect, useRef } from 'react';
 
@@ -19,9 +19,9 @@ export function AppProvider({ children }: PropsWithChildren) {
     () =>
       useLotteryStore.subscribe(
         (s) => s.games,
-        (games, prev) => {
+        (games) => {
           if (games?.length) {
-            useAnalyticsStore.getState().calculateStats(!!prev?.length).catch(console.error);
+            useAnalyticsStore.getState().calculateStats().catch(console.error);
           }
         }
       ),

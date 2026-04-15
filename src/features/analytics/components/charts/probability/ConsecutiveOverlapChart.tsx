@@ -1,24 +1,16 @@
 import { PieSummaryChart } from '@/features/analytics/components/charts/shared/PieSummaryChart';
-import { useAnalyticsActions, useNumberProfile } from '@/hooks/use-analytics';
+import { useNumberProfile } from '@/hooks/use-analytics';
 import { Pagination } from '@/shared/components/ui/Pagination';
 import { CHART_COLORS } from '@/shared/styles/chart-colors';
 import { useLotteryMeta } from '@/store/selectors';
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 
 export function ConsecutiveOverlapChart() {
   const meta = useLotteryMeta();
   const profile = useNumberProfile();
-  const { calculateStats } = useAnalyticsActions();
 
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
-
-  // Automatically migrate legacy cached data
-  useEffect(() => {
-    if (profile && !profile.overlapHistory) {
-      calculateStats(true);
-    }
-  }, [profile, calculateStats]);
 
   const overlaps = profile?.gameOverlaps;
 

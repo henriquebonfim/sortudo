@@ -13,7 +13,7 @@ interface DataSourceState {
   clearLocalData: () => Promise<void>;
 }
 
-export const useDataSourceStore = createStore<DataSourceState>('data-source', (set) => ({
+export const useDataSourceStore = createStore<DataSourceState>('data-source', (set, get) => ({
   source: 'official',
   hasLocalData: false,
 
@@ -22,17 +22,24 @@ export const useDataSourceStore = createStore<DataSourceState>('data-source', (s
 
   clearLocalData: async () => {
     await lotteryIdb.clearLocal();
+    const { useAnalyticsStore } = await import('@/store/analytics');
+    const { useLotteryStore } = await import('@/store/lottery');
+    useAnalyticsStore.getState().invalidateStats();
+    await useLotteryStore.getState().initialize(true);
     set({ hasLocalData: false, source: 'official' });
   },
 
   switchTo: async (source) => {
+    if (source === get().source) return;
     if (source === 'local') {
       const stored = await lotteryIdb.getLocal();
       if (!stored) return;
+      const { useAnalyticsStore } = await import('@/store/analytics');
       // Update lottery store at call-time (not import-time) — avoids circular imports
       const { setState } = await import('@/store/lottery').then((m) => ({
         setState: m.useLotteryStore.setState,
       }));
+      useAnalyticsStore.getState().invalidateStats();
       setState({
         games: stored.games,
         metadata: stored.metadata,
@@ -42,6 +49,8 @@ export const useDataSourceStore = createStore<DataSourceState>('data-source', (s
     } else {
       // Re-fetch official data fresh from network
       const { useLotteryStore } = await import('@/store/lottery');
+      const { useAnalyticsStore } = await import('@/store/analytics');
+      useAnalyticsStore.getState().invalidateStats();
       await useLotteryStore.getState().initialize(true);
     }
     set({ source });
