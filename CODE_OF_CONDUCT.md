@@ -36,7 +36,7 @@ Este Código de Conduta aplica-se a todos os espaços da comunidade, e também s
 
 ## Aplicação
 
-Instâncias de comportamento abusivo, assediante ou de outra forma inaceitável podem ser relatadas aos líderes da comunidade responsáveis pela aplicação em sortudo.subscript159@passinbox.com. Todas as reclamações serão revisadas e investigadas de forma rápida e justa.
+Instâncias de comportamento abusivo, assediante ou de outra forma inaceitável podem ser relatadas aos líderes da comunidade responsáveis pela aplicação em <sortudo.subscript159@passinbox.com>. Todas as reclamações serão revisadas e investigadas de forma rápida e justa.
 
 Todos os líderes da comunidade são obrigados a respeitar a privacidade e a segurança do relator de qualquer incidente.
 
