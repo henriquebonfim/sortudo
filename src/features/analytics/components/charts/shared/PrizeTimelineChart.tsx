@@ -95,7 +95,7 @@ export const PrizeTimelineChart = (props: PrizeTimelineChartProps) => {
           width="100%"
           height="100%"
           minWidth={0}
-          minHeight={1}
+          minHeight={240}
           style={responsiveStyle}
         >
           <ComposedChart

@@ -394,8 +394,8 @@ export const FrequencyAnalysisGroup = memo(function FrequencyAnalysisGroup() {
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
-        <FrequencyBarChart filter={filter} />
         <BubbleChart filter={filter} />
+        <FrequencyBarChart filter={filter} />
       </div>
 
       <div className="flex flex-wrap gap-2 justify-center">

@@ -23,8 +23,98 @@ export function Footer() {
         }}
       />
 
-      <div className="container py-12 md:py-14">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-8">
+      <div className="container py-10 sm:py-12 md:py-14">
+        {/* Mobile Layout */}
+        <div className="grid grid-cols-1 gap-8 sm:gap-10 md:hidden">
+          <div className="m-auto flex flex-col items-center justify-center space-y-4">
+            <Link
+              to="/"
+              className="group inline-flex items-center justify-center gap-2.5"
+              aria-label="Página Inicial"
+            >
+              <div
+                className="w-7 h-7 rounded-md flex items-center justify-center flex-shrink-0"
+                style={{
+                  background: 'linear-gradient(135deg, hsl(43 96% 48%), hsl(43 96% 60%))',
+                  boxShadow: '0 2px 6px hsl(43 96% 56% / 0.35)',
+                }}
+              >
+                <TrendingUp className="w-3.5 h-3.5 text-amber-900/80" strokeWidth={2.5} />
+              </div>
+              <span className="font-display font-bold text-base text-foreground tracking-tight">
+                Sortudo<span className="text-gradient-gold">?</span>
+              </span>
+            </Link>
+
+            <p className="max-w-xs text-center text-sm text-muted-foreground leading-relaxed">
+              A matemática que ninguém te contou sobre a Mega-Sena. Dados oficiais, análise
+              independente.
+            </p>
+          </div>
+
+          <div className="space-y-5">
+            <div className="p-4 rounded-xl border border-border bg-card/30 space-y-2">
+              <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground/80">
+                Aviso Legal
+              </p>
+              <p className="text-xs text-muted-foreground/75 leading-relaxed">
+                Este site utiliza exclusivamente dados oficiais publicados pela CAIXA Econômica
+                Federal. Eventuais inconsistências, omissões ou divergências na base oficial são de
+                responsabilidade exclusiva da própria CAIXA Econômica Federal.
+              </p>
+              <p className="text-xs text-muted-foreground/65 leading-relaxed">
+                O Sortudo tem finalidade estritamente informativa e educacional, não realiza
+                apostas, não intermedeia jogos e não incentiva a prática de jogos de azar.
+              </p>
+              <p className="text-xs text-muted-foreground/60 leading-relaxed">
+                Projeto independente e sem fins lucrativos.
+              </p>
+            </div>
+          </div>
+
+          <div className="m-auto">
+            <p className="mb-4 text-center text-xs font-medium uppercase tracking-widest text-muted-foreground/60">
+              Projeto
+            </p>
+            <a
+              href="https://github.com/henriquebonfim/sortudo"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors duration-150"
+            >
+              <ExternalLink className="w-4 h-4" />
+              Open Source no GitHub
+            </a>
+          </div>
+
+          <div>
+            <p className="mb-4 text-center text-xs font-medium uppercase tracking-widest text-muted-foreground/60">
+              páginas
+            </p>
+            <nav className="flex items-baseline justify-center gap-8" aria-label="Links do rodapé">
+              {navLinks.map((item) => (
+                <Link
+                  key={item.path}
+                  to={item.path}
+                  className="group flex flex-col items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors duration-150"
+                >
+                  <item.icon
+                    className="w-3.5 h-3.5 opacity-50 group-hover:opacity-80 transition-opacity"
+                    strokeWidth={1.8}
+                  />
+                  {item.label}
+                </Link>
+              ))}
+            </nav>
+          </div>
+
+          <p className="text-center text-xs text-muted-foreground/50">
+            © {year} Sortudo? · Não somos um site de apostas.
+          </p>
+        </div>
+
+        {/* Desktop Layout */}
+        <div className="hidden md:grid md:grid-cols-3 md:gap-8">
           {/* Col 1 — Brand */}
           <div className="space-y-4">
             <Link

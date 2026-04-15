@@ -53,7 +53,7 @@ export function AppRouter() {
     <BrowserRouter>
       <ScrollToTopOnRouteChange />
       <Header />
-      <main className="pt-16 min-h-screen">
+      <main className="min-h-screen pt-14 sm:pt-16">
         <Routes>
           <Route
             path="/"

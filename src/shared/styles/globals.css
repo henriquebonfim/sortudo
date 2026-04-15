@@ -233,7 +233,7 @@
 
   /* Section heading — consistent h1/h2 across pages */
   .section-heading {
-    @apply text-3xl md:text-4xl font-display font-bold text-foreground tracking-tight;
+    @apply text-2xl sm:text-3xl md:text-4xl font-display font-bold text-foreground tracking-tight;
   }
 
   /* Elevated glass card with hover state */
@@ -262,8 +262,14 @@
     position: relative;
     overflow: hidden;
     border-bottom: 1px solid hsl(var(--border) / 0.5);
-    padding-top: 2.5rem;
-    padding-bottom: 2.5rem;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+  }
+  @media (min-width: 640px) {
+    .page-hero {
+      padding-top: 2.5rem;
+      padding-bottom: 2.5rem;
+    }
   }
   @media (min-width: 768px) {
     .page-hero {

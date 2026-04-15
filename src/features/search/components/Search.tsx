@@ -10,15 +10,18 @@ function NumberInput({
   onChange,
   error,
   id,
+  ariaLabel,
 }: {
   value: string;
   onChange: (v: string) => void;
   error?: boolean;
   id?: string;
+  ariaLabel?: string;
 }) {
   return (
     <input
       id={id}
+      aria-label={ariaLabel}
       type="text"
       inputMode="numeric"
       maxLength={2}
@@ -29,10 +32,10 @@ function NumberInput({
       }}
       placeholder="?"
       className={[
-        'h-14 w-14 rounded-full border-2 bg-card text-center',
-        'font-mono text-lg font-semibold text-foreground',
+        'h-12 w-12 rounded-full border-2 bg-card text-center',
+        'font-mono text-base font-semibold text-foreground',
         'outline-none transition-all tabular-nums placeholder:text-muted-foreground/30',
-        'sm:h-16 sm:w-16 sm:text-xl',
+        'sm:h-14 sm:w-14 sm:text-lg md:h-16 md:w-16 md:text-xl',
         error
           ? 'border-hot shadow-[0_0_12px_hsl(var(--hot)/0.3)]'
           : value
@@ -68,19 +71,20 @@ function SearchForm({
 }) {
   return (
     <div className="w-full max-w-3xl flex flex-col items-center gap-10">
-      <div className="glass-card p-8 md:p-12 w-full rounded-[32px] border-primary/10 shadow-2xl">
-        <p className="text-xs uppercase tracking-[0.3em] text-muted-foreground/60 font-bold text-center mb-8">
+      <div className="glass-card w-full rounded-3xl border-primary/10 p-5 shadow-2xl sm:p-8 md:p-10">
+        <p className="mb-6 text-center text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground/60 sm:mb-8 sm:text-xs sm:tracking-[0.3em]">
           {searchType === 'numbers'
             ? `ESCOLHA 6 NÚMEROS (1–${MAX_LOTTERY_NUMBER})`
             : `DIGITE O NÚMERO DO CONCURSO (1–${drawCount})`}
         </p>
 
         {searchType === 'numbers' ? (
-          <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6">
+          <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 md:gap-6">
             {inputs.map((val, idx) => (
               <NumberInput
                 key={idx}
                 id={`search-number-input-${idx}`}
+                ariaLabel={`Número ${idx + 1}`}
                 value={val}
                 onChange={(v) => onChange(idx, v)}
                 error={val !== '' && inputs.filter((x) => x === val && x !== '').length > 1}
@@ -89,10 +93,14 @@ function SearchForm({
           </div>
         ) : (
           <div className="flex justify-center">
+            <label htmlFor="search-contest-id" className="sr-only">
+              Número do concurso
+            </label>
             <input
               id="search-contest-id"
               type="text"
               inputMode="numeric"
+              aria-label="Número do concurso"
               value={contestId}
               onChange={(e) => {
                 const v = e.target.value.replace(/\D/g, '');
@@ -101,7 +109,7 @@ function SearchForm({
                 }
               }}
               placeholder="Ex: 2000"
-              className="h-16 w-48 rounded-2xl border-2 bg-card text-center font-mono text-2xl font-bold text-foreground outline-none transition-all border-border focus:border-primary shadow-lg"
+              className="h-14 w-full max-w-[14rem] rounded-2xl border-2 border-border bg-card text-center font-mono text-xl font-bold text-foreground shadow-lg outline-none transition-all focus:border-primary sm:h-16 sm:max-w-[16rem] sm:text-2xl"
             />
           </div>
         )}
@@ -146,16 +154,16 @@ export function Search() {
 
   return (
     <div className="page-hero">
-      <div className="container m-auto flex flex-col mt-16 pb-20 px-4">
+      <div className="container m-auto mt-14 flex flex-col pb-16 sm:mt-16 sm:pb-20">
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-100px' }}
           transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-          className="text-center mb-14"
+          className="mb-10 text-center sm:mb-14"
         >
           <div
-            className="inline-flex items-center justify-center w-16 h-16 rounded-2xl mb-6 shadow-glow-gold/20"
+            className="mb-5 inline-flex h-14 w-14 items-center justify-center rounded-2xl shadow-glow-gold/20 sm:mb-6 sm:h-16 sm:w-16"
             style={{
               background: 'linear-gradient(135deg, hsl(43 96% 56% / 0.18), hsl(43 96% 56% / 0.06))',
               border: '1px solid hsl(43 96% 56% / 0.3)',
@@ -164,11 +172,11 @@ export function Search() {
             <SearchIcon className="w-8 h-8 text-primary" strokeWidth={1.5} />
           </div>
 
-          <h1 className="text-4xl md:text-6xl font-display font-bold text-foreground mb-6 tracking-tight leading-tight">
+          <h1 className="mb-5 font-display text-3xl font-bold leading-tight tracking-tight text-foreground sm:mb-6 sm:text-4xl md:text-5xl lg:text-6xl">
             Já fui <span className="text-gradient-gold">sorteado?</span>
           </h1>
 
-          <p className="text-lg md:text-xl text-muted-foreground leading-relaxed max-w-2xl mx-auto">
+          <p className="mx-auto max-w-2xl text-sm leading-relaxed text-muted-foreground sm:text-base md:text-lg lg:text-xl">
             Explore os{' '}
             <span className="font-semibold text-foreground">
               {drawCount.toLocaleString('pt-BR')}
@@ -177,12 +185,12 @@ export function Search() {
           </p>
         </motion.div>
 
-        <section className="py-12 md:py-16 flex flex-col items-center">
-          <div className="flex bg-white/5 p-1 rounded-2xl mb-8 border border-white/10">
+        <section className="flex flex-col items-center py-8 sm:py-12 md:py-16">
+          <div className="mb-6 inline-grid w-full max-w-sm grid-cols-2 rounded-2xl border border-white/10 bg-white/5 p-1 sm:mb-8">
             <button
               id="search-type-numbers"
               onClick={() => setSearchType('numbers')}
-              className={`px-6 py-2 rounded-xl text-sm font-bold transition-all ${
+              className={`rounded-xl px-3 py-2 text-xs font-bold transition-all sm:px-6 sm:text-sm ${
                 searchType === 'numbers'
                   ? 'bg-primary text-black'
                   : 'text-muted-foreground hover:text-foreground'
@@ -193,7 +201,7 @@ export function Search() {
             <button
               id="search-type-contest"
               onClick={() => setSearchType('contest')}
-              className={`px-6 py-2 rounded-xl text-sm font-bold transition-all ${
+              className={`rounded-xl px-3 py-2 text-xs font-bold transition-all sm:px-6 sm:text-sm ${
                 searchType === 'contest'
                   ? 'bg-primary text-black'
                   : 'text-muted-foreground hover:text-foreground'
@@ -224,13 +232,16 @@ export function Search() {
           </motion.div>
 
           {loading && (
-            <div className="mt-16">
+            <div className="mt-12 sm:mt-16" aria-live="polite" aria-label="Carregando resultados">
               <LoadingBalls />
             </div>
           )}
 
           {error && (
-            <div className="mt-8 p-4 rounded-xl bg-hot/10 border border-hot/20 text-hot font-bold text-center">
+            <div
+              role="alert"
+              className="mt-8 rounded-xl border border-hot/20 bg-hot/10 p-4 text-center font-bold text-hot"
+            >
               {error}
             </div>
           )}

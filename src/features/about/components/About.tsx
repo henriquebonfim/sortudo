@@ -237,28 +237,28 @@ export function About() {
   ];
   return (
     <div className="page-hero">
-      <section className="container m-auto flex flex-col pt-20 pb-32 px-4">
+      <section className="container m-auto flex flex-col pb-16 pt-10 sm:pb-24 sm:pt-14 md:pb-32 md:pt-20">
         {/* Header Section */}
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
-          className="max-w-4xl mx-auto text-center mb-24"
+          className="mx-auto mb-12 max-w-4xl text-center sm:mb-16 md:mb-24"
         >
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-primary/10 rounded-2xl mb-6">
+          <div className="mb-5 inline-flex h-14 w-14 items-center justify-center rounded-2xl bg-primary/10 sm:mb-6 sm:h-16 sm:w-16">
             <Info className="w-8 h-8 text-primary" />
           </div>
-          <h1 className="text-4xl md:text-6xl font-display font-bold text-foreground mb-8 tracking-tight">
+          <h1 className="mb-5 font-display text-3xl font-bold tracking-tight text-foreground sm:mb-6 sm:text-4xl md:mb-8 md:text-5xl lg:text-6xl">
             Transparência e <span className="text-gradient-gold">Precisão</span>
           </h1>
-          <p className="text-xl text-muted-foreground leading-relaxed">
+          <p className="text-sm leading-relaxed text-muted-foreground sm:text-base md:text-lg lg:text-xl">
             O Sortudo é uma ferramenta de auditoria cidadã que processa décadas de dados oficiais
             para revelar a realidade matemática dos números premiados.
           </p>
         </motion.div>
 
         {/* Methodology Section */}
-        <div className="max-w-5xl mx-auto space-y-24">
-          <div className="grid md:grid-cols-3 gap-8">
+        <div className="mx-auto max-w-5xl space-y-12 sm:space-y-16 md:space-y-24">
+          <div className="grid gap-5 sm:gap-6 md:grid-cols-3 md:gap-8">
             {METHODOLOGY_ITEMS.map((item, i) => (
               <motion.div
                 key={i}
@@ -266,7 +266,7 @@ export function About() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}
-                className="p-8 rounded-3xl bg-white/5 border border-white/10 hover:border-primary/30 transition-colors shadow-xl"
+                className="rounded-3xl border border-white/10 bg-white/5 p-5 shadow-xl transition-colors hover:border-primary/30 sm:p-6 md:p-8"
               >
                 <div className="text-primary mb-5">{item.icon}</div>
                 <h3 className="text-xl font-bold text-foreground mb-3">{item.title}</h3>
@@ -279,14 +279,14 @@ export function About() {
             initial={{ opacity: 0, scale: 0.98 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
-            className="bg-[#0a0a0c] border border-white/10 rounded-[40px] p-12 shadow-3xl"
+            className="rounded-3xl border border-white/10 bg-[#0a0a0c] p-5 shadow-3xl sm:rounded-[40px] sm:p-8 md:p-12"
           >
             <div className="grid gap-8 ">
               <div className=" w-full">
                 <DataParsingProcessChart />
               </div>
               {/* Open Source & Sources */}
-              <div className="glass-card p-10 rounded-[32px] space-y-6">
+              <div className="glass-card space-y-5 rounded-3xl p-5 sm:space-y-6 sm:p-8 md:p-10 md:rounded-[32px]">
                 <div className="flex items-center gap-3 mb-2">
                   <Shield className="w-6 h-6 text-success" />
                   <h2 className="text-2xl font-display font-bold">Fontes Oficiais</h2>
@@ -331,7 +331,7 @@ export function About() {
                 </div>
               </div>
 
-              <div className="glass-card p-10 rounded-[32px] space-y-6">
+              <div className="glass-card space-y-5 rounded-3xl p-5 sm:space-y-6 sm:p-8 md:p-10 md:rounded-[32px]">
                 <div className="flex items-center gap-3 mb-2">
                   <Code2 className="w-6 h-6 text-primary" />
                   <h2 className="text-2xl font-display font-bold">Código Aberto</h2>
@@ -358,7 +358,7 @@ export function About() {
                 </div>
               </div>
 
-              <div className="glass-card p-10 rounded-[32px] space-y-6">
+              <div className="glass-card space-y-5 rounded-3xl p-5 sm:space-y-6 sm:p-8 md:p-10 md:rounded-[32px]">
                 <div className="flex items-center gap-3 mb-2">
                   <Shield className="w-6 h-6 text-amber-400" />
                   <h2 className="text-2xl font-display font-bold">Apoie Este Projeto</h2>
@@ -368,7 +368,7 @@ export function About() {
                   com uma contribuição via Buy Me a Coffee ou PIX.
                 </p>
 
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                   <div>
                     <details
                       name="support-option"

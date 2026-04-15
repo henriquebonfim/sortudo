@@ -129,6 +129,7 @@ function MatchGroup({
   combination: number[];
 }) {
   const [isOpen, setIsOpen] = useState(false);
+  const panelId = `match-group-${group.label.toLowerCase()}`;
 
   return (
     <div
@@ -136,7 +137,9 @@ function MatchGroup({
     >
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full flex items-center justify-between px-6 py-4 transition-colors hover:bg-white/5 active:bg-white/10"
+        aria-expanded={isOpen}
+        aria-controls={panelId}
+        className="flex w-full items-center justify-between px-4 py-3 transition-colors hover:bg-white/5 active:bg-white/10 sm:px-6 sm:py-4"
       >
         <div className="flex items-center gap-4">
           <div
@@ -159,26 +162,40 @@ function MatchGroup({
       <AnimatePresence>
         {isOpen && (
           <motion.div
+            id={panelId}
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
           >
-            <div className="px-6 pb-6 pt-2">
-              <div className="overflow-hidden rounded-xl border border-white/5">
-                <table className="w-full text-left border-collapse">
+            <div className="px-4 pb-4 pt-2 sm:px-6 sm:pb-6">
+              <div className="overflow-x-auto rounded-xl border border-white/5">
+                <table className="min-w-[42rem] w-full border-collapse text-left">
+                  <caption className="sr-only">Resultados de {group.label} por concurso</caption>
                   <thead className="bg-white/5">
                     <tr>
-                      <th className="px-4 py-3 text-[10px] font-bold text-muted-foreground uppercase tracking-widest border-b border-white/5">
+                      <th
+                        scope="col"
+                        className="border-b border-white/5 px-4 py-3 text-[10px] font-bold uppercase tracking-widest text-muted-foreground"
+                      >
                         Sorteio
                       </th>
-                      <th className="px-4 py-3 text-[10px] font-bold text-muted-foreground uppercase tracking-widest border-b border-white/5">
+                      <th
+                        scope="col"
+                        className="border-b border-white/5 px-4 py-3 text-[10px] font-bold uppercase tracking-widest text-muted-foreground"
+                      >
                         Data
                       </th>
-                      <th className="px-4 py-3 text-[10px] font-bold text-muted-foreground uppercase tracking-widest border-b border-white/5">
+                      <th
+                        scope="col"
+                        className="border-b border-white/5 px-4 py-3 text-[10px] font-bold uppercase tracking-widest text-muted-foreground"
+                      >
                         Jogo
                       </th>
-                      <th className="px-4 py-3 text-[10px] font-bold text-muted-foreground uppercase tracking-widest border-b border-white/5 text-right">
+                      <th
+                        scope="col"
+                        className="border-b border-white/5 px-4 py-3 text-right text-[10px] font-bold uppercase tracking-widest text-muted-foreground"
+                      >
                         Prêmio
                       </th>
                     </tr>
@@ -189,9 +206,12 @@ function MatchGroup({
                         key={g.id}
                         className="hover:bg-white/5 transition-all duration-150 group/row"
                       >
-                        <td className="px-4 py-3 font-mono text-xs font-bold text-foreground group-hover/row:text-primary">
+                        <th
+                          scope="row"
+                          className="px-4 py-3 font-mono text-xs font-bold text-foreground group-hover/row:text-primary"
+                        >
                           #{g.id}
-                        </td>
+                        </th>
                         <td className="px-4 py-3 text-xs text-muted-foreground font-medium">
                           {new Date(g.date).toLocaleDateString('pt-BR')}
                         </td>

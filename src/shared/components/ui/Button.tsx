@@ -18,7 +18,7 @@ interface ButtonProps
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   (
     {
-      className = 'flex items-center gap-2 px-4 py-2 rounded-full border flex-shrink-0 text-xs font-semibold bg-primary/5 hover:bg-primary/10 text-primary border-primary/20 hover:text-primary',
+      className = 'flex items-center gap-1.5 px-3 py-1.5 sm:gap-2 sm:px-4 sm:py-2 rounded-full border flex-shrink-0 text-[11px] sm:text-xs font-semibold bg-primary/5 hover:bg-primary/10 text-primary border-primary/20 hover:text-primary',
       variant,
       size,
       asChild = false,

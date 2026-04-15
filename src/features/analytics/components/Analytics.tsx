@@ -130,10 +130,10 @@ function ChapterDivider({
     >
       <div className="flex items-center gap-4">
         {/* Left accent bar */}
-        <div className={`h-8 w-1 rounded-full flex-shrink-0 ${lineClass}`} />
+        <div className={`h-8 w-1 flex-shrink-0 rounded-full ${lineClass}`} />
 
         {/* Icon + text */}
-        <div className="flex items-center gap-3 min-w-0">
+        <div className="min-w-0 flex items-center gap-3">
           <div
             className="w-8 h-8 rounded-xl flex items-center justify-center flex-shrink-0"
             style={{ background: 'hsl(var(--muted) / 0.7)' }}
@@ -157,19 +157,19 @@ function ChapterDivider({
 
 function AnalyticsLoading() {
   return (
-    <div className="container py-16 md:py-24">
+    <div className="container py-12 sm:py-16 md:py-24">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="max-w-md mx-auto text-center"
+        className="mx-auto max-w-md text-center"
       >
         <div className="mb-8 flex justify-center">
           <LoadingBalls />
         </div>
-        <h1 className="text-2xl font-display font-bold text-foreground mb-3">
+        <h1 className="mb-3 font-display text-xl font-bold text-foreground sm:text-2xl">
           Dashboard <span className="text-gradient-gold">Analítico</span>
         </h1>
-        <p className="text-muted-foreground text-sm leading-relaxed animate-pulse">
+        <p className="animate-pulse text-sm leading-relaxed text-muted-foreground">
           Sincronizando dados dos sorteios históricos...
         </p>
       </motion.div>
@@ -179,19 +179,19 @@ function AnalyticsLoading() {
 
 function AnalyticsEmpty() {
   return (
-    <div className="container py-16 md:py-24">
+    <div className="container py-12 sm:py-16 md:py-24">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="max-w-md mx-auto text-center"
+        className="mx-auto max-w-md text-center"
       >
         <div className="w-16 h-16 rounded-2xl glass-card flex items-center justify-center mx-auto mb-6">
           <AlertCircle className="w-7 h-7 text-muted-foreground" />
         </div>
-        <h1 className="text-2xl font-display font-bold text-foreground mb-3">
+        <h1 className="mb-3 font-display text-xl font-bold text-foreground sm:text-2xl">
           Dashboard <span className="text-gradient-gold">Analítico</span>
         </h1>
-        <p className="text-muted-foreground text-sm leading-relaxed">
+        <p className="text-sm leading-relaxed text-muted-foreground">
           O banco de dados de sorteios está vazio e as informações não estão sincronizadas.
         </p>
       </motion.div>
@@ -214,17 +214,17 @@ function KpiCard({ label, value, icon, accentClass, valueClass, delay = 0 }: Kpi
           background: 'linear-gradient(135deg, hsl(43 96% 56% / 0.03) 0%, transparent 60%)',
         }}
       />
-      <div className="p-5">
-        <div className="flex items-start justify-between mb-4">
-          <span className="text-xs uppercase tracking-widest text-muted-foreground font-medium leading-tight max-w-[70%]">
+      <div className="p-4 sm:p-5">
+        <div className="mb-4 flex items-start justify-between">
+          <span className="max-w-[70%] text-[11px] font-medium uppercase leading-tight tracking-widest text-muted-foreground sm:text-xs">
             {label}
           </span>
-          <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 bg-muted/60">
+          <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-lg bg-muted/60">
             <span className={valueClass}>{icon}</span>
           </div>
         </div>
         <p
-          className={`font-mono text-2xl md:text-3xl font-bold tabular-nums tracking-tight ${valueClass}`}
+          className={`font-mono text-xl font-bold tracking-tight tabular-nums sm:text-2xl md:text-3xl ${valueClass}`}
         >
           {value}
         </p>
@@ -276,7 +276,7 @@ function DashboardKpiStrip({
 
   return (
     <div className="relative">
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-12">
+      <div className="mb-10 grid grid-cols-1 gap-3 sm:grid-cols-2 md:mb-12 lg:grid-cols-4">
         {kpiCards.map((card, i) => (
           <KpiCard key={card.label} {...card} delay={0.1 + i * 0.07} />
         ))}
@@ -324,17 +324,17 @@ function DashboardHeader({
         }}
       />
 
-      <div className="container relative py-10 md:py-14">
-        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-end gap-8">
+      <div className="container relative py-8 sm:py-10 md:py-14">
+        <div className="flex flex-col items-center justify-between gap-8 lg:flex-row lg:items-end">
           {/* Left: Title block */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5 }}
-            className="flex-1"
+            className="w-full flex-1 text-center lg:text-left"
           >
-            <div className="flex items-center gap-2.5 mb-4 flex-wrap">
-              <div className="flex items-center gap-1.5 text-xs font-mono text-muted-foreground">
+            <div className="mb-4 flex flex-wrap items-center justify-center gap-2.5 lg:justify-start">
+              <div className="flex items-center gap-1.5 text-[11px] font-mono text-muted-foreground sm:text-xs">
                 <BarChart3 className="w-3.5 h-3.5" />
                 <span>{metadata?.totalGames.toLocaleString('pt-BR')} jogos</span>
               </div>
@@ -359,15 +359,15 @@ function DashboardHeader({
               </AnimatePresence>
             </div>
 
-            <h1 className="text-4xl md:text-5xl font-display font-bold text-foreground leading-tight mb-2">
+            <h1 className="mb-2 font-display text-3xl font-bold leading-tight text-foreground sm:text-4xl md:text-5xl">
               Dashboard <span className="text-gradient-gold">Analítico</span>
             </h1>
-            <p className="text-muted-foreground text-sm md:text-base max-w-lg">
+            <p className="mx-auto max-w-lg text-sm text-muted-foreground md:text-base lg:mx-0">
               Relatório estatístico completo dos sorteios da Mega-Sena — padrões, frequências e
               probabilidades.
             </p>
             {/* Chapter quick-nav */}
-            <div className="mt-7 pt-5  flex">
+            <div className="mt-6 flex justify-center pt-4 sm:mt-7 sm:pt-5 lg:justify-start">
               <ChapterNav
                 chapters={chapters.map((ch) => ({ id: ch.id, title: ch.title, icon: ch.icon }))}
                 currentChapterIndex={currentChapterIndex}
@@ -381,14 +381,14 @@ function DashboardHeader({
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.15, duration: 0.4 }}
-            className="flex flex-col items-start lg:items-end gap-4"
+            className="flex w-full flex-col items-center gap-4 lg:w-auto lg:items-end"
           >
-            <div className="flex items-center gap-2">
+            <div className="flex w-full flex-wrap items-center justify-center gap-2 sm:w-auto lg:justify-end">
               <Button
                 variant="outline"
                 size="sm"
                 onClick={onExport}
-                className="flex items-center gap-2 px-4 py-2 rounded-full border flex-shrink-0 text-xs font-semibold"
+                className="flex h-9 items-center gap-2 rounded-full border px-4 text-xs font-semibold"
               >
                 <span className="flex items-center gap-2">
                   <Download className="w-3.5 h-3.5" />
@@ -400,7 +400,7 @@ function DashboardHeader({
                 variant="ghost"
                 size="sm"
                 onClick={onOpenUpload}
-                className="flex items-center gap-2 px-4 py-2 rounded-full border flex-shrink-0 text-xs font-semibold bg-primary/5 hover:bg-primary/10 text-primary border-primary/20 hover:text-primary"
+                className="flex h-9 items-center gap-2 rounded-full border border-primary/20 bg-primary/5 px-4 text-xs font-semibold text-primary hover:bg-primary/10 hover:text-primary"
               >
                 <span className="flex items-center gap-2">
                   <Upload className="w-3.5 h-3.5" />
@@ -471,7 +471,7 @@ export function Analytics() {
   const currentChapter = chapters[activeChapterIndex];
 
   return (
-    <div className="min-h-screen  page-hero">
+    <div className="page-hero min-h-screen">
       <DashboardHeader
         metadata={metadata}
         isStale={isStale}
@@ -483,7 +483,7 @@ export function Analytics() {
         onChapterSelect={onChapterSelect}
       />
 
-      <div className="container py-8 md:py-12 space-y-12 ">
+      <div className="container space-y-10 py-6 sm:space-y-12 sm:py-8 md:py-12">
         <DashboardKpiStrip
           totalGames={metadata?.totalGames || 0}
           pctWithoutWinner={statsMeta?.pctWithoutWinner || 0}
@@ -498,7 +498,7 @@ export function Analytics() {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -20 }}
             transition={{ duration: 0.4, ease: 'easeInOut' }}
-            className="space-y-8 "
+            className="space-y-6 sm:space-y-8"
           >
             {currentChapter && (
               <div id={currentChapter.id} className="scroll-mt-24">
@@ -511,7 +511,7 @@ export function Analytics() {
                   index={activeChapterIndex}
                 />
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 m-auto max-w-7xl ">
+                <div className="m-auto grid max-w-7xl grid-cols-1 gap-6 sm:gap-8 md:grid-cols-2 lg:grid-cols-3">
                   {currentChapter.sections.map((s, sIdx) => (
                     <motion.div
                       key={s.id}
@@ -525,17 +525,17 @@ export function Analytics() {
                       }}
                       className={s.className}
                     >
-                      <Card className="h-full  overflow-hidden flex flex-col group hover:border-primary/20 transition-all duration-300 shadow-sm hover:shadow-md">
+                      <Card className="group flex h-full flex-col overflow-hidden shadow-sm transition-all duration-300 hover:border-primary/20 hover:shadow-md">
                         <div
                           className={`h-[3px] w-full flex-shrink-0 ${currentChapter.lineClass} opacity-80`}
                         />
 
-                        <CardHeader className="p-6 pb-4 flex flex-row items-start justify-between space-y-0">
-                          <div className="space-y-2.5 min-w-0 flex-1">
+                        <CardHeader className="flex flex-row items-start justify-between space-y-0 p-4 pb-3 sm:p-6 sm:pb-4">
+                          <div className="min-w-0 flex-1 space-y-2.5">
                             <CardTitle className="text-base font-display font-bold tracking-tight text-foreground leading-snug">
                               {s.title}
                             </CardTitle>
-                            <div className="flex items-center gap-2 flex-wrap">
+                            <div className="flex flex-wrap items-center gap-2">
                               <TypeBadge type={s.type} />
                               {s.subtitle && (
                                 <CardDescription className="text-xs text-muted-foreground/90 font-medium uppercase tracking-wider">
@@ -546,14 +546,14 @@ export function Analytics() {
                           </div>
                         </CardHeader>
 
-                        <CardContent className="p-6 pt-2 flex-grow flex flex-col">
+                        <CardContent className="flex flex-grow flex-col p-4 pt-2 sm:p-6 sm:pt-2">
                           <div className="flex-grow">{s.component}</div>
 
                           {(s.insight || s.note) && (
-                            <div className="mt-6 pt-5 border-t border-border space-y-4 bg-primary/5 -mx-6 -mb-6 p-6">
+                            <div className="-mx-4 -mb-4 mt-5 space-y-4 border-t border-border bg-primary/5 p-4 pt-4 sm:-mx-6 sm:-mb-6 sm:mt-6 sm:p-6 sm:pt-5">
                               {s.insight && (
                                 <div className="flex gap-3">
-                                  <div className="w-6 h-6 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                                  <div className="mt-0.5 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-lg bg-primary/10">
                                     <Lightbulb className="w-3.5 h-3.5 text-primary" />
                                   </div>
                                   <p className="text-xs text-foreground/90 leading-relaxed font-medium italic">
@@ -562,7 +562,7 @@ export function Analytics() {
                                 </div>
                               )}
                               {s.note && (
-                                <div className="flex items-start gap-2 ml-9">
+                                <div className="ml-9 flex items-start gap-2">
                                   <span className="text-[10px] font-bold text-primary uppercase tracking-widest mt-0.5">
                                     Nota:
                                   </span>
@@ -587,9 +587,9 @@ export function Analytics() {
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
-          className="mt-16 pt-8 text-center"
+          className="mt-12 pt-6 text-center sm:mt-16 sm:pt-8"
         >
-          <div className="flex items-center justify-center gap-2 text-[10px] text-muted-foreground/40 font-mono uppercase tracking-[0.2em]">
+          <div className="flex items-center justify-center gap-2 text-[10px] font-mono uppercase tracking-[0.2em] text-muted-foreground/40">
             <Sparkles className="w-3 h-3" />
             <span>
               Dados analisados com base em {metadata?.totalGames.toLocaleString('pt-BR')} jogos

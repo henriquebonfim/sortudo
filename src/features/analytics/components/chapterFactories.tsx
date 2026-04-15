@@ -229,7 +229,7 @@ const getProbabilityChapter = (): Chapter => ({
 const getTemporalChapter = (stats?: AnalyticsStats): Chapter => ({
   id: 'evolucoes',
   icon: <TrendingUp className="w-4 h-4" />,
-  title: 'Evolução Histórica',
+  title: 'Evolução',
   description:
     'Análise da evolução histórica, recordes, tendências ao longo do tempo e muito mais...',
   lineClass: 'bg-gradient-to-r from-orange-500 to-amber-400',

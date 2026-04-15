@@ -40,11 +40,11 @@ function Coin({ side, index, flipping }: { side: Side; index: number; flipping: 
         ease: 'easeOut',
       }}
       style={{ perspective: 600 }}
-      className="flex-1 aspect-square"
+      className="w-full aspect-square min-w-0"
     >
       <div
         className={`
-          w-16 h-full rounded-full flex flex-col items-center justify-center m-auto gap-1
+          w-full h-full rounded-full flex flex-col items-center justify-center gap-1
           border-2 transition-all duration-300 shadow-md select-none
           ${
             isHeads
@@ -54,14 +54,14 @@ function Coin({ side, index, flipping }: { side: Side; index: number; flipping: 
         `}
       >
         <span
-          className={`text-xl font-black font-mono leading-none tabular-nums ${
+          className={`text-[clamp(0.8rem,3.5vw,1.25rem)] font-black font-mono leading-none tabular-nums ${
             isHeads ? 'text-amber-400' : 'text-slate-400'
           }`}
         >
           {SIDE_LABEL[side]}
         </span>
         <span
-          className={`text-[0.5rem] uppercase tracking-widest font-bold ${
+          className={`text-[clamp(0.38rem,1.45vw,0.5rem)] leading-none uppercase tracking-widest font-bold ${
             isHeads ? 'text-amber-500/70' : 'text-slate-500/70'
           }`}
         >
@@ -162,7 +162,7 @@ function CoinAnalogy() {
       </p>
 
       {/* Coin Grid */}
-      <div className="flex gap-2 h-16">
+      <div className="grid grid-cols-6 gap-1.5 sm:gap-2">
         {coins.map((side, i) => (
           <Coin key={i} side={side} index={i} flipping={flipping} />
         ))}

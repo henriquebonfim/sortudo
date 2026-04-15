@@ -64,7 +64,7 @@ interface GeneratorHistoryDropdownProps {
 
 function GeneratorBallDisplay({ displayNums, shuffling, freq }: GeneratorBallDisplayProps) {
   return (
-    <div className="flex flex-wrap items-center justify-center gap-5">
+    <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 md:gap-5">
       {displayNums.map((num, idx) => {
         const min = freq?.min?.frequency || 0;
         const max = freq?.max?.frequency || 100;
@@ -84,7 +84,7 @@ function GeneratorBallDisplay({ displayNums, shuffling, freq }: GeneratorBallDis
                 : { opacity: 1, y: 0, scale: 1, rotate: 0 }
             }
             transition={shuffling ? SHUFFLE_TRANSITION : { ...REVEAL_SPRING, delay: idx * 0.04 }}
-            className="lottery-ball w-[72px] h-[72px] sm:w-20 sm:h-20 text-lg sm:text-2xl select-none"
+            className="lottery-ball h-14 w-14 select-none text-base sm:h-16 sm:w-16 sm:text-lg md:h-20 md:w-20 md:text-2xl"
             style={{
               background: color,
               boxShadow: `0 6px 28px ${color}60, 0 2px 8px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.22)`,
@@ -113,7 +113,7 @@ function GeneratorContextMessage({ mode, hasNumbers }: GeneratorContextMessagePr
     <motion.div
       initial={{ opacity: 0, y: 12 }}
       animate={{ opacity: 1, y: 0 }}
-      className="mt-8 max-w-2xl mx-auto px-6 py-4 rounded-2xl bg-white/5 border border-white/10 text-center"
+      className="mx-auto mt-8 max-w-2xl rounded-2xl border border-white/10 bg-white/5 px-4 py-4 text-center sm:px-6"
     >
       <p className="text-sm text-muted-foreground leading-relaxed italic">"{message}"</p>
     </motion.div>
@@ -139,6 +139,8 @@ function GeneratorHistoryDropdown({ history, onClear, onSelect }: GeneratorHisto
     <div ref={ref} className="relative inline-block w-full max-w-[320px]">
       <button
         onClick={() => setOpen((state) => !state)}
+        aria-expanded={open}
+        aria-controls="generator-history-list"
         className="inline-flex items-center justify-between w-full px-4 py-2.5 rounded-xl text-xs font-medium cursor-pointer transition-all duration-200"
         style={{
           background: open ? 'hsl(43 96% 56% / 0.15)' : 'hsl(228 28% 12% / 0.7)',
@@ -159,6 +161,7 @@ function GeneratorHistoryDropdown({ history, onClear, onSelect }: GeneratorHisto
       <AnimatePresence>
         {open && (
           <motion.div
+            id="generator-history-list"
             initial={{ opacity: 0, y: -8, scale: 0.96 }}
             animate={{ opacity: 1, y: 6, scale: 1 }}
             exit={{ opacity: 0, y: -8, scale: 0.96 }}
@@ -213,7 +216,7 @@ function GeneratorModeSelector({
   disabled,
 }: GeneratorModeSelectorProps) {
   return (
-    <div className="mt-12 space-y-4">
+    <div className="mt-10 space-y-4 sm:mt-12">
       {GENERATION_MODE_GROUPS.map((group) => (
         <div key={group.label}>
           <p className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold mb-3 text-center">
@@ -272,30 +275,30 @@ export function Generator() {
 
   return (
     <div className="page-hero">
-      <section className="container m-auto flex flex-col pt-16 pb-32 px-4 items-center">
+      <section className="container m-auto flex flex-col items-center pb-16 pt-10 sm:pb-24 sm:pt-14 md:pb-32 md:pt-16">
         <motion.div
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-20"
+          className="mb-12 text-center sm:mb-16 md:mb-20"
         >
           <div className="inline-flex items-center justify-center w-16 h-16 rounded-3xl mb-8 shadow-glow-gold bg-primary/10 border border-primary/30">
             <Dices className="w-8 h-8 text-primary" strokeWidth={1.5} />
           </div>
-          <h1 className="text-4xl md:text-6xl font-display font-bold text-foreground mb-6 tracking-tight">
+          <h1 className="mb-5 font-display text-3xl font-bold tracking-tight text-foreground sm:text-4xl md:mb-6 md:text-5xl lg:text-6xl">
             Gerador da <span className="text-gradient-gold">Sorte</span>
           </h1>
-          <p className="text-xl text-muted-foreground max-w-3xl">
+          <p className="mx-auto max-w-3xl text-sm text-muted-foreground sm:text-base md:text-lg lg:text-xl">
             Análise estatística avançada para suas dezenas favoritas.
           </p>
         </motion.div>
 
-        <div className="flex flex-col gap-12 items-center w-full">
+        <div className="flex w-full flex-col items-center gap-8 sm:gap-10 md:gap-12">
           <GeneratorBallDisplay displayNums={displayNums} shuffling={shuffling} freq={freq} />
-          <div className="flex flex-col items-center gap-8 w-full">
+          <div className="flex w-full flex-col items-center gap-6 sm:gap-8">
             <button
               onClick={generate}
               disabled={shuffling || !freq}
-              className="btn-generate  h-12  text-lg font-bold shadow-glow-gold/20"
+              className="btn-generate h-12 text-base font-bold shadow-glow-gold/20 sm:text-lg"
             >
               {shuffling ? 'Gerando...' : 'Gerar Combinação'}
             </button>
@@ -319,7 +322,7 @@ export function Generator() {
               key={numbers.join('-')}
               initial={{ opacity: 0, y: 32 }}
               animate={{ opacity: 1, y: 0 }}
-              className="mt-20 w-full max-w-3xl space-y-8"
+              className="mt-14 w-full max-w-3xl space-y-6 sm:mt-16 sm:space-y-8 md:mt-20"
             >
               <div className="h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
               <ResultBanner result={result} />

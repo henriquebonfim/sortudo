@@ -320,7 +320,7 @@ function LotteryHistoryTimeline() {
             onToggleSeries={toggleSeries}
             onChartClick={handleClick}
             tooltipContent={<CustomTooltip />}
-            chartContainerClassName="flex-1 w-full min-h-[400px] h-[400px]"
+            chartContainerClassName="w-full h-[280px] sm:h-[340px] lg:h-[400px]"
             chartStyle={{ cursor: 'pointer', outline: 'none' }}
             responsiveStyle={{ outline: 'none' }}
             xAxisInterval="preserveStartEnd"

@@ -18,10 +18,10 @@ export function Header() {
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 header-glass" role="banner">
-      <div className="container flex h-16 items-center justify-between gap-4">
+      <div className="container flex h-14 items-center justify-between gap-3 sm:h-16 sm:gap-4">
         <Link
           to="/"
-          className="flex items-center gap-2 group"
+          className="group flex items-center gap-2"
           aria-label="Sortudo? — Página Inicial"
         >
           <TrendingUp className="h-5 w-5 text-primary transition-transform group-hover:rotate-12" />
@@ -98,9 +98,10 @@ export function Header() {
         {/* ── Mobile toggle ── */}
         <button
           onClick={() => setOpen(!open)}
-          className="md:hidden p-2 text-muted-foreground hover:text-foreground transition-colors rounded-lg hover:bg-white/5 cursor-pointer"
+          className="cursor-pointer rounded-lg p-1.5 text-muted-foreground transition-colors hover:bg-white/5 hover:text-foreground md:hidden sm:p-2"
           aria-label={open ? 'Fechar menu' : 'Abrir menu'}
           aria-expanded={open}
+          aria-controls="mobile-main-nav"
         >
           <AnimatePresence mode="wait" initial={false}>
             {open ? (
@@ -132,6 +133,7 @@ export function Header() {
       <AnimatePresence>
         {open && (
           <motion.nav
+            id="mobile-main-nav"
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
@@ -140,7 +142,7 @@ export function Header() {
             style={{ background: 'hsl(228 30% 7% / 0.97)', backdropFilter: 'blur(20px)' }}
             aria-label="Navegação mobile"
           >
-            <div className="container py-3 flex flex-col gap-1">
+            <div className="container flex flex-col gap-1 py-3">
               {[...navItems, { label: 'Relatório', path: '/dados', icon: BarChart3 }].map(
                 (item, i) => {
                   const isActive =

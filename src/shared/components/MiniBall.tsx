@@ -20,6 +20,7 @@ const sizes = {
  */
 export function MiniBall({ number, className, size = 'md', dimmed = false }: MiniBallProps) {
   const stats = useFrequencies();
+  const displayNumber = String(number).padStart(2, '0');
 
   // Default style (loading or neutral)
   let ballColor = '#2d3436'; // Dark grey
@@ -35,8 +36,7 @@ export function MiniBall({ number, className, size = 'md', dimmed = false }: Min
 
   return (
     <div
-      key={number}
-      title={number.toString()}
+      aria-label={`Número ${displayNumber}`}
       className={cn(
         'flex items-center justify-center rounded-full font-display font-bold relative group/ball transition-all duration-300 shrink-0',
         sizes[size],
@@ -62,7 +62,7 @@ export function MiniBall({ number, className, size = 'md', dimmed = false }: Min
         className="relative drop-shadow-md pointer-events-none font-bolder"
         style={{ color: '#ffffffff', textShadow: `2px 1px 3px #000` }}
       >
-        {String(number).padStart(2, '0')}
+        {displayNumber}
       </span>
 
       {/* Hover Reveal Overlay (For dimmed state only) */}
