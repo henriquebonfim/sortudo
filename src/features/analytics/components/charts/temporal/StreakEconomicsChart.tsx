@@ -1,9 +1,8 @@
 import { useStreakEconomics } from '@/hooks/use-analytics';
-import { Button } from '@/shared/components/ui/Button';
 import { CHART_COLORS } from '@/shared/styles/chart-colors';
 import { formatCompactCurrency } from '@/shared/utils';
 import { useLotteryMeta } from '@/store/selectors';
-import { memo, useMemo, useState } from 'react';
+import { memo, useMemo } from 'react';
 import {
   Area,
   CartesianGrid,
@@ -21,11 +20,6 @@ type StreakEntry = {
   avgCollection: number;
   avgPrize: number;
 };
-
-const VIEW_OPTIONS = [
-  { id: 'chart' as const, label: 'Gráfico' },
-  { id: 'table' as const, label: 'Tabela' },
-];
 
 const ChartLegend = memo(function ChartLegend() {
   return (
@@ -80,7 +74,7 @@ const CustomTooltip = memo(function CustomTooltip({
 
 const StreakChartTab = memo(function StreakChartTab({ data }: { data: StreakEntry[] }) {
   return (
-    <ResponsiveContainer width="100%" height={300}>
+    <ResponsiveContainer width="100%" height={300} minWidth={0} minHeight={1}>
       <ComposedChart data={data} margin={{ left: 8, right: 8, top: 8, bottom: 4 }}>
         <defs>
           <linearGradient id="gradCollection" x1="0" y1="0" x2="0" y2="1">
@@ -185,7 +179,7 @@ export function StreakEconomicsChart() {
   }
 
   return (
-    <div className="4 space-y-4">
+    <div className="space-y-4">
       <div className="flex flex-col items-center gap-3">
         <StreakChartTab data={rawData} />
         <ChartLegend />

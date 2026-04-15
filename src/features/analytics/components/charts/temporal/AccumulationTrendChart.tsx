@@ -81,7 +81,7 @@ function StreakFrequencyChart() {
   return (
     <div className="glass-card p-4">
       <div className="w-full h-48">
-        <ResponsiveContainer width="100%" height="100%">
+        <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={1}>
           <BarChart data={chartData} margin={{ left: -10, top: 10, bottom: 10, right: 10 }}>
             <CartesianGrid
               strokeDasharray="3 3"
@@ -158,7 +158,7 @@ export function AccumulationTrendChart() {
 
   return (
     <div className="space-y-4">
-      <ResponsiveContainer width="100%" height={500}>
+      <ResponsiveContainer width="100%" height={500} minWidth={0} minHeight={1}>
         <BarChart data={data} margin={{ left: -30, right: 12, top: 8, bottom: 4 }}>
           <CartesianGrid strokeDasharray="3 3" stroke={CHART_COLORS.GRID_STROKE} vertical={false} />
           <XAxis dataKey="year" tick={{ fontSize: 11, fill: CHART_COLORS.TICK_LABEL }} />

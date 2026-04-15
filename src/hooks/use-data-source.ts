@@ -1,7 +1,4 @@
-import type { DataSource } from '@/store/data';
 import { useDataSourceStore } from '@/store/data';
-
-export type { DataSource };
 
 export function useDataSourceActions() {
   const switchTo = useDataSourceStore((s) => s.switchTo);

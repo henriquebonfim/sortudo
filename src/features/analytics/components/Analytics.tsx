@@ -246,14 +246,14 @@ function DashboardKpiStrip({
       label: 'Total de jogos',
       value: totalGames.toLocaleString('pt-BR') || '0',
       icon: <BarChart3 className="w-4 h-4" />,
-      accentClass: 'bg-gradient-to-r from-blue-500 to-cyan-500',
-      valueClass: 'text-[hsl(var(--info))]',
+      accentClass: 'bg-gradient-to-r from-orange-500 to-amber-400',
+      valueClass: 'text-primary',
     },
     {
       label: 'Total de ganhadores',
       value: totalJackpotWinners.toLocaleString('pt-BR') || '0',
       icon: <Users className="w-4 h-4" />,
-      accentClass: 'bg-gradient-to-r from-primary to-amber-300',
+      accentClass: 'bg-gradient-to-r from-orange-500 to-amber-400',
       valueClass: 'text-primary',
     },
     {
@@ -261,7 +261,7 @@ function DashboardKpiStrip({
       value: `${pctWithoutWinner ?? '--'}%`,
       icon: <TrendingUp className="w-4 h-4" />,
       accentClass: 'bg-gradient-to-r from-orange-500 to-amber-400',
-      valueClass: 'text-hot',
+      valueClass: 'text-primary',
     },
     {
       label: 'Maior prêmio já distribuido',
@@ -269,8 +269,8 @@ function DashboardKpiStrip({
         maximumFractionDigits: 0,
       })}M`,
       icon: <Trophy className="w-4 h-4" />,
-      accentClass: 'bg-gradient-to-r from-emerald-500 to-green-400',
-      valueClass: 'text-success',
+      accentClass: 'bg-gradient-to-r from-orange-500 to-amber-400',
+      valueClass: 'text-primary',
     },
   ];
 

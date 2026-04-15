@@ -54,7 +54,7 @@ export const VerticalBarChartShell = (props: VerticalBarChartShellProps) => {
   } = props;
 
   return (
-    <ResponsiveContainer width="100%" height={height}>
+    <ResponsiveContainer width="100%" height={height} minWidth={0} minHeight={1}>
       <BarChart data={data} layout="vertical" margin={margin}>
         <CartesianGrid
           strokeDasharray="3 3"

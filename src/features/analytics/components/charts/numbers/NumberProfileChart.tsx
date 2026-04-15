@@ -115,7 +115,7 @@ const OverlapChart = memo(function OverlapChart({ data }: { data: OverlapDataEnt
       <p className="text-xs text-muted-foreground mb-2 font-medium">
         Repetições entre sorteios consecutivos
       </p>
-      <ResponsiveContainer width="100%" height={120}>
+      <ResponsiveContainer width="100%" height={120} minWidth={0} minHeight={1}>
         <BarChart data={data} margin={{ left: 0, right: 0, top: 4, bottom: 0 }}>
           <XAxis
             dataKey="label"

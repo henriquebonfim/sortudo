@@ -1,7 +1,7 @@
 import { lotteryIdb } from '@/lib/core/idb';
 import { createStore } from '@/lib/zustand';
 
-export type DataSource = 'official' | 'local';
+type DataSource = 'official' | 'local';
 
 interface DataSourceState {
   source: DataSource;

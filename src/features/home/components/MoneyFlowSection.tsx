@@ -146,7 +146,7 @@ function MoneyFlowChart({ distributionData, expectedStats }: MoneyFlowChartProps
         De R$ 6,00 apostados, apenas R$ 2,60 (43,35%) retornam como prêmio bruto
       </p>
       <div className="flex justify-center items-center">
-        <ResponsiveContainer width={240} height={240}>
+        <ResponsiveContainer width={240} height={240} minWidth={0} minHeight={1}>
           <PieChart>
             <Pie
               data={distributionData}

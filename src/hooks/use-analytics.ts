@@ -4,16 +4,6 @@ import { TOTAL_COMBINATIONS } from '@/shared/constants';
 import { useAnalyticsStore } from '@/store/analytics';
 import { useMemo } from 'react';
 
-export function useAnalyticsActions() {
-  const calculateStats = useAnalyticsStore((s) => s.calculateStats);
-  const clearError = useAnalyticsStore((s) => s.clearError);
-
-  return {
-    calculateStats,
-    clearError,
-  };
-}
-
 export function useLotteryFullStats() {
   return useAnalyticsStore((s) => s.stats);
 }

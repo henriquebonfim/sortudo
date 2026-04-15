@@ -20,8 +20,8 @@ export function SumBellCurveChart() {
   const meta = useLotteryMeta();
   const rawData = useSumDistribution();
 
-  const { data, total, peak } = useMemo(() => {
-    if (!rawData) return { data: [], total: 0, peak: 1 };
+  const { data, peak } = useMemo(() => {
+    if (!rawData) return { data: [], peak: 1 };
 
     const tot = rawData.reduce((s, item) => s + item.count, 0) || 1;
     const transformed = rawData.map((item) => ({
@@ -30,7 +30,7 @@ export function SumBellCurveChart() {
     }));
     const p = Math.max(...transformed.map((d) => d.count), 1);
 
-    return { data: transformed, total: tot, peak: p };
+    return { data: transformed, peak: p };
   }, [rawData]);
 
   if (!meta || !rawData) {
@@ -39,7 +39,7 @@ export function SumBellCurveChart() {
 
   return (
     <div className="space-y-3">
-      <ResponsiveContainer width="100%" height={850}>
+      <ResponsiveContainer width="100%" height={850} minWidth={0} minHeight={1}>
         <BarChart data={data} margin={{ left: 0, right: 12, top: 8, bottom: 4 }}>
           <CartesianGrid strokeDasharray="3 3" stroke={CHART_COLORS.GRID_STROKE} vertical={false} />
           <XAxis

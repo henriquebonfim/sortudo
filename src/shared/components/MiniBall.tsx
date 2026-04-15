@@ -6,7 +6,6 @@ interface MiniBallProps {
   className?: string;
   size?: 'xs' | 'sm' | 'md' | 'lg';
   dimmed?: boolean;
-  textColor?: 'light' | 'dark';
 }
 
 const sizes = {
@@ -19,13 +18,7 @@ const sizes = {
 /**
  * MiniBall Molecule — Domain-specific lottery ball visualization.
  */
-export function MiniBall({
-  number,
-  className,
-  size = 'md',
-  dimmed = false,
-  textColor = 'dark',
-}: MiniBallProps) {
+export function MiniBall({ number, className, size = 'md', dimmed = false }: MiniBallProps) {
   const stats = useFrequencies();
 
   // Default style (loading or neutral)

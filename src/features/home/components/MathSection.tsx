@@ -348,7 +348,7 @@ function CombinatorialChart({
       </div>
 
       <div className="mt-2 h-[300px] w-full">
-        <ResponsiveContainer width="100%" height="100%">
+        <ResponsiveContainer width="100%" height="100%" minWidth={0} minHeight={1}>
           <BarChart data={data} margin={{ top: 20, right: 10, left: 10, bottom: 20 }}>
             <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="rgba(255,255,255,0.05)" />
             <XAxis

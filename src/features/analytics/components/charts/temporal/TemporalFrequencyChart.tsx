@@ -2,7 +2,7 @@ import { useFrequencyRanking, useTemporalFrequency } from '@/hooks/use-analytics
 import { CHART_COLORS } from '@/shared/styles/chart-colors';
 import { useLotteryMeta } from '@/store/selectors';
 import { memo, useMemo } from 'react';
-import type { TooltipProps } from 'recharts';
+import type { TooltipContentProps } from 'recharts';
 import {
   CartesianGrid,
   Line,
@@ -12,11 +12,6 @@ import {
   XAxis,
   YAxis,
 } from 'recharts';
-
-type TooltipContentProps<
-  TValue extends number | string | Array<number | string>,
-  TName extends string,
-> = TooltipProps<TValue, TName>;
 
 const CHART_DIMENSIONS = {
   DEFAULT_HEIGHT: 320,
@@ -93,7 +88,12 @@ export function TemporalFrequencyChart() {
   return (
     <div className="space-y-6">
       <div className="  p-4">
-        <ResponsiveContainer width="100%" height={CHART_DIMENSIONS.DEFAULT_HEIGHT + 100}>
+        <ResponsiveContainer
+          width="100%"
+          height={CHART_DIMENSIONS.DEFAULT_HEIGHT + 100}
+          minWidth={0}
+          minHeight={1}
+        >
           <LineChart data={chartData} margin={CHART_DIMENSIONS.MARGIN}>
             <CartesianGrid strokeDasharray="3 3" stroke={CHART_COLORS.GRID_STROKE} />
             <XAxis

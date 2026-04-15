@@ -37,7 +37,7 @@ export function PoissonSplittingChart() {
           prêmio (área em <span className="text-primary font-bold">Laranja</span>) dispara.
         </p>
       </div>
-      <ResponsiveContainer width="100%" height={700}>
+      <ResponsiveContainer width="100%" height={700} minWidth={0} minHeight={1}>
         <ComposedChart data={chartData} margin={{ left: -20, right: 30, top: 20, bottom: 40 }}>
           <CartesianGrid strokeDasharray="3 3" stroke={CHART_COLORS.GRID_STROKE} vertical={false} />
           <XAxis

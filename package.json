@@ -77,10 +77,5 @@
     "*.{ts,tsx}": [
       "eslint --max-warnings 0"
     ]
-  },
-  "overrides": {
-    "minimatch": "9.0.9",
-    "glob": "10.5.0",
-    "flatted": "3.4.2"
   }
 }

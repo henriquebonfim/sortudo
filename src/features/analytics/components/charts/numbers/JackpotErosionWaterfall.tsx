@@ -64,7 +64,7 @@ export function JackpotErosionWaterfall() {
 
   return (
     <div className="space-y-4">
-      <ResponsiveContainer width="100%" height={380}>
+      <ResponsiveContainer width="100%" height={380} minWidth={0} minHeight={1}>
         <BarChart
           data={chartData}
           layout="vertical"
