@@ -11,15 +11,11 @@ interface MiniBallProps {
 
 const sizes = {
   xs: 'w-7 h-7 text-[10px]',
-  sm: 'w-9 h-9 text-xs',
-  md: 'w-12 h-12 text-sm sm:w-14 sm:h-14 sm:text-base',
-  lg: 'w-14 h-14 text-base sm:w-18 sm:h-18 sm:text-xl',
+  sm: 'w-9 h-9 text-sm ',
+  md: 'w-12 h-12 text-md',
+  lg: 'w-14 h-14 text-lg',
 };
 
-const textColors = {
-  light: '#ffffff',
-  dark: '#000000',
-};
 /**
  * MiniBall Molecule — Domain-specific lottery ball visualization.
  */
@@ -70,8 +66,8 @@ export function MiniBall({
       <div className="absolute inset-0 rounded-full bg-gradient-to-tr from-black/20 via-transparent to-white/30 pointer-events-none" />
 
       <span
-        className="relative drop-shadow-md pointer-events-none"
-        style={{ color: textColors[textColor] }}
+        className="relative drop-shadow-md pointer-events-none font-bolder"
+        style={{ color: '#ffffffff', textShadow: `2px 1px 3px #000` }}
       >
         {String(number).padStart(2, '0')}
       </span>

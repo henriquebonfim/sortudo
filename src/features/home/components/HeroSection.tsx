@@ -19,7 +19,7 @@ export function HeroSection({ id }: { id?: string }) {
   return (
     <section
       id={id}
-      className="container min-h-[100vh] flex flex-col items-center justify-center overflow-hidden"
+      className="container min-h-[90vh] flex flex-col items-center justify-center overflow-hidden"
       aria-label="Introdução"
     >
       <div className="w-full max-w-5xl mx-auto">

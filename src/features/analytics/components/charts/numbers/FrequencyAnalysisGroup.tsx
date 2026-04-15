@@ -4,7 +4,7 @@ import { LoadingBalls } from '@/shared/components/LoadingBalls';
 import { Button } from '@/shared/components/ui/Button';
 import { CHART_COLORS } from '@/shared/styles/chart-colors';
 import { useFrequencies, useLotteryMeta, useLotteryMetadata } from '@/store/selectors';
-import { MouseEvent, useEffect, useMemo, useRef, useState } from 'react';
+import { memo, MouseEvent, useEffect, useMemo, useRef, useState } from 'react';
 import { Bar, Cell, LabelList } from 'recharts';
 
 interface BubbleChartProps {
@@ -43,9 +43,9 @@ interface FrequencyChartRow extends Record<string, unknown> {
 type FilterMode = 'top30' | 'bottom30' | 'all';
 
 const FILTER_OPTIONS: { id: FilterMode; label: string }[] = [
-  { id: 'top30', label: 'Top 30 mais sorteados' },
   { id: 'bottom30', label: 'Top 30 menos sorteados' },
   { id: 'all', label: 'Todos os 60' },
+  { id: 'top30', label: 'Top 30 mais sorteados' },
 ];
 const LEGEND_ITEMS = [
   { color: CHART_COLORS.RED, label: 'Mais sorteados' },
@@ -385,7 +385,7 @@ function BubbleChart({ filter }: BubbleChartProps) {
   );
 }
 
-export function FrequencyAnalysisGroup() {
+export const FrequencyAnalysisGroup = memo(function FrequencyAnalysisGroup() {
   const [filter, setFilter] = useState<FilterMode>('all');
   const data = useFrequencies();
 
@@ -421,4 +421,4 @@ export function FrequencyAnalysisGroup() {
       </div>
     </div>
   );
-}
+});

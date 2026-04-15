@@ -8,7 +8,7 @@ import { RecordsSection } from '@/features/home/components/RecordsSection';
 
 export default function HeroPage() {
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col page-hero">
       <ChapterProgress />
       <HeroSection id="inicio" />
       <MathSection id="matematica" />

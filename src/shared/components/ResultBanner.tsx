@@ -200,7 +200,7 @@ function MatchGroup({
                             <MiniBall
                               key={n}
                               number={n}
-                              size="sm"
+                              size="xs"
                               dimmed={!combination.includes(n)}
                             />
                           ))}
@@ -247,7 +247,7 @@ export function ResultBanner({ result, contestId }: { result: SearchResult; cont
           {contestId
             ? `Concurso #${contestId}`
             : hasJackpot
-              ? 'Combinação já foi Premiada!'
+              ? 'Combinação já foi sorteada!'
               : 'Combinação nunca foi sorteada!'}
         </h2>
         <p className="text-muted-foreground leading-relaxed max-w-2xl mx-auto font-medium">
@@ -261,7 +261,7 @@ export function ResultBanner({ result, contestId }: { result: SearchResult; cont
         <div className="flex flex-col items-center gap-8 mt-8">
           <div className="flex flex-wrap justify-center gap-4">
             {result.combination.map((n) => (
-              <MiniBall key={n} number={n} size="md" />
+              <MiniBall key={n} number={n} size="lg" />
             ))}
           </div>
           <ShareButton result={result} />

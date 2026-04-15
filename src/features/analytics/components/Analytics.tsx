@@ -576,7 +576,7 @@ function DashboardKpiStrip({
       valueClass: 'text-primary',
     },
     {
-      label: 'Porcentagem de sorteios acumulados',
+      label: 'Sorteios sem ganhadores (%)',
       value: `${pctWithoutWinner ?? '--'}%`,
       icon: <TrendingUp className="w-4 h-4" />,
       accentClass: 'bg-gradient-to-r from-orange-500 to-amber-400',
@@ -788,8 +788,6 @@ function DashboardHeader({
   const hasLocalData = useHasLocalData();
   return (
     <div className="relative overflow-hidden border-b border-border">
-      {/* Background layers */}
-      <div className="absolute inset-0 bg-grid opacity-60 pointer-events-none" />
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
@@ -905,31 +903,10 @@ export function Analytics() {
 
   const chapters = useMemo(() => (stats ? buildChapters(stats) : []), [stats]);
 
-  // Handle hash-based navigation
-  useEffect(() => {
-    const handleHashChange = () => {
-      const hash = window.location.hash.replace('#', '');
-      if (hash && chapters.length > 0) {
-        const index = chapters.findIndex((ch) => ch.id === hash);
-        if (index !== -1) {
-          setCurrentChapterIndex(index);
-        }
-      }
-    };
-
-    if (chapters.length > 0) {
-      handleHashChange();
-    }
-
-    window.addEventListener('hashchange', handleHashChange);
-    return () => window.removeEventListener('hashchange', handleHashChange);
-  }, [chapters]);
-
   const onChapterSelect = (index: number) => {
+    if (index < 0 || index >= chapters.length) return;
     setCurrentChapterIndex(index);
-    if (chapters[index]) {
-      window.history.pushState(null, '', `#${chapters[index].id}`);
-    }
+    window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
   };
 
   useEffect(() => {
@@ -981,12 +958,12 @@ export function Analytics() {
   if (isSeeding) return <AnalyticsLoading />;
   if (!hasData) return <AnalyticsEmpty />;
 
-  const safeChapterIndex =
-    chapters.length > 0 && currentChapterIndex >= chapters.length ? 0 : currentChapterIndex;
-  const currentChapter = chapters[safeChapterIndex];
+  const activeChapterIndex =
+    chapters.length > 0 ? Math.min(currentChapterIndex, chapters.length - 1) : 0;
+  const currentChapter = chapters[activeChapterIndex];
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen  page-hero">
       <DashboardHeader
         metadata={metadata}
         isStale={isStale}
@@ -994,11 +971,11 @@ export function Analytics() {
         onExport={handleExport}
         onOpenUpload={() => setIsUploadOpen(true)}
         chapters={chapters}
-        currentChapterIndex={currentChapterIndex}
+        currentChapterIndex={activeChapterIndex}
         onChapterSelect={onChapterSelect}
       />
 
-      <div className="container py-8 md:py-12 space-y-12">
+      <div className="container py-8 md:py-12 space-y-12 ">
         <DashboardKpiStrip
           totalGames={metadata?.totalGames || 0}
           pctWithoutWinner={statsMeta?.pctWithoutWinner || 0}
@@ -1013,7 +990,7 @@ export function Analytics() {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -20 }}
             transition={{ duration: 0.4, ease: 'easeInOut' }}
-            className="space-y-8"
+            className="space-y-8 "
           >
             {currentChapter && (
               <div id={currentChapter.id} className="scroll-mt-24">
@@ -1023,10 +1000,10 @@ export function Analytics() {
                   description={currentChapter.description}
                   lineClass={currentChapter.lineClass}
                   iconColorClass={currentChapter.iconColorClass}
-                  index={currentChapterIndex}
+                  index={activeChapterIndex}
                 />
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 m-auto max-w-7xl">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 m-auto max-w-7xl ">
                   {currentChapter.sections.map((s, sIdx) => (
                     <motion.div
                       key={s.id}
