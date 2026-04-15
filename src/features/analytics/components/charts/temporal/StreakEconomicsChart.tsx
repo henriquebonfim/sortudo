@@ -80,7 +80,7 @@ const CustomTooltip = memo(function CustomTooltip({
 
 const StreakChartTab = memo(function StreakChartTab({ data }: { data: StreakEntry[] }) {
   return (
-    <ResponsiveContainer width="100%" height={700}>
+    <ResponsiveContainer width="100%" height={300}>
       <ComposedChart data={data} margin={{ left: 8, right: 8, top: 8, bottom: 4 }}>
         <defs>
           <linearGradient id="gradCollection" x1="0" y1="0" x2="0" y2="1">
@@ -143,11 +143,11 @@ const StreakChartTab = memo(function StreakChartTab({ data }: { data: StreakEntr
 
 const StreakTableTab = memo(function StreakTableTab({ data }: { data: StreakEntry[] }) {
   const tableData = useMemo(() => {
-    return data.filter((d) => d.count >= 1).slice(0, 15);
+    return data.filter((d) => d.count >= 1);
   }, [data]);
 
   return (
-    <div className="glass-card p-4 overflow-x-auto">
+    <div className=" ">
       <table className="w-full text-xs font-mono">
         <thead>
           <tr className="text-muted-foreground border-b border-border">
@@ -179,34 +179,18 @@ const StreakTableTab = memo(function StreakTableTab({ data }: { data: StreakEntr
 export function StreakEconomicsChart() {
   const meta = useLotteryMeta();
   const rawData = useStreakEconomics();
-  const [view, setView] = useState<'chart' | 'table'>('chart');
-
-  const filteredData = useMemo(() => {
-    if (!rawData) return [];
-    return rawData.filter((d) => d.count >= 2 && d.streak <= 20);
-  }, [rawData]);
 
   if (!meta || !rawData || rawData.length === 0) {
     return <div className="h-64 animate-pulse bg-muted/20 rounded-xl" />;
   }
 
   return (
-    <div className="space-y-4">
-      <div className="flex m-auto justify-center gap-2">
-        {VIEW_OPTIONS.map((f) => (
-          <Button key={f.id} onClick={() => setView(f.id)}>
-            {f.label}
-          </Button>
-        ))}
+    <div className="4 space-y-4">
+      <div className="flex flex-col items-center gap-3">
+        <StreakChartTab data={rawData} />
+        <ChartLegend />
       </div>
-
-      {view === 'chart' ? (
-        <StreakChartTab data={filteredData} />
-      ) : (
-        <StreakTableTab data={rawData} />
-      )}
-
-      <ChartLegend />
+      <StreakTableTab data={rawData} />
     </div>
   );
 }

@@ -44,44 +44,42 @@ const JackpotWinnerRow = memo(function JackpotWinnerRow({
       {/* Header: ID, Date, Winners */}
       <div className="relative z-10 flex items-start justify-between">
         <div className="flex items-center gap-3">
-          <div className="flex-shrink-0 w-12 h-12  flex items-center justify-center font-mono font-bold text-sm   text-primary   shadow-glow-gold/10">
-            #{game.id}
-          </div>
           <div>
+            <p className="text-xs text-muted-foreground font-medium uppercase tracking-wider">
+              <span className="font-mono font-bold text-sm   text-primary   shadow-glow-gold/10">
+                #{game.id}
+              </span>
+              &nbsp;/ {formatDate(game.date)}
+            </p>
             <div className="flex items-center gap-2">
               <span className="font-mono font-bold text-base text-foreground">
                 {game.jackpotWinners} {game.jackpotWinners === 1 ? 'ganhador' : 'ganhadores'}
               </span>
-              {game.jackpotWinners === maxWinners && (
-                <span className="text-[9px] px-2 py-0.5 rounded-full font-mono uppercase tracking-widest bg-primary text-primary-foreground font-bold shadow-lg">
-                  recorde
-                </span>
-              )}
             </div>
-            <p className="text-xs text-muted-foreground font-medium uppercase tracking-wider">
-              {formatDate(game.date)}
+            <p className="font-mono text-lg font-bold text-foreground leading-none">
+              {formatCurrency(game.jackpotPrize)}
             </p>
           </div>
         </div>
+
         <div className="text-right">
           <div className="flex items-center justify-end gap-1.5 text-primary mb-1">
-            <Trophy className="w-3.5 h-3.5" />
-            <span className="text-[10px] font-bold uppercase tracking-widest">Sena</span>
-            {game.jackpotPrize === maxPrize && (
+            {(game.jackpotPrize === maxPrize || game.jackpotWinners === maxWinners) && (
               <span className="text-[9px] px-1.5 py-0.5 rounded font-mono uppercase tracking-wider bg-primary/20 text-primary ml-1">
                 recorde
               </span>
             )}
+            <Trophy className="w-3.5 h-3.5" />
+            <span className="text-[10px] font-bold uppercase tracking-widest">Sena</span>
           </div>
 
-          <div className="font-mono text-lg font-bold text-foreground leading-none">
-            {formatCurrency(game.jackpotPrize)}
+          <div className="flex flex-col justify-between">
+            <div className="relative z-10 flex flex-wrap gap-2 py-2 min-w-52">
+              {game.numbers.map((num) => (
+                <MiniBall key={num} number={num} size="sm" />
+              ))}
+            </div>
           </div>
-        </div>
-        <div className="relative z-10 flex flex-wrap gap-2 py-2">
-          {game.numbers.map((num) => (
-            <MiniBall key={num} number={num} size="xs" />
-          ))}
         </div>
       </div>
 
@@ -107,7 +105,7 @@ const JackpotWinnerRow = memo(function JackpotWinnerRow({
   );
 });
 
-export function AllJackpotWinnersChart() {
+export function AllJackpotWinnersList() {
   const games = useGames();
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);

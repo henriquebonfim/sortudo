@@ -97,7 +97,6 @@ export function HeroSection({ id }: { id?: string }) {
                 }}
               />
 
-              <dt className="stat-label text-xs md:text-sm mb-3">Arrecadação histórica</dt>
               <dd className="text-4xl md:text-5xl font-mono font-bold text-primary tabular-nums leading-none mb-1">
                 R$&nbsp;
                 <AnimatedCounter target={totalBillions} duration={2500} />,
@@ -107,6 +106,7 @@ export function HeroSection({ id }: { id?: string }) {
                 />{' '}
                 bilhões
               </dd>
+              <dt className="stat-label text-xs md:text-sm mb-3">de Reais já foram arrecadados</dt>
               <dd className="text-xs text-muted-foreground font-mono mt-2">
                 {drawCount.toLocaleString('pt-BR')} sorteios ({yearsOfOperation} anos)
               </dd>

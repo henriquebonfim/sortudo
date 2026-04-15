@@ -80,7 +80,7 @@ export function TopNumbersByDecadeChart() {
     <div className="pt-4">
       <VerticalBarChartShell
         data={groupedData}
-        height={800}
+        height={1200}
         margin={{ left: -10, top: 0, bottom: 0, right: 10 }}
         xAxisTick={{ fill: CHART_COLORS.TICK_LABEL, fontSize: 11 }}
         xAxisAxisLine={false}

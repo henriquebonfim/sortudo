@@ -21,7 +21,6 @@ import { Link } from 'react-router-dom';
 import type { TooltipContentProps } from 'recharts';
 import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from 'recharts';
 
-import { AllJackpotWinnersChart } from '@/features/analytics/components/charts/numbers/AllJackpotWinnersChart';
 import {
   duration,
   formatCompactCurrency,
@@ -256,84 +255,90 @@ function LotteryHistoryTimeline() {
 
   return (
     <motion.div
-      className="glass-card p-6 flex flex-col lg:flex-row gap-8 overflow-hidden"
+      className="glass-card p-6 "
       initial={{ opacity: 0, y: 24 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-80px' }}
       transition={{ ...spring.gentle, duration: duration.lg }}
     >
-      {/* Left: Milestones Timeline */}
-      <div className="lg:w-1/3 flex flex-col gap-6">
-        <div>
-          <h3 className="font-display font-bold text-xl text-foreground">Evolução Histórica</h3>
-          <p className="text-sm text-muted-foreground mt-1">
-            Explore os marcos da Mega-Sena e o crescimento das premiações ao longo dos anos.
-          </p>
-        </div>
+      <div className="flex flex-col lg:flex-row gap-8 overflow-hidden">
+        {/* Left: Milestones Timeline */}
+        <div className="lg:w-1/3 flex flex-col gap-6">
+          <div>
+            <h3 className="font-display font-bold text-xl text-foreground">Evolução Histórica</h3>
+            <p className="text-sm text-muted-foreground mt-1">
+              Explore os marcos da Mega-Sena e o crescimento das premiações ao longo dos anos.
+            </p>
+          </div>
 
-        <div className="relative border-l border-border ml-3 space-y-8 py-2">
-          {MILESTONES.map((m) => {
-            const isActive = selectedYear === m.year;
-            return (
-              <button
-                key={m.year}
-                onClick={() => setSelectedYear(isActive ? null : m.year)}
-                className={`relative pl-6 text-left transition-opacity duration-300 w-full outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-lg ${
-                  isActive || !selectedYear ? 'opacity-100' : 'opacity-40 hover:opacity-100'
-                }`}
-              >
-                <div
-                  className={`absolute -left-[13px] top-0 w-6 h-6 rounded-full flex items-center justify-center border-2 bg-background transition-colors duration-300 shadow-sm ${
-                    isActive ? '' : 'border-border text-muted-foreground'
+          <div className="relative border-l border-border ml-3 space-y-8 py-2">
+            {MILESTONES.map((m) => {
+              const isActive = selectedYear === m.year;
+              return (
+                <button
+                  key={m.year}
+                  onClick={() => setSelectedYear(isActive ? null : m.year)}
+                  className={`relative pl-6 text-left transition-opacity duration-300 w-full outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 rounded-lg ${
+                    isActive || !selectedYear ? 'opacity-100' : 'opacity-40 hover:opacity-100'
                   }`}
-                  style={
-                    isActive
-                      ? { borderColor: m.color, color: m.color, boxShadow: `0 0 10px ${m.color}40` }
-                      : {}
-                  }
                 >
-                  {m.icon}
-                </div>
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="font-mono text-xs font-bold bg-muted/50 px-1.5 py-0.5 rounded text-foreground">
-                    {m.year}
-                  </span>
-                  <h4 className="font-semibold text-sm text-foreground">{m.title}</h4>
-                </div>
-                <p className="text-xs text-muted-foreground leading-relaxed">{m.description}</p>
-              </button>
-            );
-          })}
+                  <div
+                    className={`absolute -left-[13px] top-0 w-6 h-6 rounded-full flex items-center justify-center border-2 bg-background transition-colors duration-300 shadow-sm ${
+                      isActive ? '' : 'border-border text-muted-foreground'
+                    }`}
+                    style={
+                      isActive
+                        ? {
+                            borderColor: m.color,
+                            color: m.color,
+                            boxShadow: `0 0 10px ${m.color}40`,
+                          }
+                        : {}
+                    }
+                  >
+                    {m.icon}
+                  </div>
+                  <div className="flex items-center gap-2 mb-1">
+                    <span className="font-mono text-xs font-bold bg-muted/50 px-1.5 py-0.5 rounded text-foreground">
+                      {m.year}
+                    </span>
+                    <h4 className="font-semibold text-sm text-foreground">{m.title}</h4>
+                  </div>
+                  <p className="text-xs text-muted-foreground leading-relaxed">{m.description}</p>
+                </button>
+              );
+            })}
+          </div>
         </div>
-      </div>
 
-      {/* Right: Dual Axis Composed Chart */}
-      <div className="lg:w-2/3 min-w-0 flex flex-col min-h-[400px]">
-        <PrizeTimelineChart
-          data={data}
-          selectedYear={selectedYear}
-          visibleSeries={visibleSeries}
-          onToggleSeries={toggleSeries}
-          onChartClick={handleClick}
-          tooltipContent={<CustomTooltip />}
-          chartContainerClassName="flex-1 w-full min-h-[400px] h-[400px]"
-          chartStyle={{ cursor: 'pointer', outline: 'none' }}
-          responsiveStyle={{ outline: 'none' }}
-          xAxisInterval="preserveStartEnd"
-          yAxisTick={{ fontSize: 11, fill: CHART_COLORS.TICK_LABEL, fontStretch: 'condensed' }}
-          yAxisTickFormatter={formatCompactCurrency}
-          yAxisTickMargin={8}
-          yAxisWidth={80}
-          barSelectedOpacity={0.35}
-          barUnselectedOpacity={0.12}
-          maxPrizeSeriesName="Maior Prêmio"
-          distributedSeriesName="Total distribuídos"
-          distributedLegendLabel="Total distribuídos"
-          revenueSeriesName="Arrecadação"
-          revenueLegendLabel="Arrecadação Total"
-          legendVariant="minimal"
-          selectionStrokeOpacity={0.5}
-        />
+        {/* Right: Dual Axis Composed Chart */}
+        <div className="lg:w-2/3 min-w-0 flex flex-col min-h-[400px]">
+          <PrizeTimelineChart
+            data={data}
+            selectedYear={selectedYear}
+            visibleSeries={visibleSeries}
+            onToggleSeries={toggleSeries}
+            onChartClick={handleClick}
+            tooltipContent={<CustomTooltip />}
+            chartContainerClassName="flex-1 w-full min-h-[400px] h-[400px]"
+            chartStyle={{ cursor: 'pointer', outline: 'none' }}
+            responsiveStyle={{ outline: 'none' }}
+            xAxisInterval="preserveStartEnd"
+            yAxisTick={{ fontSize: 11, fill: CHART_COLORS.TICK_LABEL, fontStretch: 'condensed' }}
+            yAxisTickFormatter={formatCompactCurrency}
+            yAxisTickMargin={8}
+            yAxisWidth={80}
+            barSelectedOpacity={0.35}
+            barUnselectedOpacity={0.12}
+            maxPrizeSeriesName="Maior Prêmio"
+            distributedSeriesName="Total distribuídos"
+            distributedLegendLabel="Total distribuídos"
+            revenueSeriesName="Arrecadação"
+            revenueLegendLabel="Arrecadação Total"
+            legendVariant="minimal"
+            selectionStrokeOpacity={0.5}
+          />
+        </div>
       </div>
     </motion.div>
   );
@@ -587,17 +592,14 @@ export function RecordsSection({ id }: { id: string }) {
       <div className="space-y-12">
         <CaseStudy title="Mega Sena da Virada: 2025" />
         <LotteryHistoryTimeline />
-        <div className="glass-card p-4">
-          <AllJackpotWinnersChart />
-        </div>
 
         <div className="flex justify-center pt-8">
           <Link
-            to="/dados"
+            to="/dados#numeros"
             className="btn-generate px-8 py-4 rounded-2xl font-bold flex items-center gap-2 group transition-all hover:scale-[1.02]"
           >
             <FileText className="w-5 h-5 transition-transform group-hover:rotate-6" />
-            Ver Relatório Completo
+            Ver Lista Completa
           </Link>
         </div>
       </div>

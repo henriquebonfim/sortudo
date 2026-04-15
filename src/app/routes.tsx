@@ -1,8 +1,8 @@
 import { LoadingBalls } from '@/shared/components/LoadingBalls';
 import { Footer } from '@/shared/components/layout/Footer';
 import { Header } from '@/shared/components/layout/Header';
-import { lazy, Suspense } from 'react';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { lazy, Suspense, useEffect } from 'react';
+import { BrowserRouter, Route, Routes, useLocation } from 'react-router-dom';
 
 const Hero = lazy(() => import('@/features/home/pages/HeroPage'));
 const About = lazy(() => import('@/features/about/pages/AboutPage'));
@@ -38,9 +38,20 @@ function NotFound() {
   );
 }
 
+function ScrollToTopOnRouteChange() {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+  }, [pathname]);
+
+  return null;
+}
+
 export function AppRouter() {
   return (
     <BrowserRouter>
+      <ScrollToTopOnRouteChange />
       <Header />
       <main className="pt-16 min-h-screen">
         <Routes>

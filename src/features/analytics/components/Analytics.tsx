@@ -1,4 +1,4 @@
-import { AllJackpotWinnersChart } from '@/features/analytics/components/charts/numbers/AllJackpotWinnersChart';
+import { AllJackpotWinnersList } from '@/features/analytics/components/charts/numbers/AllJackpotWinnersList';
 import { FrequencyAnalysisGroup } from '@/features/analytics/components/charts/numbers/FrequencyAnalysisGroup';
 import { GapAnalysisChart } from '@/features/analytics/components/charts/numbers/GapAnalysisChart';
 import { HotColdNumbersChart } from '@/features/analytics/components/charts/numbers/HotColdNumbersChart';
@@ -123,50 +123,10 @@ const getNumbersChapter = (stats?: AnalyticsStats | null): Chapter => ({
   id: 'numeros',
   icon: <Hash className="w-4 h-4" />,
   title: 'Números',
-  description: 'Frequência, temperatura e DNA das dezenas',
-  lineClass: 'bg-blue-500/60',
-  iconColorClass: 'text-blue-400',
+  description: 'Análise de Frequência, temperatura, DNA das dezenas e muito mais...',
+  lineClass: 'bg-gradient-to-r from-orange-500 to-amber-400',
+  iconColorClass: 'text-amber-400',
   sections: [
-    {
-      id: 'frequency',
-      title: 'Frequência',
-      subtitle: 'saiba quais números saem mais',
-      type: 'Estatístico',
-      insight: `O número ${stats?.frequencies?.max?.number || 10} lidera com ${stats?.frequencies?.max?.frequency || '...'} sorteios. A dispersão é baixa: cada dezena tem ~${(100 / MAX_LOTTERY_NUMBER).toFixed(1)}% de chance teórica por bola.`,
-      note: 'A frequência observada coincide com a curva de expectativa estatística de longo prazo.',
-      className: 'md:col-span-2 lg:col-span-3',
-      component: <FrequencyAnalysisGroup />,
-    },
-    {
-      id: 'winner-records',
-      title: 'Recordes de Ganhadores',
-      subtitle: 'Top sorteios com mais acertos simultâneos',
-      type: 'Lista',
-      insight: `O recorde histórico é de ${stats?.topJackpotWinners?.[0]?.winners || 0} ganhadores simultâneos na Sena — o que diluiu drasticamente o prêmio individual naquele sorteio.`,
-      note: 'Ocorre em bolões, números muito populares, aleatórios ou visuais, que são os mais sorteados.',
-      component: <TopJackpotWinnersChart />,
-    },
-    {
-      id: 'all-winner-list',
-      title: 'Lista de Ganhadores',
-      subtitle: 'Todos os sorteios com mais de 1 ganhador',
-      type: 'Lista',
-      insight: `O histórico de ganhadores é de ${stats?.topJackpotWinners?.length || 0} sorteios com mais de 1 ganhador.`,
-      note: 'Ocorre quando números muito populares, sequenciados ou visuais são sorteados.',
-      className: 'md:col-span-2 lg:col-span-2',
-      component: <AllJackpotWinnersChart />,
-    },
-    {
-      id: 'gap-analysis',
-      title: 'Números Atrasados',
-      subtitle: 'Pressão de ausência por dezena',
-      type: 'Lista',
-      insight:
-        "Os números com maior proporção entre 'atraso atual / atraso recorde' estão sob máxima pressão estatística. Cada sorteio é independente, mas a ausência prolongada é matematicamente incomum.",
-      note: 'Cor vermelha = atraso atual supera 60% do recorde histórico — o valor mais incomum registrado.',
-      className: 'md:col-span-2 lg:col-span-1',
-      component: <GapAnalysisChart />,
-    },
     {
       id: 'hot-cold',
       title: 'Termômetro',
@@ -188,18 +148,37 @@ const getNumbersChapter = (stats?: AnalyticsStats | null): Chapter => ({
       className: 'md:col-span-2 lg:col-span-1',
       component: <NumberProfileChart />,
     },
+    {
+      id: 'gap-analysis',
+      title: 'Números Atrasados',
+      subtitle: 'Pressão de ausência por dezena',
+      type: 'Lista',
+      insight: `O número ${stats?.frequencies?.max?.number || 10} lidera com ${stats?.frequencies?.max?.frequency || '...'} sorteios. A dispersão é baixa: cada dezena tem ~${(100 / MAX_LOTTERY_NUMBER).toFixed(1)}% de chance teórica por bola.`,
+      note: "Os números com maior proporção entre 'atraso atual / atraso recorde' estão sob máxima pressão estatística. Cada sorteio é independente, mas a ausência prolongada é matematicamente incomum.",
+      className: 'md:col-span-2 lg:col-span-1',
+      component: <GapAnalysisChart />,
+    },
 
     {
-      id: 'prize-tiers',
-      title: 'Distribuição por Faixa',
-      subtitle: 'Hierarquia de prêmios',
-      type: 'Hierárquico',
-      insight:
-        'A sena concentra a maior parte do valor, mas quinas e quadras distribuem volumes significativos para milhares de apostadores.',
-      note: 'Concentração vs. Capilaridade.',
-      className: 'md:col-span-2 lg:col-span-1',
-      component: <PrizeDistributionChart />,
+      id: 'winner-records',
+      title: 'Recordes de Ganhadores',
+      subtitle: 'Top sorteios com mais acertos simultâneos',
+      type: 'Lista',
+      insight: `O recorde histórico é de ${stats?.topJackpotWinners?.[0]?.winners || 0} ganhadores simultâneos na Sena — o que diluiu drasticamente o prêmio individual naquele sorteio.`,
+      note: 'Ocorre em bolões, números muito populares, aleatórios ou visuais, que são os mais sorteados.',
+      component: <TopJackpotWinnersChart />,
     },
+    {
+      id: 'all-winner-list',
+      title: 'Lista de Ganhadores',
+      subtitle: 'Todos os sorteios com mais de 1 ganhador',
+      type: 'Lista',
+      insight: `O histórico de ganhadores é de ${stats?.topJackpotWinners?.length || 0} sorteios com mais de 1 ganhador.`,
+      note: 'Ocorre quando números muito populares, sequenciados ou visuais são sorteados.',
+      className: 'md:col-span-2 lg:col-span-2',
+      component: <AllJackpotWinnersList />,
+    },
+
     {
       id: 'waterfall',
       title: 'A Ilusão de 1 Bilhão',
@@ -221,16 +200,27 @@ const getNumbersChapter = (stats?: AnalyticsStats | null): Chapter => ({
       className: 'md:col-span-1 lg:col-span-1',
       component: <RegularVsSpecialChart />,
     },
+    {
+      id: 'prize-tiers',
+      title: 'Distribuição por Faixa',
+      subtitle: 'Hierarquia de prêmios',
+      type: 'Hierárquico',
+      insight:
+        'A sena concentra a maior parte do valor, mas quinas e quadras distribuem volumes significativos para milhares de apostadores.',
+      note: 'Concentração vs. Capilaridade.',
+      className: 'md:col-span-2 lg:col-span-1',
+      component: <PrizeDistributionChart />,
+    },
   ],
 });
 
 const getProbabilityChapter = (): Chapter => ({
-  id: 'probability',
+  id: 'probabilidades',
   icon: <PieChart className="w-4 h-4" />,
   title: 'Probabilidade',
-  description: 'Distribuições e padrões matemáticos das combinações',
-  lineClass: 'bg-cyan-500/60',
-  iconColorClass: 'text-cyan-400',
+  description: 'Análise de distribuições, padrões matemáticos das combinações e muito mais...',
+  lineClass: 'bg-gradient-to-r from-orange-500 to-amber-400',
+  iconColorClass: 'text-amber-400',
   sections: [
     {
       id: 'parity',
@@ -239,7 +229,7 @@ const getProbabilityChapter = (): Chapter => ({
       type: 'Estatístico',
       insight:
         'Combinações 3+3 são as mais prováveis (31%), seguidas pelos formatos 4/2 e 2/4. Juntas formam ~79% de todos os concursos.',
-      note: 'Isso respeita rigorosamente a distribuição binomial estatística esperada.',
+      note: null,
       component: <ParityDistributionChart />,
     },
     {
@@ -248,8 +238,8 @@ const getProbabilityChapter = (): Chapter => ({
       subtitle: 'Dezenas consecutivas e pares frequentes',
       type: 'Informacional',
       insight:
-        'Em 42% dos sorteios ocorre pelo menos um par de dezenas consecutivas. A probabilidade de trio consecutivo cai para apenas 3.2%.',
-      note: 'Os pares mais frequentes históricos aparecem em ~1.4% dos sorteios.',
+        'Em 42% dos sorteios ocorre pelo menos um par de dezenas consecutivas. A probabilidade de trio consecutivo cai para apenas 3.2%. Os pares mais frequentes históricos aparecem em ~1.4% dos sorteios.',
+      note: null,
       component: <PairCooccurrenceChart />,
     },
     {
@@ -262,36 +252,7 @@ const getProbabilityChapter = (): Chapter => ({
       note: 'Se você ganhar com esses números, terá que dividir o prêmio com dezenas de outros apostadores, o que reduz drasticamente o lucro real por bilhete.',
       component: <SelectionBiasHeatmap />,
     },
-    {
-      id: 'low-high',
-      title: 'Distribuição: Baixas vs Altas',
-      subtitle: 'Números de 1-30 vs 31-60',
-      type: 'Estatístico',
-      insight:
-        'Apesar das crenças supersticiosas, 49.51% dos números sorteados são baixos e 50.49% são altos, revelando um equilíbrio quase perfeito a longo prazo.',
-      note: 'Bolas (1-30) vs Bolas (31-60).',
-      component: <LowHighChart />,
-    },
-    {
-      id: 'math-composition',
-      title: 'Composição Matemática',
-      subtitle: 'Primos, Múltiplos e Padrões',
-      type: 'Estatístico',
-      insight:
-        'Aproximadamente 28% das bolas sorteadas são números primos, enquanto 20% são múltiplos de 5. Isso mostra a diversidade matemática esperada.',
-      note: 'DNA dos sorteios.',
-      component: <MathCompositionChart />,
-    },
-    {
-      id: 'clustering',
-      title: 'Agrupamento de Dezenas',
-      subtitle: 'Distribuição entre as linhas',
-      type: 'Estatístico',
-      insight:
-        'Menos de 3% dos sorteios têm números primorosamente espalhados por todas as linhas (ex. 1 a 10, 11 a 20...). A maioria agrupa-se naturalmente.',
-      note: 'Comportamento aglomerado vs espalhado.',
-      component: <ClusteringChart />,
-    },
+
     {
       id: 'overlap',
       title: 'Independência Consecutiva',
@@ -310,7 +271,7 @@ const getProbabilityChapter = (): Chapter => ({
       type: 'Estatístico',
       insight:
         'Comprar ingressos quando o prêmio chega a 1 Bilhão aumenta exponencialmente a probabilidade matemática de que, se você ganhar, terá que dividir o prêmio com muito mais pessoas.',
-      note: 'Em sorteios como a Mega da Virada, onde as vendas frequentemente ultrapassam 150 milhões de bilhetes, ganhar sozinho é matematicamente quase impossível.',
+      note: null,
       component: <PoissonSplittingChart />,
     },
     {
@@ -323,16 +284,47 @@ const getProbabilityChapter = (): Chapter => ({
       note: 'Total de 2.994 sorteios analisados. Soma mínima teórica: 21 (1+2+3+4+5+6) · Máxima: 345 (55+56+57+58+59+60).',
       component: <SumBellCurveChart />,
     },
+    {
+      id: 'low-high',
+      title: 'Distribuição: Baixas vs Altas',
+      subtitle: 'Números de 1-30 vs 31-60',
+      type: 'Estatístico',
+      insight:
+        'Apesar das crenças supersticiosas, 49.51% dos números sorteados são baixos e 50.49% são altos, revelando um equilíbrio quase perfeito a longo prazo.',
+      note: null,
+      component: <LowHighChart />,
+    },
+    {
+      id: 'math-composition',
+      title: 'Composição Matemática',
+      subtitle: 'Primos, Múltiplos e Padrões',
+      type: 'Estatístico',
+      insight:
+        'Aproximadamente 28% das bolas sorteadas são números primos, enquanto 20% são múltiplos de 5. Isso mostra a diversidade matemática esperada.',
+      note: null,
+      component: <MathCompositionChart />,
+    },
+    {
+      id: 'clustering',
+      title: 'Agrupamento de Dezenas',
+      subtitle: 'Distribuição entre as linhas',
+      type: 'Estatístico',
+      insight:
+        'Menos de 3% dos sorteios têm números primorosamente espalhados por todas as linhas (ex. 1 a 10, 11 a 20...). A maioria agrupa-se naturalmente.',
+      note: null,
+      component: <ClusteringChart />,
+    },
   ],
 });
 
 const getTemporalChapter = (stats?: AnalyticsStats | null): Chapter => ({
-  id: 'time-series',
+  id: 'evolucoes',
   icon: <TrendingUp className="w-4 h-4" />,
-  title: 'Temporalidade',
-  description: 'Evolução histórica e tendências ao longo do tempo',
-  lineClass: 'bg-violet-500/60',
-  iconColorClass: 'text-violet-400',
+  title: 'Evolução Histórica',
+  description:
+    'Análise da evolução histórica, recordes, tendências ao longo do tempo e muito mais...',
+  lineClass: 'bg-gradient-to-r from-orange-500 to-amber-400',
+  iconColorClass: 'text-amber-400',
   sections: [
     {
       id: 'prizes',
@@ -361,8 +353,8 @@ const getTemporalChapter = (stats?: AnalyticsStats | null): Chapter => ({
       subtitle: 'Comportamento histórico imutável',
       type: 'Cronológico',
       insight:
-        'As frequências se mantêm totalmente estáveis ao longo das décadas — evidência de entropia robusta e ausência de viés mecânico.',
-      note: 'Não há evidência de viés crescente nos sorteios desde 1996.',
+        'As frequências se mantêm totalmente estáveis ao longo das décadas desde a digitalização em 1996.',
+      note: null,
       className: ' col-span-2',
       component: <TemporalFrequencyChart />,
     },
@@ -373,7 +365,7 @@ const getTemporalChapter = (stats?: AnalyticsStats | null): Chapter => ({
       subtitle: 'Rollover por ano',
       type: 'Estatístico',
       insight: `Quase ${stats?.meta?.pctWithoutWinner || 79}% de todos os sorteios terminam acumulados. A maior seca registrou 28 concursos seguidos sem ganhador.`,
-      note: 'A cada sorteio acumulado a chance matemática continua a mesma — 1 em ~50 milhões.',
+      note: null,
       component: <AccumulationTrendChart />,
     },
     {
@@ -383,9 +375,7 @@ const getTemporalChapter = (stats?: AnalyticsStats | null): Chapter => ({
       type: 'Comparativo',
       insight:
         'O gráfico de barras empilhadas mostra a constância da frequência dezena a dezena em cada década.',
-      note: 'Agrupado e ordenado pelo volume total histórico.',
-
-      className: 'md:col-span-2 lg:col-span-2',
+      note: null,
       component: <TopNumbersByDecadeChart />,
     },
     {
@@ -395,7 +385,8 @@ const getTemporalChapter = (stats?: AnalyticsStats | null): Chapter => ({
       type: 'Estatístico',
       insight:
         'O volume de apostas cresce exponencialmente à medida que o prêmio acumula. Sorteios com 10+ acúmulos arrecadam até 5× mais que sorteios iniciais.',
-      note: 'Correlação prêmio/volume.',
+      note: '*As informações em branco são de dados que não foram devidamente cadastrados no banco de dados, e não necessariamente indicam ausência de ganhadores ou acúmulos.',
+      className: 'md:col-span-2 lg:col-span-2',
       component: <StreakEconomicsChart />,
     },
   ],
@@ -533,7 +524,7 @@ function KpiCard({ label, value, icon, accentClass, valueClass, delay = 0 }: Kpi
       initial={{ opacity: 0, y: 24 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay, duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-      className="glass-card relative overflow-hidden group cursor-default"
+      className="  relative overflow-hidden group cursor-default"
     >
       <div className={`absolute top-0 left-0 right-0 h-0.5 ${accentClass}`} />
       <div
@@ -609,6 +600,7 @@ function DashboardKpiStrip({
           <KpiCard key={card.label} {...card} delay={0.1 + i * 0.07} />
         ))}
       </div>
+      <FrequencyAnalysisGroup />
 
       <AnimatePresence>
         {isCalculating && (
@@ -821,8 +813,6 @@ function DashboardHeader({
                 <span>{metadata?.totalGames.toLocaleString('pt-BR')} jogos</span>
               </div>
 
-              <span className="text-border/60">•</span>
-
               <AnimatePresence mode="wait">
                 <motion.div
                   key={isStale ? 'stale' : 'fresh'}
@@ -981,7 +971,7 @@ export function Analytics() {
     } else {
       toast({
         type: 'success',
-        message: `Dados atualizados com sucesso — ${newCount.toLocaleString()} sorteios carregados${delta > 0 ? ` (+${delta} novos)` : ''}.`,
+        message: `${newCount.toLocaleString()} dados atualizados com sucesso!`,
       });
     }
   };
@@ -1050,7 +1040,7 @@ export function Analytics() {
                       }}
                       className={s.className}
                     >
-                      <Card className="h-full glass-card border-border overflow-hidden flex flex-col group hover:border-primary/20 transition-all duration-300 shadow-sm hover:shadow-md">
+                      <Card className="h-full  overflow-hidden flex flex-col group hover:border-primary/20 transition-all duration-300 shadow-sm hover:shadow-md">
                         <div
                           className={`h-[3px] w-full flex-shrink-0 ${currentChapter.lineClass} opacity-80`}
                         />

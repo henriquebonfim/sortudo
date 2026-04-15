@@ -92,12 +92,21 @@ export function Footer() {
                 Open Source no GitHub
               </a>
             </div>
-            <div className="p-4 rounded-xl border border-border bg-card/30 space-y-1.5">
-              <p className="text-xs text-muted-foreground/70 leading-relaxed">
-                Dados oficiais da CEF. Matemática por nossa conta.
+            <div className="p-4 rounded-xl border border-border bg-card/30 space-y-2">
+              <p className="text-[11px] font-semibold uppercase tracking-wider text-muted-foreground/80">
+                Aviso Legal
               </p>
-              <p className="text-xs text-muted-foreground/50 italic leading-relaxed">
-                "Jogar pode ser divertido. Só saiba quanto está custando."
+              <p className="text-xs text-muted-foreground/75 leading-relaxed">
+                Este site utiliza exclusivamente dados oficiais publicados pela CAIXA Econômica
+                Federal. Eventuais inconsistências, omissões ou divergências na base oficial são de
+                responsabilidade exclusiva da própria CAIXA Econômica Federal.
+              </p>
+              <p className="text-xs text-muted-foreground/65 leading-relaxed">
+                O Sortudo tem finalidade estritamente informativa e educacional, não realiza
+                apostas, não intermedeia jogos e não incentiva a prática de jogos de azar.
+              </p>
+              <p className="text-xs text-muted-foreground/60 leading-relaxed">
+                Projeto independente e sem fins lucrativos.
               </p>
             </div>
           </div>

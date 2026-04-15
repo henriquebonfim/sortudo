@@ -30,7 +30,7 @@ export function PoissonSplittingChart() {
 
   return (
     <div className="space-y-4">
-      <div className="  p-6 border-t-4 border-t-info/50">
+      <div className="  p-6 ">
         <p className="text-sm text-muted-foreground mb-6 max-w-2xl leading-relaxed">
           À medida que as vendas de bilhetes (Eixo X) superam as combinações totais (
           {TOTAL_COMBINATIONS.toLocaleString()}), a probabilidade de você ser forçado a dividir o

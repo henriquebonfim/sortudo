@@ -63,6 +63,11 @@ function freqToColor(freq: number, min: number, max: number): string {
   return palette[index];
 }
 
+function seededUnit(seed: number): number {
+  const hashed = Math.sin(seed * 12.9898) * 43758.5453;
+  return hashed - Math.floor(hashed);
+}
+
 function applyPhysics(nodes: BubbleNode[], width: number, height: number) {
   // Center gravity pull
   for (const n of nodes) {
@@ -178,13 +183,25 @@ function FrequencyBarChart({ filter }: FrequencyBarChartProps) {
         tooltipContent={({ active, payload, label }) => (
           <ChartTooltip
             active={active}
-            payload={payload?.map((entry) => ({
-              payload: entry.payload as Record<string, unknown> | undefined,
-              name: entry.name,
-              value: entry.value,
-              color: typeof entry.color === 'string' ? entry.color : undefined,
-            }))}
+            payload={payload}
             label={label}
+            items={[
+              { label: 'Quantidade de repetições', value: 'frequencyValue' },
+              {
+                label: 'Percentual sobre o total dos sorteios',
+                value: 'percentageValue',
+              },
+            ]}
+            formatter={(value, name) => {
+              const numericValue = Number(value);
+              if (!Number.isFinite(numericValue)) return String(value ?? '');
+
+              if (name === 'Percentual sobre o total dos sorteios') {
+                return `${numericValue.toFixed(1)}%`;
+              }
+
+              return numericValue.toLocaleString('pt-BR');
+            }}
           />
         )}
         tooltipCursor={{ fill: CHART_COLORS.CURSOR }}
@@ -274,15 +291,19 @@ function BubbleChart({ filter }: BubbleChartProps) {
     const maxFreq = data.max.frequency;
 
     // Initialize nodes
-    const initialNodes: BubbleNode[] = filteredEntries.map((e) => {
+    const initialNodes: BubbleNode[] = filteredEntries.map((e, index) => {
       const t = (e.frequency - minFreq) / (maxFreq - minFreq || 1);
+      const seedBase = e.number * 1000 + e.frequency * 10 + index;
+      const spreadX = seededUnit(seedBase + 17) - 0.5;
+      const spreadY = seededUnit(seedBase + 53) - 0.5;
+
       return {
         number: e.number,
         frequency: e.frequency,
         radius: 16 + t * 32,
         color: freqToColor(e.frequency, minFreq, maxFreq),
-        x: W / 2 + (Math.random() - 0.5) * W * 0.5,
-        y: H / 2 + (Math.random() - 0.5) * H * 0.5,
+        x: W / 2 + spreadX * W * 0.5,
+        y: H / 2 + spreadY * H * 0.5,
         vx: 0,
         vy: 0,
       };

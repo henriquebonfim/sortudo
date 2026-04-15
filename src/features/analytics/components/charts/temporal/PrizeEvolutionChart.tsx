@@ -187,7 +187,7 @@ export function PrizeEvolutionChart() {
                 className="glass-card p-4 bg-primary/5 border-primary/20"
               >
                 <div className="flex items-center justify-between mb-3">
-                  <h4 className="font-display font-bold text-foreground">Foco: {selectedYear}</h4>
+                  <h4 className="font-display font-bold text-foreground">{selectedYear}</h4>
                   <button
                     onClick={() => setSelectedYear(null)}
                     className="text-[10px] text-primary hover:underline"

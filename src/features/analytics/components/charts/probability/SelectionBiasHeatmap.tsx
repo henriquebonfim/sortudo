@@ -90,7 +90,7 @@ export function SelectionBiasHeatmap() {
 
   return (
     <div className="space-y-6 flex flex-col content-between items-center justify-between">
-      <div className=" p-6  border-t-4 border-t-primary/50">
+      <div className=" p-6  border-t">
         <p className="text-sm text-muted-foreground mb-6 max-w-2xl leading-relaxed">
           Embora o sorteio seja matemático e uniforme, as escolhas humanas são profundamente
           enviesadas. Os pontos em <span className="text-hot font-bold">Vermelho</span> e{' '}

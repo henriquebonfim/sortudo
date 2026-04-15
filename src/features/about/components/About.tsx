@@ -310,6 +310,25 @@ export function About() {
                     </a>
                   ))}
                 </div>
+
+                <div className="rounded-2xl border border-amber-500/25 bg-amber-500/5 p-5 space-y-3">
+                  <h3 className="text-sm font-semibold uppercase tracking-wider text-amber-300">
+                    Aviso Legal
+                  </h3>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    Este projeto utiliza exclusivamente dados oficiais disponibilizados pela CAIXA
+                    Econômica Federal. Eventuais inconsistências, omissões, atrasos de atualização
+                    ou divergências nesses dados são de responsabilidade exclusiva da própria CAIXA
+                    Econômica Federal.
+                  </p>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    O Sortudo possui finalidade estritamente informativa e educacional, não realiza
+                    apostas, não intermedeia jogos e não apoia a prática de jogos de azar.
+                  </p>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    Projeto independente e sem fins lucrativos.
+                  </p>
+                </div>
               </div>
 
               <div className="glass-card p-10 rounded-[32px] space-y-6">
