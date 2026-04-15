@@ -1,4 +1,4 @@
-import { createModuleWorker, registerValidatedWorkerHandler } from '@/workers/worker-runtime';
+import { registerValidatedWorkerHandler } from '@/workers/worker-runtime';
 import { describe, expect, it, vi } from 'vitest';
 import { z } from 'zod';
 
@@ -19,8 +19,8 @@ describe('worker runtime helpers', () => {
     vi.stubGlobal('Worker', WorkerMock as unknown as typeof Worker);
 
     const url = new URL('file:///tmp/worker.ts');
-    createModuleWorker(url);
 
+    new Worker(url, { type: 'module' });
     expect(workerCtorSpy).toHaveBeenCalledWith(url, { type: 'module' });
 
     vi.unstubAllGlobals();

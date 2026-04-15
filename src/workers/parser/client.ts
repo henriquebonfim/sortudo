@@ -7,13 +7,12 @@ import {
   ParseExcelResponseSchema,
 } from '@/workers/parser/commands';
 import { FeatureWorkerClient } from '@/workers/worker-client';
-import { createModuleWorker } from '@/workers/worker-runtime';
 
 export class LotteryParserWorkerClient extends FeatureWorkerClient<LotteryParserCommand, Game[]> {
   private static instance: LotteryParserWorkerClient | null = null;
 
   private constructor() {
-    const worker = createModuleWorker(new URL('./worker.ts', import.meta.url));
+    const worker = new Worker(new URL('./worker.ts', import.meta.url), { type: 'module' });
     super(worker, 45000, {
       commandSchema: LotteryParserCommandSchema,
       responseSchema: ParseExcelResponseSchema,

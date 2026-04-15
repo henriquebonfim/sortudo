@@ -73,6 +73,7 @@ export const LotteryStatsSchema = z.object({
   parityDistribution: z
     .array(
       z.object({
+        label: z.string(),
         odds: z.number(),
         evens: z.number(),
         count: z.number(),

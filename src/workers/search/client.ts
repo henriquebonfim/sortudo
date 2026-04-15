@@ -7,7 +7,6 @@ import {
   SearchResponseSchema,
 } from '@/workers/search/commands';
 import { FeatureWorkerClient } from '@/workers/worker-client';
-import { createModuleWorker } from '@/workers/worker-runtime';
 
 /**
  * Feature-specific worker client for the Search domain.
@@ -16,9 +15,8 @@ import { createModuleWorker } from '@/workers/worker-runtime';
 export class SearchWorkerClient extends FeatureWorkerClient<SearchCommand, SearchResult> {
   private static instance: SearchWorkerClient | null = null;
 
-  // Uses Vite's worker import syntax
   private constructor() {
-    const worker = createModuleWorker(new URL('./worker.ts', import.meta.url));
+    const worker = new Worker(new URL('./worker.ts', import.meta.url), { type: 'module' });
     super(worker, 45000, {
       commandSchema: SearchCommandSchema,
       responseSchema: SearchResponseSchema,

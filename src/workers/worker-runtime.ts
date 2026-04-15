@@ -13,10 +13,6 @@ interface WorkerHandlerOptions<TCommand extends WorkerCommand, TResponse> {
   handleCommand: (command: TCommand) => Promise<TResponse> | TResponse;
 }
 
-export function createModuleWorker(workerModuleUrl: URL): Worker {
-  return new Worker(workerModuleUrl, { type: 'module' });
-}
-
 export function registerValidatedWorkerHandler<TCommand extends WorkerCommand, TResponse>({
   requestSchema,
   invalidPayloadMessage,
