@@ -23,10 +23,20 @@ const JackpotWinnerRow = memo(function JackpotWinnerRow({
   maxWinners,
   maxPrize,
 }: JackpotWinnerRowProps) {
-  const safeMaxWinners = Math.max(maxWinners, 1);
-  const barWidthPercent = (game.jackpotWinners / safeMaxWinners) * 100;
-
-  const gradientBackground = `linear-gradient(90deg, hsl(var(--foreground) / 0.05) ${barWidthPercent}%, transparent ${barWidthPercent}%)`;
+  const parsedDate = new Date(game.date);
+  const hasValidDate = !Number.isNaN(parsedDate.getTime());
+  const mobileDate = hasValidDate
+    ? parsedDate
+        .toLocaleDateString('pt-BR', {
+          day: '2-digit',
+          month: 'short',
+          year: 'numeric',
+        })
+        .toUpperCase()
+    : formatDate(game.date).toUpperCase();
+  const winnersLabel = `${game.jackpotWinners} ${game.jackpotWinners === 1 ? 'ganhador' : 'ganhadores'}`;
+  const isRecord = game.jackpotPrize === maxPrize || game.jackpotWinners === maxWinners;
+  const primaryLocation = game.locations[0] || 'N/A';
 
   return (
     <motion.div
@@ -34,73 +44,119 @@ const JackpotWinnerRow = memo(function JackpotWinnerRow({
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -10 }}
       transition={{ duration: 0.2, delay: (index % 10) * 0.03 }}
-      className="relative flex flex-col gap-4 p-5 rounded-2xl border border-border bg-muted/5 overflow-hidden transition-all hover:bg-muted/10"
+      className="relative overflow-hidden"
     >
-      <div
-        className="absolute inset-0 opacity-20 pointer-events-none"
-        style={{ background: gradientBackground }}
-      />
-
-      {/* Header: ID, Date, Winners */}
-      <div className="relative z-10 flex items-start justify-between">
-        <div className="flex items-center gap-3">
-          <div>
-            <p className="text-xs text-muted-foreground font-medium uppercase tracking-wider">
-              <span className="font-mono font-bold text-sm   text-primary   shadow-glow-gold/10">
-                #{game.id}
-              </span>
-              &nbsp;/ {formatDate(game.date)}
+      <div className="relative overflow-hidden rounded-[22px] border border-white/10   p-4 md:hidden">
+        <div className="relative z-10 flex flex-col gap-3">
+          <div className="flex items-start justify-between gap-3">
+            <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-400">
+              <span className="text-amber-300">#{game.id}</span>
+              <span className="mx-1.5 text-slate-500">/</span>
+              {mobileDate}
             </p>
-            <div className="flex items-center gap-2">
-              <span className="font-mono font-bold text-base text-foreground">
-                {game.jackpotWinners} {game.jackpotWinners === 1 ? 'ganhador' : 'ganhadores'}
-              </span>
+
+            <div className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-[0.16em] text-amber-300">
+              <Trophy className="h-3.5 w-3.5" />
+              <span>Sena</span>
             </div>
-            <p className="font-mono text-lg font-bold text-foreground leading-none">
+          </div>
+
+          <div className="space-y-0.5">
+            <p className="font-display text-[clamp(1.2rem,5.3vw,1.75rem)] font-semibold leading-none text-slate-100">
+              {winnersLabel}
+            </p>
+            <p className="font-display text-[clamp(1.2rem,5.8vw,1.95rem)] font-bold leading-tight text-slate-50">
               {formatCurrency(game.jackpotPrize)}
             </p>
           </div>
-        </div>
 
-        <div className="text-right">
-          <div className="flex items-center justify-end gap-1.5 text-primary mb-1">
-            {(game.jackpotPrize === maxPrize || game.jackpotWinners === maxWinners) && (
-              <span className="text-[9px] px-1.5 py-0.5 rounded font-mono uppercase tracking-wider bg-primary/20 text-primary ml-1">
-                recorde
-              </span>
-            )}
-            <Trophy className="w-3.5 h-3.5" />
-            <span className="text-[10px] font-bold uppercase tracking-widest">Sena</span>
+          <div className="h-px bg-gradient-to-r from-amber-300/90 via-amber-500/40 to-transparent" />
+
+          <div className="flex flex-wrap items-center gap-2">
+            {game.numbers.map((num) => (
+              <MiniBall key={`mobile-${game.id}-${num}`} number={num} size="sm" />
+            ))}
           </div>
 
-          <div className="flex flex-col justify-between">
-            <div className="relative z-10 flex flex-wrap gap-2 py-2 min-w-52">
-              {game.numbers.map((num) => (
-                <MiniBall key={num} number={num} size="sm" />
-              ))}
-            </div>
+          <div className="mt-0.5 flex items-center gap-2 text-slate-400">
+            <MapPin className="h-3.5 w-3.5" />
+            <span className="rounded-full border border-white/10 bg-black/25 px-2.5 py-0.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-slate-300">
+              {primaryLocation}
+            </span>
           </div>
         </div>
+
+        {isRecord && (
+          <span className="pointer-events-none absolute right-3 top-9 rounded-full border border-amber-400/30 bg-amber-400/10 px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.1em] text-amber-300">
+            recorde
+          </span>
+        )}
       </div>
 
-      {/* Locations Section */}
-      {game.locations.length > 0 && (
-        <div className="relative z-10 pt-3 border-t border-white/5">
-          <div className="flex items-start gap-2">
-            <MapPin className="w-3.5 h-3.5 text-muted-foreground shrink-0 mt-0.5" />
-            <div className="flex flex-wrap gap-1.5">
-              {game.locations.map((loc, i) => (
-                <span
-                  key={i}
-                  className="px-2 py-0.5 rounded-md bg-white/5 text-[10px] font-medium text-muted-foreground border border-white/5"
-                >
-                  {loc}
+      <div className="relative hidden flex-col gap-4 rounded-2xl border border-border bg-muted/5 p-5 transition-all hover:bg-muted/10 md:flex">
+        <div className="absolute inset-0 pointer-events-none opacity-20" />
+
+        {/* Header: ID, Date, Winners */}
+        <div className="relative z-10 flex items-start justify-between">
+          <div className="flex items-center gap-3">
+            <div>
+              <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                <span className="font-mono text-sm font-bold text-primary shadow-glow-gold/10">
+                  #{game.id}
                 </span>
-              ))}
+                &nbsp;/ {formatDate(game.date)}
+              </p>
+              <div className="flex items-center gap-2">
+                <span className="font-mono text-base font-bold text-foreground">
+                  {winnersLabel}
+                </span>
+              </div>
+              <p className="font-mono text-lg font-bold leading-none text-foreground">
+                {formatCurrency(game.jackpotPrize)}
+              </p>
+            </div>
+          </div>
+
+          <div className="text-right">
+            <div className="mb-1 flex items-center justify-end gap-1.5 text-primary">
+              {isRecord && (
+                <span className="ml-1 rounded bg-primary/20 px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-wider text-primary">
+                  recorde
+                </span>
+              )}
+              <Trophy className="h-3.5 w-3.5" />
+              <span className="text-[10px] font-bold uppercase tracking-widest">Sena</span>
+            </div>
+
+            <div className="flex flex-col justify-between">
+              <div className="relative z-10 flex min-w-52 flex-wrap gap-2 py-2">
+                {game.numbers.map((num) => (
+                  <MiniBall key={num} number={num} size="sm" />
+                ))}
+              </div>
             </div>
           </div>
         </div>
-      )}
+
+        {/* Locations Section */}
+        {game.locations.length > 0 && (
+          <div className="relative z-10 border-t border-white/5 pt-3">
+            <div className="flex items-start gap-2">
+              <MapPin className="mt-0.5 h-3.5 w-3.5 shrink-0 text-muted-foreground" />
+              <div className="flex flex-wrap gap-1.5">
+                {game.locations.map((loc, i) => (
+                  <span
+                    key={i}
+                    className="rounded-md border border-white/5 bg-white/5 px-2 py-0.5 text-[10px] font-medium text-muted-foreground"
+                  >
+                    {loc}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
     </motion.div>
   );
 });

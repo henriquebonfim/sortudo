@@ -75,6 +75,7 @@ const getNumbersChapter = (stats?: AnalyticsStats): Chapter => ({
       type: 'Lista',
       insight: `O recorde histórico é de ${stats?.topJackpotWinners?.[0]?.winners || 0} ganhadores simultâneos na Sena — o que diluiu drasticamente o prêmio individual naquele sorteio.`,
       note: 'Ocorre em bolões, números muito populares, aleatórios ou visuais, que são os mais sorteados.',
+      className: 'md:col-span-2 lg:col-span-1',
       component: <TopJackpotWinnersChart />,
     },
     {
@@ -96,6 +97,7 @@ const getNumbersChapter = (stats?: AnalyticsStats): Chapter => ({
       insight:
         'Os prêmios anunciados são baseados em anuidades de 30 anos. Se você optar pelo valor em dinheiro vivo (o que, matematicamente, você provavelmente deveria fazer), você perde instantaneamente ~52% do valor anunciado. E então vêm os impostos.',
       note: ' Aquele anúncio dizendo "1 BILHÃO DE REAIS!" representa, na verdade, um valor de ~R$300 milhões. Combine isso com o risco de Divisão (curva de Poisson), e o valor real cai ainda mais.',
+      className: 'md:col-span-2 lg:col-span-1',
       component: <JackpotErosionWaterfall />,
     },
     {
@@ -106,7 +108,7 @@ const getNumbersChapter = (stats?: AnalyticsStats): Chapter => ({
       insight:
         'A disparidade de magnitude entre prêmios é de centenas de vezes. O evento especial anualmente redefine os recordes da loteria.',
       note: 'Comparação direta entre a rentabilidade média de sorteios semanais vs. o evento anual especial.',
-      className: 'md:col-span-1 lg:col-span-1',
+      className: 'md:col-span-2 lg:col-span-1',
       component: <RegularVsSpecialChart />,
     },
     {
@@ -139,6 +141,7 @@ const getProbabilityChapter = (): Chapter => ({
       insight:
         'Combinações 3+3 são as mais prováveis (31%), seguidas pelos formatos 4/2 e 2/4. Juntas formam ~79% de todos os concursos.',
       note: null,
+      className: 'md:col-span-1 lg:col-span-1',
       component: <ParityDistributionChart />,
     },
     {
@@ -159,6 +162,7 @@ const getProbabilityChapter = (): Chapter => ({
       insight:
         'Enquanto as bolas caem aleatoriamente, os humanos não escolhem aleatoriamente. Apostar em datas de nascimento não altera suas chances de ganhar, mas MAXIMIZA a chance de dividir o prêmio.',
       note: 'Se você ganhar com esses números, terá que dividir o prêmio com dezenas de outros apostadores, o que reduz drasticamente o lucro real por bilhete.',
+
       component: <SelectionBiasHeatmap />,
     },
 
@@ -191,6 +195,7 @@ const getProbabilityChapter = (): Chapter => ({
       insight:
         'A média histórica da soma das 6 dezenas é 183.15, variando entre 66 e 331. A distribuição segue perfeita curva normal. Extremos (somas perto de 21 ou de 345) são os eventos mais raros, enquanto a maioria dos sorteios se concentra entre 150 e 200.',
       note: 'Total de 2.994 sorteios analisados. Soma mínima teórica: 21 (1+2+3+4+5+6) · Máxima: 345 (55+56+57+58+59+60).',
+
       component: <SumBellCurveChart />,
     },
     {
@@ -253,7 +258,7 @@ const getTemporalChapter = (stats?: AnalyticsStats): Chapter => ({
       type: 'Geográfico',
       insight: `A região Sudeste domina. ${stats?.geoWinners?.[0]?.state || 'SP'} lidera com ${stats?.geoWinners?.[0]?.total || '--'} ganhadores. O 'Canal Eletrônico' já representa ~4.5%.`,
       note: 'A cidade não-capital mais premiada historicamente é Santos/SP.',
-      className: 'md:col-span-1 lg:col-span-1',
+      className: 'md:col-span-2 lg:col-span-1',
       component: <GeoWinnersChart />,
     },
     {
@@ -264,7 +269,7 @@ const getTemporalChapter = (stats?: AnalyticsStats): Chapter => ({
       insight:
         'As frequências se mantêm totalmente estáveis ao longo das décadas desde a digitalização em 1996.',
       note: null,
-      className: ' col-span-2',
+      className: 'md:col-span-2 lg:col-span-1',
       component: <TemporalFrequencyChart />,
     },
 
@@ -275,6 +280,7 @@ const getTemporalChapter = (stats?: AnalyticsStats): Chapter => ({
       type: 'Estatístico',
       insight: `Quase ${stats?.meta?.pctWithoutWinner || 79}% de todos os sorteios terminam acumulados. A maior seca registrou 28 concursos seguidos sem ganhador.`,
       note: null,
+      className: 'md:col-span-2 lg:col-span-1',
       component: <AccumulationTrendChart />,
     },
     {
@@ -285,6 +291,7 @@ const getTemporalChapter = (stats?: AnalyticsStats): Chapter => ({
       insight:
         'O gráfico de barras empilhadas mostra a constância da frequência dezena a dezena em cada década.',
       note: null,
+      className: 'md:col-span-2 lg:col-span-1',
       component: <TopNumbersByDecadeChart />,
     },
     {

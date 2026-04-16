@@ -51,7 +51,7 @@ interface DashboardHeaderProps {
   onOpenUpload: () => void;
   chapters: { id: string; title: string; icon: ReactNode }[];
   currentChapterIndex: number;
-  onChapterSelect: (index: number) => void;
+  onChapterSelect: (index: number, chapterId?: string) => void;
 }
 
 interface DashboardKpiStripProps {
