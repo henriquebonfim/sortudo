@@ -1,7 +1,7 @@
 name: Relato de Bug
 description: Informe um erro para nos ajudar a melhorar o Sortudo?
-title: "[BUG]: "
-labels: ["bug"]
+title: '[BUG]: '
+labels: ['bug']
 assignees: []
 body:
   - type: markdown

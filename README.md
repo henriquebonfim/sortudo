@@ -1,84 +1,111 @@
-# Sortudo? (Lucky?) 🍀 — Simulador Educativo da Mega-Sena
+# Sortudo (A Matemática da Mega-Sena)
 
+[![Test E2E](https://github.com/your-repo/odds-are-not-with-you/actions/workflows/staging.yml/badge.svg)](https://github.com/your-repo/odds-are-not-with-you/actions/workflows/staging.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-**Sortudo?** é um simulador educativo e de código aberto projetado para desmistificar a matemática por trás das loterias. Usando dados históricos reais da Mega-Sena, o projeto demonstra visualmente as probabilidades e o impacto financeiro de apostar a longo prazo.
-
-> "A sorte é um erro de cálculo. A matemática não é cruel — só honesta."
+**Sortudo** é uma aplicação interativa baseada em dados que visualiza a improbabilidade estatística de ganhar na Mega-Sena. Com análises de dados, histórico de sorteios e um gerador de combinações, o projeto educa sobre a matemática dos jogos de azar e suas baixas probabilidades.
 
 ---
 
-## ✨ Características
+## 🚀 Principais Recursos
 
--   **📊 Painel de Dados**: Importe os resultados oficiais da Caixa (XLSX) e visualize estatísticas de frequência.
--   **💸 Calculadora de Perdas**: Descubra quanto você já gastou historicamente e o que esse dinheiro teria rendido em Tesouro Selic ou Ibovespa.
--   **🎲 Simulador 40 Anos**: Veja como seu patrimônio se comporta em décadas de apostas ininterruptas.
--   **🔍 Buscador de Combinações**: Verifique se seus números da "sorte" já saíram alguma vez nos 2.800+ concursos.
--   **🏗️ Arquitetura DDD**: Código limpo, testável e desacoplado, seguindo padrões de Domain-Driven Design.
-
-## 🏗️ Requisitos Técnicos
-
-O projeto utiliza tecnologias modernas focadas em performance e experiência do usuário:
-
--   **Frontend**: React + TypeScript + Vite
--   **Estilização**: Tailwind CSS + shadcn/ui
--   **Animações**: Framer Motion
--   **Persistência**: IndexedDB (Local-first storage)
--   **Processamento**: Web Workers
+- **📊 Dashboard de Análise Interativo:** Explore mais de 30 anos de história da loteria com gráficos sobre a erosão do prêmio, distribuição geográfica e tendências de frequência.
+- **🎲 Gerador de Sorte:** Um gerador de combinações baseado em física que simula a "sorte" necessária para vencer, destacando a aleatoriedade do sorteio.
+- **🔍 Busca Histórica:** Verifique qualquer combinação de 6 números para ver se ela já foi sorteada na história da Mega-Sena.
+- **📉 Narrativa Matemática Interativa (Scrollytelling):** Uma jornada curada enquanto você rola a página, explicando conceitos como a Lei dos Grandes Números e a distribuição de Poisson em um contexto visual na seção "Matemática do Improvável".
 
 ---
 
-## 🚀 Como Começar
+## 🛠️ Pilha Tecnológica
+
+### Core
+
+- **Runtime:** [Bun](https://bun.sh/) (Runtime JavaScript rápido, _tudo-em-um_)
+- **Framework:** [React 18](https://reactjs.org/) com [TypeScript](https://www.typescriptlang.org/)
+- **Ferramenta de Build:** [Vite](https://vitejs.dev/)
+- **Roteamento:** [React Router 7](https://reactrouter.com/)
+
+### UI & Estilização
+
+- **Estilização:** [Tailwind CSS](https://tailwindcss.com/) com efeitos de [Glassmorphism](https://ui.glass/)
+- **Animações:** [Framer Motion](https://www.framer.com/motion/)
+- **Gráficos:** [Recharts](https://recharts.org/)
+- **Ícones:** [Lucide React](https://lucide.dev/)
+- **Componentes:** Primitivos do [Radix UI](https://www.radix-ui.com/)
+
+### Testes & Qualidade
+
+- **Unitário/Integração:** [Vitest](https://vitest.dev/) & [React Testing Library](https://testing-library.com/docs/react-testing-library/intro/)
+- **Testes E2E:** [Playwright](https://playwright.dev/)
+- **Linting/Formatação:** [ESLint](https://eslint.org/) (com limites estritos) & [Prettier](https://prettier.io/)
+- **Segurança de Tipos:** [Zod](https://zod.dev/) para validação de dados
+
+---
+
+## 🏗️ Arquitetura
+
+O projeto utiliza uma organização **baseada em funcionalidades**, que separa a lógica por contexto de uso, facilitando a manutenção sem a complexidade de camadas estritas:
+
+1.  **`src/features/`**: Domínios de produto (Analytics, Generator, Search, Home, About), com páginas e componentes por feature.
+2.  **`src/app/`**: Roteamento, bootstrap e orquestração global via `AppProvider`.
+3.  **`src/store/`**: Estado global e coordenação entre domínio de dados, analytics, busca e geração.
+4.  **`src/workers/`**: Processamento pesado fora da thread principal (analytics, parser e search).
+5.  **`src/shared/` e `src/lib/`**: UI reutilizável, utilitários, schemas e helpers transversais.
+
+Documentação técnica completa:
+
+- [docs/architecture.md](./docs/architecture.md) — visão de arquitetura, system design, práticas de código, runbook e roadmap técnico.
+
+---
+
+## 🚦 Primeiros Passos
 
 ### Pré-requisitos
--   Node.js (v18+)
--   Bun (recomendado) ou npm/yarn
+
+- [Bun](https://bun.sh/docs/installation) instalado em sua máquina.
 
 ### Instalação
 
 ```bash
 # Clone o repositório
 git clone https://github.com/henriquebonfim/sortudo.git
-
-# Entre na pasta
 cd sortudo
 
 # Instale as dependências
 bun install
+```
 
-# Inicie o servidor de desenvolvimento
-bun dev
+### Desenvolvimento
+
+```bash
+# Busque os dados mais recentes da loteria e inicie o servidor de desenvolvimento
+bun run dev
+```
+
+### Testes
+
+```bash
+# Executa eslint, knip, prettier e verificação de types
+bun run codebase:smells
+
+# Execute os testes unitários, integração, e os testes de ponta a ponta (Playwright)
+bun run codebase:tests
 ```
 
 ---
 
-## 📂 Arquitetura (DDD)
+## 🧹 Qualidade de Código
 
-A base de código é organizada em camadas para garantir escalabilidade:
+Mantemos altos padrões para a saúde do código:
 
--   `src/domain`: Entidades, interfaces de repositório e serviços de domínio (as regras do jogo).
--   `src/application`: Serviços de aplicação que orquestram fluxos de dados e comandos.
--   `src/infrastructure`: Implementações técnicas (storage, workers, api clients).
--   `src/features`: Fatias verticais de funcionalidades complexas.
-
----
-
-## 🤝 Contribuindo
-
-Contribuições são muito bem-vindas! Sinta-se à vontade para abrir uma Issue ou enviar um Pull Request.
-
-1. Faça um Fork do projeto
-2. Crie uma Branch para sua feature (`git checkout -b feature/minha-feature`)
-3. Faça commit das suas alterações (`git commit -m 'feat: Adiciona nova funcionalidade'`)
-4. Faça Push para a Branch (`git push origin feature/minha-feature`)
-5. Abra um Pull Request
+- **Formatação:** `bun run prettier` (Integrado com `lint-staged` no pre-commit).
+- **Linting:** `bun run lint` (Verifica tanto o estilo de código quanto violações arquiteturais).
+- **CI/CD:** Fluxos de trabalho automatizados para staging, produção e release.
 
 ---
 
 ## 📄 Licença
 
-Distribuído sob a licença MIT. Veja `LICENSE` para mais informações.
+Este projeto está licenciado sob a Licença MIT - veja o arquivo [LICENSE](./LICENSE) para mais detalhes.
 
 ---
-
-Desenvolvido com ❤️ e matemática por [Henrique Bonfim](https://github.com/henriquebonfim).

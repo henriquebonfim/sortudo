@@ -1,0 +1,47 @@
+# ── Sortudo Dev Environment ──────────────────────────────────────────────────
+# docker compose up        → starts the Vite dev server
+# docker compose run ci    → full CI suite (lint + typecheck + test + build)
+# docker compose run app bun run test  → ad-hoc commands
+
+services:
+  # ── Application (dev server) ──────────────────────────────────────────────
+  app:
+    image: oven/bun:1
+    working_dir: /app
+    volumes:
+      - .:/app
+      # Isolate node_modules so host-installed packages don't bleed in
+      - sortudo_modules:/app/node_modules
+    ports:
+      - '5173:5173'
+    environment:
+      NODE_ENV: development
+    command: >
+      sh -c "bun install && bun run dev -- --host 0.0.0.0"
+    healthcheck:
+      test: ['CMD', 'wget', '-qO-', 'http://localhost:5173']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  # ── CI (lint + typecheck + test + build) ─────────────────────────────────
+  # Usage: docker compose run --rm ci
+  ci:
+    image: oven/bun:1
+    working_dir: /app
+    volumes:
+      - .:/app
+      - sortudo_modules:/app/node_modules
+    environment:
+      NODE_ENV: test
+      CI: 'true'
+    command: >
+      sh -c "bun install &&
+             bun run lint &&
+             bun run typecheck &&
+             bun run test &&
+             bun run build"
+
+volumes:
+  sortudo_modules:

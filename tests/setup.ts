@@ -1,5 +1,3 @@
-import { vi } from 'vitest';
-
 class ResizeObserver {
   observe() {}
   unobserve() {}

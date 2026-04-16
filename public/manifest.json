@@ -1,0 +1,16 @@
+{
+  "name": "Sortudo",
+  "short_name": "Sortudo",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#020617",
+  "theme_color": "#020617",
+  "description": "A matemática da Mega-Sena.",
+  "icons": [
+    {
+      "src": "favicon.ico",
+      "sizes": "64x64",
+      "type": "image/x-icon"
+    }
+  ]
+}
