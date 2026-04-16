@@ -1,7 +1,7 @@
 # Sortudo (A Matemática da Mega-Sena)
 
-[![Test E2E](https://github.com/your-repo/odds-are-not-with-you/actions/workflows/staging.yml/badge.svg)](https://github.com/your-repo/odds-are-not-with-you/actions/workflows/staging.yml)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Test E2E](https://github.com/henriquebonfim/sortudo/actions/workflows/production.yml/badge.svg)](https://github.com/henriquebonfim/sortudo/actions/workflows/production.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 
 **Sortudo** é uma aplicação interativa baseada em dados que visualiza a improbabilidade estatística de ganhar na Mega-Sena. Com análises de dados, histórico de sorteios e um gerador de combinações, o projeto educa sobre a matemática dos jogos de azar e suas baixas probabilidades.
 
@@ -16,7 +16,7 @@
 
 ---
 
-## 🛠️ Pilha Tecnológica
+## 🛠️ Tech Stach
 
 ### Core
 
