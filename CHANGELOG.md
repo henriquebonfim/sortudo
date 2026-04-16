@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.2.0](https://github.com/henriquebonfim/sortudo/compare/v1.1.0...v1.2.0) (2026-04-16)
+
+
+### Features
+
+* update document to the latest version ([7020630](https://github.com/henriquebonfim/sortudo/commit/7020630d1a438c0c204cd8b9063b3ef2e9e450e4))
+
 ## [1.1.0](https://github.com/henriquebonfim/sortudo/compare/v1.0.0...v1.1.0) (2026-04-16)
 
 
