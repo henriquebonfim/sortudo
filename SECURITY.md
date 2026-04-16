@@ -1,20 +1,20 @@
-# Security Policy
+# Política de Segurança
 
-## Supported Versions
+## Versões Suportadas
 
-At this moment, only the latest version of the main branch is supported.
+No momento, apenas a versão mais recente do branch main é suportada.
 
-| Version | Supported          |
-| ------- | ------------------ |
-| Main    | :white_check_mark: |
+| Versão | Suportada          |
+| ------ | ------------------ |
+| Main   | :white_check_mark: |
 
-## Reporting a Vulnerability
+## Relatando uma Vulnerabilidade
 
-If you discover a security vulnerability within this project, please follow the steps below:
+Se você descobrir uma vulnerabilidade de segurança neste projeto, siga os passos abaixo:
 
-1.  **Do not disclose it publicly**. Public disclosure before a fix is available puts users at risk.
-2.  Open an issue with the details of the vulnerability.
-3.  Provide a clear description of the issue, steps to reproduce, and possible impact.
-4.  We will acknowledge your report within 48 hours and work on a resolution.
+1. **Não divulgue publicamente**. A divulgação pública antes de uma correção estar disponível coloca os usuários em risco.
+2. Abra uma issue com os detalhes da vulnerabilidade.
+3. Forneça uma descrição clara do problema, passos para reproduzir e possível impacto.
+4. Reconheceremos seu relatório em até 48 horas e trabalharemos em uma resolução.
 
-Thank you for helping keep this project secure!
+Obrigado por ajudar a manter este projeto seguro!

@@ -1,7 +1,7 @@
 name: Sugestão de Funcionalidade
 description: Sugira uma ideia para o Sortudo?
-title: "[FEAT]: "
-labels: ["enhancement"]
+title: '[FEAT]: '
+labels: ['enhancement']
 assignees: []
 body:
   - type: textarea

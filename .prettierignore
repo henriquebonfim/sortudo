@@ -1,0 +1,11 @@
+public/data.json
+.agent/
+.firebase
+.vscode/
+node_modules/
+dist/
+build/
+tests/coverage/
+*.lock
+.codacy/
+*.last-run.json

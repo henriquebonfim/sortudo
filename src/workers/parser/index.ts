@@ -1,0 +1,1 @@
+export { LotteryParserWorkerClient } from './client';
