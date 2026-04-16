@@ -9,6 +9,7 @@ const About = lazy(() => import('@/features/about/pages/AboutPage'));
 const Search = lazy(() => import('@/features/search/pages/SearchPage'));
 const Generator = lazy(() => import('@/features/generator/pages/GeneratorPage'));
 const Analytics = lazy(() => import('@/features/analytics/pages/AnalyticsPage'));
+const FAQ = lazy(() => import('@/features/faq/pages/FAQPage'));
 
 function LazyPage({ children }: { children: React.ReactNode }) {
   return (
@@ -100,6 +101,14 @@ export function AppRouter() {
             element={
               <LazyPage>
                 <About />
+              </LazyPage>
+            }
+          />
+          <Route
+            path="/faq"
+            element={
+              <LazyPage>
+                <FAQ />
               </LazyPage>
             }
           />
