@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.3.0](https://github.com/henriquebonfim/sortudo/compare/v1.2.0...v1.3.0) (2026-04-16)
+
+
+### Features
+
+* add SEO/AEO ([a09e218](https://github.com/henriquebonfim/sortudo/commit/a09e218505e535443e71755a55c1590b6cc76243))
+
 ## [1.2.0](https://github.com/henriquebonfim/sortudo/compare/v1.1.0...v1.2.0) (2026-04-16)
 
 ### Features
