@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.0](https://github.com/henriquebonfim/sortudo/compare/v1.3.0...v1.4.0) (2026-05-05)
+
+
+### Features
+
+* update Mega-Sena.xlsx ([cd85f9b](https://github.com/henriquebonfim/sortudo/commit/cd85f9b048b75d928df788f93e7ce1063e942114))
+
 ## [1.3.0](https://github.com/henriquebonfim/sortudo/compare/v1.2.0...v1.3.0) (2026-04-16)
 
 
